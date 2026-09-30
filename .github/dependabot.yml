@@ -5,8 +5,8 @@
 
 version: 2
 updates:
-  # To manage Python packages
-  - package-ecosystem: "pip" # See documentation for possible values
+  # To manage Python packages (updates pyproject.toml and uv.lock together)
+  - package-ecosystem: "uv" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"

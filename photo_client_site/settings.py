@@ -13,20 +13,34 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_FILE = BASE_DIR / '.env'
 
 # Load variables from .env (not committed). Existing environment variables,
 # e.g. on the hosting platform, are not overwritten by the file.
-load_dotenv(BASE_DIR / '.env')
+load_dotenv(ENV_FILE)
 
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # No default on purpose: a missing key should fail loudly at startup.
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+# The .env check only picks the error message: on a server the key comes
+# from the environment and there is no .env file at all.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    if not ENV_FILE.exists():
+        raise ImproperlyConfigured(
+            f'{ENV_FILE} was not found and DJANGO_SECRET_KEY is not set in the '
+            'environment. Copy .env.example to .env and add a key (see README).'
+        )
+    raise ImproperlyConfigured(
+        f'DJANGO_SECRET_KEY is missing or empty in {ENV_FILE}. '
+        "Generate a key and paste it in single quotes: DJANGO_SECRET_KEY='...' (see README)."
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Defaults to off, so a server without DJANGO_DEBUG set is safe.

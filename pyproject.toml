@@ -1,0 +1,8 @@
+[project]
+name = "26-pit-projekts-rtu"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "django>=6.1.1",
+    "python-dotenv>=1.2.3",
+]

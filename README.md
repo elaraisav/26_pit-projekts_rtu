@@ -4,14 +4,15 @@ Studiju projekts: tīmekļa platforma, kurā fotogrāfi var kopīgot fotogrāfij
 
 ## Tehnoloģijas
 
-- Python 3.13, Django 6.1
-- [uv](https://docs.astral.sh/uv/) – Python, virtuālās vides un atkarību pārvaldība
-- SQLite – lokālajai izstrādei
-- Objektu krātuve (object storage) – fotogrāfiju glabāšanai (plānots)
+- [Python 3.13](https://www.python.org/downloads/release/python-3130/),
+- [Django 6.1](https://www.djangoproject.com/) - augsta līmeņa Python tīmekļa ietvars (lejupielādējama pakotne Python)
+- [uv rīks](https://docs.astral.sh/uv/) – Python, virtuālās vides un atkarību pārvaldība (lietosim pip vietā, vieglāk sinhronizēt pakotnes)
+- [SQLite](https://sqlite.org/) – lietotāju un saziņu datu uzglabāšanai (noklusējums Django)
+- [Silo Dockerī](https://hub.docker.com/r/pgsty/silo) - objektu krātuve (object storage) fotogrāfiju glabāšanai (plānots)
 
 ## Īsumā
 
-Ja Git un uv jau ir uzstādīti, projektu var palaist ar šīm komandām (vienādas visās operētājsistēmās un termināļos):
+Ja **Git** un **uv** jau ir uzstādīti, projektu var palaist ar šīm komandām (vienādas visās operētājsistēmās un termināļos):
 
 ```bash
 git clone https://github.com/elaraisav/26_pit-projekts_rtu.git
@@ -23,6 +24,10 @@ uv run python manage.py runserver
 ```
 
 Tad atver <http://127.0.0.1:8000/>. Sīkāks apraksts – zemāk.
+
+Vienīgā komanda, kas ir nestandarta ir `uv run python scripts/setup_env.py`. Šī komanda palaiž skriptu, kas automatizē `.env` izveidi un aizpildi. 
+
+Pat, ja visi nepieciešamie rīki ir uzstādīti, lūgums, pārskati pārējo instrukciju saturu.  
 
 ## 1. Nepieciešamie rīki
 
@@ -40,11 +45,13 @@ git --version
 uv --version
 ```
 
-Python atsevišķi uzstādīt nav nepieciešams – `uv sync` pats lejupielādēs Python 3.13, ja tā nav.
+Python atsevišķi uzstādīt nav nepieciešams – `uv sync` atradīs projektā lietotās verijas un pats lejupielādēs Python 3.13, ja tā nav.
 
 ## 2. Projekta lejupielāde
 
 Izvēlies mapi, kurā glabāsi projektu. **Windows:** neizmanto OneDrive sinhronizētas mapes (bieži tās ir *Desktop* un *Documents*) – `.venv` mapē ir tūkstošiem failu, un sinhronizācija rada kļūdas. Piemērs: `C:\dev\`.
+
+Dažas projekta lejupielādes iespējas:
 
 - **Terminālis:** atver termināli izvēlētajā mapē un izpildi
   ```bash

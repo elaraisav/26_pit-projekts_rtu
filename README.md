@@ -2,6 +2,10 @@
 
 Studiju projekts: tīmekļa platforma, kurā fotogrāfi var kopīgot fotogrāfijas ar saviem klientiem.
 
+## Informācija
+
+Instrukcijas un projekta aprakst `README.md`, modifikācijas `settings.py` un `.env` izveides skripts `scripts/setup_env.py` tika ģenerēti ar mākslīgo intelektu (MI). Pēc ģenerācijas veicu pārbaudi un vietām veicu pielāgojumus, bet nebiju spējīgs pārbaudīt instalāciju ar Windows vai Apple operētājsistēmām, tāpēc nevaru garantēt to darbību. Ja ir kāda problēma ar instrukcijām, skriptiem un kļūdu paziņojumiem, lūdzu dodat ziņu, risināsim. 
+
 ## Tehnoloģijas
 
 - [Python 3.13](https://www.python.org/downloads/release/python-3130/),

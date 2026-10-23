@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,24 +12,40 @@
         <img src="logo.png"> <!-- Placeholder, nepieciešams aizvietot ar īstu attēlu, kas strādā -->
         <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
             <input type="text" id="search-bar" placeholder="Meklējiet fotogrāfu...">
-            <button id="search-btn">Meklēt</button>
+            <button id="search-btn">Meklēt</button> <!-- teorētiski tipam nevajag būt submit, jo tad var meklēšanā izvadīt visus fotogrāfus bez filtra -->
         </form>
         <form action="{% url 'testsite:profils' %}" method="get"> <!--  nez kāpēc šī poga arī negrib strādāt, help -->
-            <button type="button" id="profila-btn">Mans Profils</button>
+            <button id="profila-btn">Mans Profils</button>
         </form>
     </div>
     <div class="mainpage">
         <div class="sidebar">
             <h3>Aktīvās sarakstes</h3>
-            <div></div> <!-- profils 1-->
-            <div></div> <!-- profils 2-->
-        </div> <!-- Sāna sarakstes opcijas -->
+            <div class="profili">
+                <div class="profils"> <!-- profils 1-->
+                    <!-- Profilbilde -->
+                    <p>Vārds Uzvārds</p>
+                    <button type="button">Sarakstīties</button>
+                </div> 
+                <div class="profils">  <!-- profils 2-->
+                    <!-- Profilbilde -->
+                    <p>Vārds Uzvārds</p>
+                    <button type="button">Sarakstīties</button>
+                </div>
+            </div>
+        </div>
         <div class="mainpage-photos">
             <h2>LAIPNI LŪGTI FOTOGRĀFU PASAULĒ!</h2>
-            <div></div> <!-- tematika 1-->
-            <div></div> <!-- tematika 2-->
-        </div> <!-- Sadaļa ar visām fotogrāfiju tematikām -->
+            <div class= "temats">
+                <!-- tematika 1-->
+                <h3>Temats 1</h3>
+                <!-- attēli virknē ar pogu, attēla autors zem attēla-->
+            </div>
+            <div class= "temats">
+                <!-- tematika 2-->
+                <h3>Temats 2</h3>
+                <!-- attēli virknē ar pogu, attēla autors zem attēla-->
+            </div>
+        </div>
     </div>
-
-    <script src="js/sakumlapa.js"></script>
 </body>

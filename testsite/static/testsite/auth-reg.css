@@ -60,10 +60,9 @@ h1{
 }
 /* Visu pogu, kas ir konteinerī auth, formatējums */
 .auth button{
-    width: auto;
+    width: 100px;
     height: 25px;
     padding: 5px;
-    /*border: 2px, solid, #031D44;*/
     border-radius: 5px;
     font-size: 16px;
     color: #FDF9ED;
@@ -118,7 +117,6 @@ h1{
     width: auto;
     height: 25px;
     padding: 5px;
-    /*border: 2px, solid, #031D44;*/
     border-radius: 5px;
     font-size: 16px;
     color: #FDF9ED;

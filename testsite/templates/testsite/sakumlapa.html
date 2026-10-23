@@ -9,12 +9,12 @@
 </head>
 <body>
     <div class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
-        <img src="logo.png"> <!-- Placeholder, nepieciešams aizvietot ar īstu attēlu -->
+        <img src="logo.png"> <!-- Placeholder, nepieciešams aizvietot ar īstu attēlu, kas strādā -->
         <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
             <input type="text" id="search-bar" placeholder="Meklējiet fotogrāfu...">
             <button id="search-btn">Meklēt</button>
         </form>
-        <form> <!-- jāpievieno vēl viena lapa, ved uz profilu-->
+        <form action="{% url 'testsite:profils' %}" method="get"> <!--  nez kāpēc šī poga arī negrib strādāt, help -->
             <button type="button" id="profila-btn">Mans Profils</button>
         </form>
     </div>

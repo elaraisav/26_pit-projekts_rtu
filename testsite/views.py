@@ -16,3 +16,6 @@ def aizmirsu_paroli(request):
 
 def meklesana(request):
     return render(request, 'testsite/meklesana.html')
+
+def profils(request):
+    return render(request, 'testsite/profils.html')

@@ -41,12 +41,6 @@ h1{
     text-align: center;
     color:#FDF9ED;
 }
-/* Formas lauku formatējums */
-/*form{
-    align-self: center;
-    align-items: center;
-}
-*/
 /* Ievadlauku dizains */
 .auth-form input{
     display: block;
@@ -64,19 +58,6 @@ h1{
     color: #031D44;
     background-color: #FDF9ED;
 }
-/* Pogu dizains */
-/*button{
-    width: auto;
-    height: 25px;
-    padding: 5px;
-    border: 5px, #031D44;
-    border-radius: 5px;
-    font-size: 16px;
-    text-align: center;
-    color: #FDF9ED;
-    background-color: #031D44
-}
-*/
 /* Visu pogu, kas ir konteinerī auth, formatējums */
 .auth button{
     width: auto;
@@ -157,4 +138,3 @@ h1{
 /* Aizmirsu paroli lapas formatējums */
 /* :P */
 
-/* Sākumlapas formatējums */

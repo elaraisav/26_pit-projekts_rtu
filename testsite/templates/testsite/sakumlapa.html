@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sākumlapa</title>
-    <!-- <link rel="stylesheet" href="css/formatejums.css"> -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
 </head>
 <body>
     <div class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
         <img src="logo.png"> <!-- Placeholder, nepieciešams aizvietot ar īstu attēlu -->
-        <form class="topbar-form">
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
             <input type="text" id="search-bar" placeholder="Meklējiet fotogrāfu...">
             <button id="search-btn">Meklēt</button>
         </form>
-        <button id="profila-btn" onclick=location.href='profils.html'>Mans Profils</button>
+        <form> <!-- jāpievieno vēl viena lapa, ved uz profilu-->
+            <button type="button" id="profila-btn">Mans Profils</button>
+        </form>
     </div>
     <div class="mainpage">
         <div class="sidebar">

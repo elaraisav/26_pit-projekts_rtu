@@ -225,6 +225,7 @@ Pēc uzstādīšanas lokāli parādīsies arī (repozitorijā tie netiek iekļau
 ## Komanda
 
 | Vārds  | Loma           |
+|---|---|
 | Elans  | Raitums-Šāvējs |
 | Aigars | Gerasimčiks    |
 | Artūrs | Helmanis       |

@@ -50,6 +50,8 @@ body{
     background-color: #FDF9ED;
     /* Jāpamaina searchbar, lai būtu centra pozīcijā */
 }
+/* Meklēšanas poga */
+
 .topbar-form button{
     width: auto;
     height: 25px;
@@ -72,22 +74,43 @@ body{
     background-color: #031D44;
     cursor: pointer;
 }
-
 .topbar button:hover{
     background-color: #D68A71;
 }
-
+/* konteineris, kur pārējie lapas elementi atrodas */
 .mainpage{
     width: 100%;
     height: 100%;
-    background-color: #D68A71;
-    margin: 0;
+    /* background-color: #D68A71; */
+    /* margin: 0;*/
     /* position: fixed;*/
 }
-
+/* Sāna sadaļa ar pieejamam sarakstēm */
 .sidebar{
     width: 15%;
     height: 100%;
     background-color: #70A288;
     position: absolute;
+}
+h3{
+    /* pagaidu vērt, obligāti izmainīt */
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold; 
+    text-align: center;
+    color:#FDF9ED;
+}
+/* Sadaļa ar fotogrāfu bildēm pa kategorijām */
+.mainpage-photos{
+
+}
+h2{
+    /* pagaidu vērt, obligāti izmainīt */
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 28px;
+    font-weight: bold; 
+    text-align: center;
+    color:#FDF9ED;
 }

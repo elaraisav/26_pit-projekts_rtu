@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorizācija</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/auth-reg.css' %}">
+</head>
+<body>
+    <div class="auth">
+        <h1>Autorizacija</h1>
+        <!-- Connect pages via urls defined in apps urls.py -->
+        <form class="auth-form" action="{% url 'testsite:sakumlapa' %}" method="get">
+            <input type="text" name="username" placeholder="Lietotājvārds" required>
+            <input type="text"  name="password" placeholder="Parole" required> <!-- japapildina te ar konkr ievadnosacījumiem-->
+            <button type="submit" id="iesniegt-btn">Iesniegt</button> <!-- Jāveic iesniegsanas funk., veiksmīhā gadījumā pārved uz sakumlapa.html -->
+        </form>
+        <div class="auth-buttons">
+            <form action="{% url 'testsite:registracija' %}" method="get">
+                <button id="registreties-btn">Reģistrēties</button> <!-- Jāaizved uz registreties.html -->
+            </form>
+            <form action="{% url 'testsite:aizmirsu-paroli' %}" method="get">
+                <button id="aizmirsu-paroli-btn">Aizmirsu paroli</button> <!-- Jāaizved uz lapu aizmirsu-paroli.html-->
+            </form>
+        </div>
+    </div>
+</body>

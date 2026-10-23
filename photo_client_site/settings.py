@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'testsite', # testsite where the app is
 ]
 
 MIDDLEWARE = [

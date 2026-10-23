@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registracija</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/auth-reg.css' %}">
+</head>
+<body>
+    <div class="reg">
+        <h1>Registracija</h1>
+        <form class="reg-form"> <!-- Jāpieliek funkcionalitāte !!!-->
+            <input type="text" id="lietotajvards-input" placeholder="Lietotājvārds" required>
+            <input type="text" id="parole-input" placeholder="Parole" required> <!-- japapildina te ar konkr ievadnosacījumiem-->
+            <input type="text" id="vards-input" placeholder="Vārds" required>
+            <input type="text" id="uzvards-input" placeholder="Uzvārds" required>
+            <input type="text" id="epasts-input" placeholder="E-Pasts" required>
+            <button type="submit" id="registreties-btn">Reģistrēties</button> <!-- izpilda registracijas funkciju -->
+        </form>
+        <div class="reg-button">
+            <form action="{% url 'testsite:autorizacija' %}" method="get">
+                <button id="atgriesties-btn">Atgriesties</button> <!-- ved atpakal uz autorizacija.html-->
+            </form>  
+        </div>
+    </div>
+</body>

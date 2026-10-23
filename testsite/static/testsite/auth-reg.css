@@ -1,0 +1,138 @@
+/* Krāsas: 
+    #031D44 (Ļoti tumši zils)
+    #043B62 (Tumši zils)
+    #70A288 (Gaiši mežšzaļs)
+    #FDF9ED (Knapi iedzeltens)
+    #D68A71 (Ķieģeļsarkans)
+*/
+/* Autorizācijas lapas formatējums */
+/* Pamata formatējums, attiecas uz visu, ja nav specifizēts savādāk */
+*{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+}
+/* Lapas pamata dizians, īpašības */
+body{
+    font-family: 'Helvetica', sans-serif;
+    background: #043B62;
+    margin: 0;
+    padding: 0;
+}
+/* Konteineris 'auth' */
+.auth{
+    margin: 50px auto;
+    margin-top: 150px;
+    margin-bottom: 50px;
+    height: 350px;
+    width: 450px;
+    padding: 20px;
+    border-radius: 5px;
+    background: #70A288; 
+    text-align: center;
+}
+/* Virsraksts */
+h1{
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 36px;
+    font-weight: bold; 
+    text-align: center;
+    color:#FDF9ED;
+}
+/* Ievadlauku dizains */
+.auth-form input{
+    display: block;
+    align-self: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    width: 300px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 5px, solid, #031D44;
+    border-radius: 3px;
+    font-size: 18px;
+    text-align: center;
+    color: #031D44;
+    background-color: #FDF9ED;
+}
+/* Visu pogu, kas ir konteinerī auth, formatējums */
+.auth button{
+    width: 100px;
+    height: 25px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #FDF9ED;
+    background-color: #031D44;
+    cursor: pointer;
+}
+/* Pogas maina krāsu, kad tām uzbrauc ar peli */
+.auth button:hover {
+    background-color: #D68A71;
+}
+/* Tālāko pogu izkārtojums */
+.auth-buttons{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
+    flex-wrap: wrap;
+}
+
+/* Registracijas lapas formatējums */
+/* Konteineris 'reg' */
+.reg{
+    margin: 50px auto;
+    margin-top: 100px;
+    margin-bottom: 50px;
+    height: 500px;
+    width: 450px;
+    padding: 20px;
+    border-radius: 5px;
+    background: #70A288; 
+    text-align: center;
+}
+/* Reģistrācijas ievadlauku formatējums */
+.reg-form input{
+    display: block;
+    align-self: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    width: 300px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 5px, solid, #031D44;
+    border-radius: 3px;
+    font-size: 18px;
+    text-align: center;
+    color: #031D44;
+    background-color: #FDF9ED;
+}
+/* Reģistrācjas pogu formatējums */
+.reg button{
+    width: auto;
+    height: 25px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #FDF9ED;
+    background-color: #031D44;
+    cursor: pointer;
+}
+/* Pogas maina krāsu, kad tām uzbrauc ar peli */
+.reg button:hover {
+    background-color: #D68A71;
+}
+.reg-button{
+    margin-top: 10px;
+    /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
+    flex-wrap: wrap;
+}
+
+/* Aizmirsu paroli lapas formatējums */
+/* :P */
+

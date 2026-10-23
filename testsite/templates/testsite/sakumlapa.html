@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sākumlapa</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <script src="{% static 'testsite/sakumlapa.js' %}" defer></script> <!-- ChatGPT ieteikums -->
+</head>
+<body>
+    <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+        <!-- ChatGPT ieteikums -->
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+            <!-- Vai kāds atceras kas vietnei bija izdomātais nosaukums?-->
+        </a>
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
+            <button type="submit" id="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+        </form>
+        <form action="{% url 'testsite:profils' %}" method="get">
+            <button id="profila-btn">Mans Profils</button>
+        </form>
+    </header>
+    <div class="mainpage">
+        <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
+            <h3>Aktīvās sarakstes</h3>
+            <div class="profili">
+                <article class="profils"> <!-- ChatCPT ieteikums -->
+                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Anna Bērziņa</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+                <article class="profils">
+                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Jānis Ozols</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+            </div>
+        </aside>
+        <main class="mainpage-photos"> <!-- <main> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
+            <h2>Laipni lūgti fotogrāfu pasaulē!</h2>
+            <section class="temats" aria-labelledby="nature-title">
+                <div class="topic-header">
+                    <h2 id="nature-title">Daba un ainavas</h2>
+                </div>
+                <div class="photo-carousel">
+                    <button class="carousel-btn prev" type="button" aria-label="Iepriekšējie attēli">
+                        &#10094;
+                    </button>
+                    <div class="photo-track">
+                        {% for n in "1234567890" %}
+                        <article class="photo-card">
+                            <img src="{% static 'testsite/images/photos/nature-' %}{{ forloop.counter|stringformat:'02d' }}.jpg"
+                                alt="Dabas un ainavas fotogrāfija {{ forloop.counter }}"
+                                loading="lazy"
+                            >
+                            <p>Fotogrāfs {{ forloop.counter }}</p>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-btn next" type="button" aria-label="Nākamie attēli">
+                        &#10095;
+                    </button>
+                </div>
+            </section>
+            <section class="temats" aria-labelledby="portrait-title">
+                <div class="topic-header">
+                    <h2 id="portrait-title">Portreti</h2>
+                </div>
+                <div class="photo-carousel">
+                    <button class="carousel-btn prev" type="button" aria-label="Iepriekšējie attēli">
+                        &#10094;
+                    </button>
+                    <div class="photo-track">
+                        {% for n in "1234567890" %}
+                        <article class="photo-card">
+                            <img src="{% static 'testsite/images/photos/portrait-' %}{{ forloop.counter|stringformat:'02d' }}.jpg"
+                                alt="Portreta fotogrāfija {{ forloop.counter }}"
+                                loading="lazy"
+                            >
+                            <p>Fotogrāfs {{ forloop.counter }}</p>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-btn next" type="button" aria-label="Nākamie attēli">
+                        &#10095;
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>

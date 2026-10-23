@@ -224,9 +224,14 @@ Pēc uzstādīšanas lokāli parādīsies arī (repozitorijā tie netiek iekļau
 
 ## Komanda
 
-| Vārds | Loma |
-|---|---|
-| … | … |
+| Vārds  | Loma           |
+| Elans  | Raitums-Šāvējs |
+| Aigars | Gerasimčiks    |
+| Artūrs | Helmanis       |
+| Marta  | Stašāne        |
+| Anna   | Stašāne        |
+
+
 
 ## Licence
 

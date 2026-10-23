@@ -1,119 +1,344 @@
-/* Krāsas: 
-    #031D44 (Ļoti tumši zils)
-    #043B62 (Tumši zils)
-    #70A288 (Gaiši mežšzaļs)
-    #FDF9ED (Knapi iedzeltens)
-    #D68A71 (Ķieģeļsarkans)
-*/
-/* Pamata formatējums, attiecas uz visu, ja nav specifizēts savādāk */
-/*
-*{
+/* ChatGPT CSS kods priekš sākumlapas pārveidojumiem */
+/* Krāsu palete */
+:root {
+    --navy: #031D44;
+    --blue: #043B62;
+    --green: #70A288;
+    --cream: #FDF9ED;
+    --terracotta: #D68A71;
+}
+
+/* Pamata iestatījumi */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    background: var(--blue);
+    color: var(--cream);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Augšējā josla */
+.topbar {
+    display: grid;
+    grid-template-columns: 1fr minmax(250px, 600px) 1fr;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    min-height: 100px;
+    padding: 16px 28px;
+    background: var(--green);
+}
+
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+}
+
+.logo-link img {
+    display: block;
+    width: 160px;
+    max-width: 100%;
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Meklēšanas forma */
+.topbar-form {
+    display: flex;
+    align-items: stretch;
+    justify-self: center;
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+}
+
+.topbar-form input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    outline-offset: 3px;
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 16px;
+}
+
+.topbar-form input:focus {
+    outline: 2px solid var(--terracotta);
+}
+
+.search-btn,
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.profile-btn {
+    justify-self: end;
+    white-space: nowrap;
+}
+
+.search-btn:hover,
+.profile-btn:hover {
+    background: var(--terracotta);
+    color: var(--navy);
+}
+
+.search-btn:focus-visible,
+.profile-btn:focus-visible,
+.carousel-btn:focus-visible,
+.chat-btn:focus-visible {
+    outline: 3px solid var(--terracotta);
+    outline-offset: 3px;
+}
+
+/* Sānpanelis un galvenais saturs */
+.mainpage {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: start;
+    gap: 28px;
+    max-width: 1800px;
+    min-height: calc(100vh - 100px);
+    margin: 0 auto;
+    padding: 28px;
+}
+
+/* Aktīvās sarakstes */
+.sidebar {
+    min-width: 0;
+    padding: 20px 16px;
+    border-radius: 12px;
+    background: var(--green);
+    color: var(--navy);
+}
+
+.sidebar h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.profili {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    box-sizing: border-box;
-    font-family: 'Helvetica', sans-serif;
+    gap: 12px;
 }
-*/
-/* Lapas pamata dizians, īpašības */
-body{
-    font-family: 'Helvetica', sans-serif;
-    background: #043B62;
-    margin: 0;
-    padding: 0;
-}
-/* Augšējā josla */
-.topbar{
-    display: flex;
-    width: 100%;
-    height: 100px;
-    background-color: #70A288;
-}
-/* Logo */
-.topbar img{
-    height: 60px;
-    width: 160px;
-    margin: 20px; /*, 55px, 20px, 55px;*/
-}
-/* Meklēšanas josla */
-/* JĀBŪT EKRĀNA CENTRĀ */
-.topbar-form input{
-    width: 500px;
-    height: auto;
-    margin-top: 30px;
-    margin-left: 30px;
-    padding: 10px;
-    border: 2px, solid, #031D44;
-    border-radius: 3px;
-    font-size: 18px;
-    text-align: left;
-    color: #031D44;
-    background-color: #FDF9ED;
-}
-/* Meklēšanas poga */
-/* KORIGĒ IZMĒRU, CENTRĒ*/
-.topbar-form button{
-    width: 50px;
-    height: 25px;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #FDF9ED;
-    background-color: #031D44;
-    text-align: center;
-    cursor: pointer;
-}
-/* Profila poga */
-/* PĀRBĪGI POGU UZ KREISO PUSI */
-.topbar button{
-    width: 100px;
-    height: 25px;
-    margin-top: 20px;
-    margin-right: 20px;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #FDF9ED;
-    background-color: #031D44;
-    cursor: pointer;
-}
-.topbar button:hover{
-    background-color: #D68A71;
-}
-/* konteineris, kur pārējie lapas elementi atrodas */
-.mainpage{
-    width: 100%;
-    height: 100%;
-    /* background-color: #D68A71; */
-    /* margin: 0;*/
-    /* position: fixed;*/
-}
-/* Sāna sadaļa ar pieejamam sarakstēm */
-.sidebar{
-    width: 15%;
-    height: 100%;
-    background-color: #70A288;
-    position: absolute;
-}
-h3{
-    /* pagaidu vērt, obligāti izmainīt */
-    margin-top: 20px;
-    margin-bottom: 15px;
-    font-size: 18px;
-    font-weight: bold; 
-    text-align: center;
-    color:#FDF9ED;
-}
-/* Sadaļa ar fotogrāfu bildēm pa kategorijām */
-.mainpage-photos{
 
+.profils {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--cream);
 }
-h2{
-    /* pagaidu vērt, obligāti izmainīt */
-    margin-top: 20px;
-    margin-bottom: 15px;
-    font-size: 28px;
-    font-weight: bold; 
+
+.avatar {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--terracotta);
+}
+
+.profile-info {
+    min-width: 0;
+}
+
+.profile-info p {
+    margin: 0 0 8px;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.chat-btn {
+    display: inline-block;
+    padding: 7px 9px;
+    border-radius: 6px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 12px;
     text-align: center;
-    color:#FDF9ED;
+}
+
+.chat-btn:hover {
+    background: var(--terracotta);
+    color: var(--navy);
+}
+
+/* Galvenā attēlu daļa */
+.mainpage-photos {
+    min-width: 0;
+}
+
+.mainpage-photos > h1 {
+    margin: 4px 0 32px;
+    font-size: clamp(22px, 3vw, 32px);
+    line-height: 1.25;
+    text-align: center;
+}
+
+/* Tematiskās sadaļas */
+.temats {
+    min-width: 0;
+    margin-bottom: 36px;
+}
+
+.topic-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.topic-header h2 {
+    margin: 0;
+    font-size: 23px;
+}
+
+/* Horizontāli ritināma attēlu virkne */
+.photo-carousel {
+    position: relative;
+    min-width: 0;
+    padding: 0 42px;
+}
+
+.photo-track {
+    display: grid;
+    grid-auto-columns: calc((100% - 48px) / 4);
+    grid-auto-flow: column;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 2px 14px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--green) var(--navy);
+}
+
+.photo-card {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--navy);
+    scroll-snap-align: start;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+.photo-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: var(--green);
+}
+
+.photo-card p {
+    margin: 0;
+    padding: 12px 10px;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Virknes pārvietošanas pogas */
+.carousel-btn {
+    position: absolute;
+    top: 38%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--navy);
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.carousel-btn:hover {
+    background: var(--terracotta);
+}
+
+.carousel-btn.prev {
+    left: 0;
+}
+
+.carousel-btn.next {
+    right: 0;
+}
+
+.carousel-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Planšetdatori */
+@media (max-width: 1000px) {
+    .topbar {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 14px;
+        padding: 14px 18px;
+    }
+
+    .logo-link img {
+        width: 120px;
+        height: 48px;
+    }
+
+    .mainpage {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 18px;
+        padding: 20px;
+    }
+
+    .photo-track {
+        grid-auto-columns: calc((100% - 16px) / 2);
+        gap: 16px;
+    }
 }

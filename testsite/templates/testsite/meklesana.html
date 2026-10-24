@@ -26,9 +26,15 @@
     <div class="mainpage">
         <aside class="sidebar">
             <h3>Filtri</h3>
-            <form>
-                <!-- Nosaukums - piemirsu, kas ar to bij domāts. Noskaidrošu un pievienošu -->
-                <!-- Vertibas tiek nosutitas uz meklesanas joslu -->
+            <form class="filtri"> <!-- Vertibām vajadzētu tikt nosūtītām meklēsanas joslai -->
+                <label for="seciba">Lietotāju secība:</label><br> <!-- Kļūda specifikācijā - pamainiju Nosaukums kā lietotāju izvades secību -->
+                <select name="seciba" id="seciba">
+                    <option value="A-Z">A-Z</option>
+                    <option value="Z-A">Z-A</option>
+                    <option value="jaunakie">Jaunākie vispirms</option>
+                    <option value="kazu">Vecākie vispirms</option>
+                </select>
+                <br>
                 <label for="specialitate">Fotogrāfa specialitāte:</label><br>
                 <select name="specialitate" id="specialitate">
                     <option value="portreti">Portreti</option>
@@ -46,7 +52,7 @@
                     <option value="fi">Somija</option>
                 </select>
                 <br>
-                <!--  Parveidoju par slideri jo specifizējot katru cenu diapazonu būtu neiespējami -->
+                <!--  Parveidoju par slideri, jo specifizējot katru cenu diapazonu būtu neiespējami -->
                 <div class="slidecontainer"></div> 
                     <label for="cenu_diapazons">Cenu diapazons:</label><br>
                     <input type="range" min="0" max="1000" value="50" class="slider" id="range" name="cenu_diapazons">

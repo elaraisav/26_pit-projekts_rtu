@@ -222,6 +222,9 @@ a {
 .temats {
     min-width: 0;
     margin-bottom: 36px;
+    background: var(--navy);
+    padding: 12px;
+    border-radius: 10px;
 }
 
 .topic-header {
@@ -320,6 +323,40 @@ a {
 }
 
 /* Meklēšanas lapas elementu formatējums */
+/* Fltru formatējums */
+/* Paša select lauka izskats */
+.sidebar select{
+    padding: 6px 32px 6px 10px;
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    background-color: var(--cream);
+    color: var(--navy);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sidebar select:hover {
+    background-color: var(--cream);
+    color: var(--navy);
+}
+
+.sidebar select:focus {
+    outline: 2px solid var(--terracotta);
+}
+
+/* Opciju izskats */
+.sidebar select option{
+    background-color: var(--cream);
+    color: var(--navy);
+}
+
+/* Nevienmēr strādās, atkarīgs no pārlūkprogrammas */
+/* Opcija, kad uz tās uzliek kursoru */
+.sidebar select option:hover{
+    background-color: var(--terracotta);
+    color: var(--cream);
+}
+
 /* Pagaidu formatējuma kods no W3Schools par range slider */
 .slidecontainer {
   width: 100%; /* Width of the outside container */
@@ -331,7 +368,7 @@ a {
   width: 100%;
   height: 15px;
   border-radius: 5px;  
-  background: #d3d3d3;
+  background: var(--cream);
   outline: none;
   opacity: 0.7;
   -webkit-transition: .2s;
@@ -343,22 +380,22 @@ a {
   opacity: 1; /* Fully shown on mouse-over */
 }
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) to override default look) */
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  border-radius: 50%; /* Aplītis, ko velk, lai lietotu slider */
-  background: #04AA6D; /* Green background */
+  border-radius: 50%; /* Izveido slider handle apaļo formu */
+  background: var(--terracotta); /* Slider handle background */
   cursor: pointer; /* Cursor on hover */
 }
 
 .slider::-moz-range-thumb {
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-    border-radius: 50%;
-  background: #04AA6D; /* Green background */
+  border-radius: 50%;
+  background: var(--terracotta);
   cursor: pointer; /* Cursor on hover */
 }
 
@@ -475,10 +512,5 @@ a {
     border-radius: 8px;
     background: var(--green);
 }
-
-/* ... */
-
-
-
 
 /* Profila elementu formatējums */

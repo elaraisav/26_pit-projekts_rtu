@@ -19,3 +19,6 @@ def profils(request):
 
 def profils_fotogr(request):
     return render(request, 'testsite/profils_fotogr.html')
+
+def profils_fotogr_klienta(request):
+    return render(request, 'testsite/profils_fotogr_klienta.html')

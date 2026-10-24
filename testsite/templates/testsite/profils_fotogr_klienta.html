@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profils</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+</head>
+ <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+        <!-- ChatGPT ieteikums -->
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+            <!-- Vai kāds atceras kas vietnei bija izdomātais nosaukums?-->
+        </a>
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
+            <button type="submit" id="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+        </form>
+        <!-- fotogrāfa profils, klienta skats -->
+        <!-- klienta profila variants? -->
+        <button id="profila-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+    </header>
+<body>
+      <div class="mainpage">
+        <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
+            <h3>Aktīvās sarakstes</h3>
+            <div class="profili">
+                <article class="profils"> <!-- ChatCPT ieteikums -->
+                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Anna Bērziņa</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+                <article class="profils">
+                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Jānis Ozols</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+            </div>
+        </aside>
+        <main class="profile">
+  <!--iespējams fotogrāfa skats. neesmu pārbaudījusi -M-->
+        <div class="container">
+            <!-- Profila augšējā sadaļa -->
+            <section class="profile-header">
+
+                <img
+                    src="{% static 'testsite/images/profilepic1.jpg' %}"
+                    alt="Profila attēls"
+                    class="profile-avatar">
+
+                <div class="profile-details">
+                    <h1>Vārds Uzvārds</h1>
+
+                    <button type="button" class="edit-profile-btn">
+                        Rediģēt profilu
+                    </button>
+                </div>
+
+                <div class="profile-description">
+                    <p>Apraksts</p>
+                </div>
+
+            </section>
+
+            <!-- Portfolio virsraksts -->
+            <section class="portfolio">
+
+                <div class="portfolio-header">
+                    <h2>Portfolio:</h2>
+
+                    <!--<button type="button" class="edit-portfolio-btn">
+                        Rediģēt portfolio
+                    </button>
+                </div>-->
+
+                <!-- Portfolio fotogrāfijas -->
+                <div class="portfolio-grid">
+
+                    {% for n in "123456" %}
+                    <article class="portfolio-card">
+
+                        <div class="portfolio-image">
+                            <span>Attēls</span>
+                        </div>
+
+                        <h3>Nosaukums</h3>
+
+                        <div class="portfolio-description">
+                            <p>Apraksts</p>
+                        </div>
+
+                    </article>
+                    {% endfor %}
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+        </main>
+    </div>
+</body>

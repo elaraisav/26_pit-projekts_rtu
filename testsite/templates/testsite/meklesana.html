@@ -6,6 +6,59 @@
     <title>Meklēšanas rezultāti</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <script src="{% static 'testsite/meklesana.js' %}" defer></script>
 </head>
 <body>
+    <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+        <!-- ChatGPT ieteikums -->
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+            <!-- Vai kāds atceras kas vietnei bija izdomātais nosaukums?-->
+        </a>
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
+            <button type="submit" id="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+        </form>
+        <form action="{% url 'testsite:profils' %}" method="get">
+            <button id="profila-btn">Mans Profils</button>
+        </form>
+    </header>
+    <div class="mainpage">
+        <aside class="sidebar">
+            <h3>Filtri</h3>
+            <form>
+                <!-- Nosaukums - piemirsu, kas ar to bij domāts. Noskaidrošu un pievienošu -->
+                <!-- Vertibas tiek nosutitas uz meklesanas joslu -->
+                <label for="specialitate">Fotogrāfa specialitāte:</label><br>
+                <select name="specialitate" id="specialitate">
+                <option value="portreti">Portreti</option>
+                <option value="ainavas">Dabas ainavas</option>
+                <option value="produktu">Produktu</option>
+                <option value="kazu">Kāzu</option>
+                <option value="dzivnieku">Dzīvnieku</option>
+                <br><br> <!-- Jāizlabo 2. filtrs, nav izveidots pareizi -->
+                <label for="lokacija">Lokācija:</label><br>
+                <select name="lokacija" id="lokacija">
+                <option value="lv">Latvija</option>
+                <option value="lt">Lietuva</option>
+                <option value="ee">Igaunija</option>
+                <option value="fi">Somija</option>
+                <br>
+                <!--  Parveidoju par slideri jo specifizējot katru cenu diapazonu būtu neiespējami -->
+                <div class="slidecontainer"></div> 
+                    <label for="cenu_diapazons">Cenu diapazons:</label><br>
+                    <input type="range" min="0" max="1000" value="50" class="slider" id="range" name="cenu_diapazons">
+                    <!-- Pievienot vērtību izvadi pie slaidera -->
+                    <!-- Change value later -->
+            </form>
+        </aside>
+        <main class="search-results">
+            <h2>Atrastie fotogrāfi:</h2>
+            <div> <!-- atrasto fotogrāfu lielais konteineris-->
+                <div></div> <!-- fotogrāfs 1 -->
+                <div></div> <!-- fotogrāfs 2 -->
+                <div></div> <!-- fotogrāfs 3 -->
+            </div>
+        </main>
+    </div>
 </body>

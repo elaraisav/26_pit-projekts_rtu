@@ -52,7 +52,7 @@
                     <option value="fi">Somija</option>
                 </select>
                 <br>
-                <!-- Parveidoju par slideri, jo specifizējot katru cenu diapazonu būtu neiespējami -->
+                <!-- Parveidojam par slideri, jo specifizējot katru cenu diapazonu būtu neiespējami -->
                 <div class="slidecontainer"></div> 
                     <label for="cenu_diapazons">Cenu diapazons:</label><br>
                     <input type="range" min="0" max="1000" value="50" class="slider" id="range" name="cenu_diapazons">
@@ -61,41 +61,65 @@
         </aside>
         <main class="search-results">
             <h2>Atrastie fotogrāfi:</h2>
-            <div class="meklesanas_rezultati"> <!-- atrasto fotogrāfu lielais konteineris-->
+            <div class="meklesanas_rezultati"> <!-- ChatGPT modificēts, lietojot originālo struktūru un ieteikumus-->
                 <article class="meklesanas_rezultats">
-                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
-                    <div class="fotografa-info">
-                        <p>Anna Bērziņa</p>
-                        <p> Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts <br> Apraksta teksts </p>
+                    <div class="fotografa-galvene">
+                        <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="Anna Bērziņa" class="avatar">
+                        <div class="fotografa-info">
+                            <h3>Anna Bērziņa</h3>
+                            <p>Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts<br>Apraksta teksts</p>
+                        </div>
                         <a href="##" class="fotografa-profila-btn">Apskatīt profilu</a> <!-- Pārveidot par pogu, ved uz konkrēta fotogrāfa profila lapu -->
                     </div>
                     <div class="fotografa-portfolio">
-                        <p>Portfolio:</p>
-                        <!-- Vismaz 5 attēlu virkne -->
+                        <h4>Portfolio:</h4>
+                        <div class="portfolio-attelu-virkne">
+                            <img src="{% static 'testsite/images/photos/nature-01.jpg' %}" alt="Portfolio attēls 1">
+                            <img src="{% static 'testsite/images/photos/portrait-01.jpg' %}" alt="Portfolio attēls 2">
+                            <img src="{% static 'testsite/images/photos/portrait-02.jpg' %}" alt="Portfolio attēls 3">
+                            <img src="{% static 'testsite/images/photos/nature-05.jpg' %}" alt="Portfolio attēls 4">
+                            <img src="{% static 'testsite/images/photos/nature-02.jpg' %}" alt="Portfolio attēls 5">
+                        </div>
                     </div>
                 </article>
                 <article class="meklesanas_rezultats">
-                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
-                    <div class="fotografa-info">
-                        <p>Jānis Ozols</p>
-                        <p> Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts <br> Apraksta teksts </p>
+                    <div class="fotografa-galvene">
+                        <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="Jānis Ozols" class="avatar">
+                        <div class="fotografa-info">
+                            <h3>Jānis Ozols</h3>
+                            <p>Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts<br>Apraksta teksts</p>
+                        </div>
                         <a href="##" class="fotografa-profila-btn">Apskatīt profilu</a> <!-- Pārveidot par pogu, ved uz konkrēta fotogrāfa profila lapu -->
                     </div>
                     <div class="fotografa-portfolio">
-                        <p>Portfolio:</p>
-                        <!-- Vismaz 5 attēlu virkne -->
+                        <h4>Portfolio:</h4>
+                        <div class="portfolio-attelu-virkne">
+                            <img src="{% static 'testsite/images/photos/nature-08.jpg' %}" alt="Portfolio attēls 1">
+                            <img src="{% static 'testsite/images/photos/portrait-05.jpg' %}" alt="Portfolio attēls 2">
+                            <img src="{% static 'testsite/images/photos/portrait-09.jpg' %}" alt="Portfolio attēls 3">
+                            <img src="{% static 'testsite/images/photos/nature-09.jpg' %}" alt="Portfolio attēls 4">
+                            <img src="{% static 'testsite/images/photos/nature-10.jpg' %}" alt="Portfolio attēls 5">
+                        </div>
                     </div>
                 </article>
                 <article class="meklesanas_rezultats">
-                    <img src="{% static 'testsite/images/profilepic3.jpg' %}" alt="" class="avatar">
-                    <div class="fotografa-info">
-                        <p>Gatis Timšāns</p>
-                        <p> Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts <br> Apraksta teksts </p>
-                        <a href="##" class="fotografa-profila-btn">Apskatīt profilu</a> <!-- Pārveidot par pogu, ved uz konkrēta fotogrāfa profila lapu-->
+                    <div class="fotografa-galvene">
+                        <img src="{% static 'testsite/images/profilepic3.jpg' %}" alt="Anna Bērziņa" class="avatar">
+                        <div class="fotografa-info">
+                            <h3>Gatis Timšāns</h3>
+                            <p>Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts Apraksta teksts<br>Apraksta teksts</p>
+                        </div>
+                        <a href="##" class="fotografa-profila-btn">Apskatīt profilu</a> <!-- Pārveidot par pogu, ved uz konkrēta fotogrāfa profila lapu -->
                     </div>
                     <div class="fotografa-portfolio">
-                        <p>Portfolio:</p>
-                        <!-- Vismaz 5 attēlu virkne -->
+                        <h4>Portfolio:</h4>
+                        <div class="portfolio-attelu-virkne">
+                            <img src="{% static 'testsite/images/photos/portrait-10.jpg' %}" alt="Portfolio attēls 1">
+                            <img src="{% static 'testsite/images/photos/portrait-10.jpg' %}" alt="Portfolio attēls 2">
+                            <img src="{% static 'testsite/images/photos/portrait-10.jpg' %}" alt="Portfolio attēls 3">
+                            <img src="{% static 'testsite/images/photos/portrait-10.jpg' %}" alt="Portfolio attēls 4">
+                            <img src="{% static 'testsite/images/photos/portrait-10.jpg' %}" alt="Portfolio attēls 5">
+                        </div>
                     </div>
                 </article>
             </div>

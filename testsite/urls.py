@@ -10,4 +10,5 @@ urlpatterns = [
     path('aizmirsu-paroli/', views.aizmirsu_paroli, name='aizmirsu-paroli'),
     path('meklesana/', views.meklesana, name='meklesana'),
     path('profils/', views.profils, name='profils'),
+    path('profils_fotogr/', views.profils_fotogr, name='profils_fotogr'),
 ]

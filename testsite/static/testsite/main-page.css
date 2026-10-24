@@ -451,7 +451,7 @@ a {
     /*overflow-wrap: anywhere;*/
 }
 /* ja būtu portfolio*/
-/* Portfolio virsraksts un poga /
+/* Portfolio virsraksts un poga */
 .portfolio-header {
     display: flex;
     justify-content: space-between;
@@ -473,7 +473,7 @@ a {
     flex-shrink: 0;
 }
 
-/* Portfolio kartīšu režģis /
+/* Portfolio kartīšu režģis */
 .portfolio-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -486,7 +486,7 @@ a {
     color: var(--cream);
 }
 
-/*Portfolio attēla vietturis /
+/*Portfolio attēla vietturis */
 .portfolio-image {
     width: 100%;
     aspect-ratio: 260 / 168;
@@ -503,7 +503,7 @@ a {
 .portfolio-image span {
     padding: 8px;
 }
-/* Portfolio darba nosaukums /
+/* Portfolio darba nosaukums */
 .portfolio-card h3 {
     margin: 14px 10px 8px;
     color: var(--cream);
@@ -512,7 +512,7 @@ a {
     overflow-wrap: anywhere;
 }
 
-/* Katra darba apraksts /
+/* Katra darba apraksts */
 .portfolio-description {
     min-height: 109px;
     display: flex;
@@ -528,100 +528,5 @@ a {
 
 .portfolio-description p {
     margin: 0;
-    /*overflow-wrap: anywhere;/
+    /*overflow-wrap: anywhere;*/
 }
-*/
-
-/*========================================
-   RESPONSĪVAIS PROFILA IZKĀRTOJUMS
-   ======================================== /
-
-@media (max-width: 1100px) {
-    .profile {
-        padding: 24px 18px;
-    }
-
-    .profile-header {
-        grid-template-columns: 100px minmax(130px, 0.7fr)
-            minmax(0, 1fr);
-        gap: 12px;
-    }
-
-    .profile-avatar {
-        width: 100px;
-        height: 125px;
-    }
-
-    .portfolio-grid {
-        column-gap: 16px;
-    }
-
-    .edit-profile-btn,
-    .edit-portfolio-btn {
-        min-width: 0;
-        padding: 10px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 760px) {
-    .profile-header {
-        grid-template-columns: 90px minmax(0, 1fr);
-    }
-
-    .profile-avatar {
-        width: 90px;
-        height: 110px;
-    }
-
-    .profile-details h1 {
-        margin-bottom: 15px;
-    }
-
-    .profile-description {
-        grid-column: 1 / -1;
-        min-height: 90px;
-    }
-
-    .portfolio-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px 12px;
-    }
-
-    .portfolio-header {
-        padding-left: 0;
-    }
-
-    .edit-portfolio-btn {
-        min-height: 48px;
-    }
-
-    .portfolio-description {
-        min-height: 80px;
-    }
-}
-
-@media (max-width: 480px) {
-    .profile {
-        padding: 16px 12px;
-    }
-
-    .portfolio-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .portfolio-header {
-        align-items: flex-start;
-        flex-wrap: wrap;
-    }
-
-    .profile-header {
-        grid-template-columns: 80px minmax(0, 1fr);
-    }
-
-    .profile-avatar {
-        width: 80px;
-        height: 100px;
-    }
-}
-*/

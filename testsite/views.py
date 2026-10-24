@@ -19,3 +19,6 @@ def meklesana(request):
 
 def profils(request):
     return render(request, 'testsite/profils.html')
+
+def profils_fotogr(request):
+    return render(request, 'testsite/profils_fotogr.html')

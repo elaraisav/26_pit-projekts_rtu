@@ -7,7 +7,7 @@
     --cream: #FDF9ED;
     --terracotta: #D68A71;
 }
-
+/* Sākumlapas formatējums */
 /* Pamata iestatījumi */
 * {
     box-sizing: border-box;
@@ -92,6 +92,7 @@ a {
     outline: 2px solid var(--terracotta);
 }
 
+/* Pogu formatējums nestrādā, pārbaudīt */
 .search-btn,
 .profile-btn {
     display: inline-flex;
@@ -318,27 +319,52 @@ a {
     cursor: not-allowed;
 }
 
-/* Planšetdatori */
-@media (max-width: 1000px) {
-    .topbar {
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        gap: 14px;
-        padding: 14px 18px;
-    }
-
-    .logo-link img {
-        width: 120px;
-        height: 48px;
-    }
-
-    .mainpage {
-        grid-template-columns: 220px minmax(0, 1fr);
-        gap: 18px;
-        padding: 20px;
-    }
-
-    .photo-track {
-        grid-auto-columns: calc((100% - 16px) / 2);
-        gap: 16px;
-    }
+/* Meklēšanas lapas elementu formatējums */
+/* Pagaidu formatējuma kods no W3Schools par range slider */
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
 }
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  border-radius: 50%; /* Aplītis, ko velk, lai lietotu slider */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+    border-radius: 50%;
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+/* ... */
+
+
+
+
+/* Profila elementu formatējums */

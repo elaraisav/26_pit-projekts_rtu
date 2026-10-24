@@ -27,36 +27,41 @@
         <aside class="sidebar">
             <h3>Filtri</h3>
             <form class="filtri"> <!-- Vertibām vajadzētu tikt nosūtītām meklēsanas joslai -->
-                <label for="seciba">Lietotāju secība:</label><br> <!-- Kļūda specifikācijā - pamainiju Nosaukums kā lietotāju izvades secību -->
-                <select name="seciba" id="seciba">
-                    <option value="A-Z">A-Z</option>
-                    <option value="Z-A">Z-A</option>
-                    <option value="jaunakie">Jaunākie vispirms</option>
-                    <option value="kazu">Vecākie vispirms</option>
-                </select>
-                <br>
-                <label for="specialitate">Fotogrāfa specialitāte:</label><br>
-                <select name="specialitate" id="specialitate">
-                    <option value="portreti">Portreti</option>
-                    <option value="ainavas">Dabas ainavas</option>
-                    <option value="produktu">Produktu</option>
-                    <option value="kazu">Kāzu</option>
-                    <option value="dzivnieku">Dzīvnieku</option>
-                </select>
-                <br>
-                <label for="lokacija">Lokācija:</label><br>
-                <select name="lokacija" id="lokacija">
-                    <option value="lv">Latvija</option>
-                    <option value="lt">Lietuva</option>
-                    <option value="ee">Igaunija</option>
-                    <option value="fi">Somija</option>
-                </select>
-                <br>
-                <!-- Parveidojam par slideri, jo specifizējot katru cenu diapazonu būtu neiespējami -->
-                <div class="slidecontainer"></div> 
-                    <label for="cenu_diapazons">Cenu diapazons:</label><br>
-                    <input type="range" min="0" max="1000" value="50" class="slider" id="range" name="cenu_diapazons">
-                    <p>Izvēlētā cena: <span id="cena_izvade">50</span> €</p>
+                <div class="filtrs">
+                    <label for="seciba">Lietotāju secība:</label> <!-- Kļūda specifikācijā - pamainiju Nosaukums kā lietotāju izvades secību -->
+                    <select name="seciba" id="seciba">
+                        <option value="A-Z">A-Z</option>
+                        <option value="Z-A">Z-A</option>
+                        <option value="jaunakie">Jaunākie vispirms</option>
+                        <option value="kazu">Vecākie vispirms</option>
+                    </select>
+                </div>
+                <div class="filtrs">
+                    <label for="specialitate">Fotogrāfa specialitāte:</label>
+                    <select name="specialitate" id="specialitate">
+                        <option value="portreti">Portreti</option>
+                        <option value="ainavas">Dabas ainavas</option>
+                        <option value="produktu">Produktu</option>
+                        <option value="kazu">Kāzu</option>
+                        <option value="dzivnieku">Dzīvnieku</option>
+                    </select>
+                </div>
+                <div class="filtrs">
+                    <label for="lokacija">Lokācija:</label>
+                    <select name="lokacija" id="lokacija">
+                        <option value="lv">Latvija</option>
+                        <option value="lt">Lietuva</option>
+                        <option value="ee">Igaunija</option>
+                        <option value="fi">Somija</option>
+                    </select>
+                </div>
+                <div class="filtrs">
+                    <!-- Parveidojam par slideri, jo specifizējot katru cenu diapazonu būtu neiespējami -->
+                    <div class="slidecontainer"></div> 
+                        <label for="cenu_diapazons">Cenu diapazons:</label>
+                        <input type="range" min="0" max="1000" value="50" class="slider" id="range" name="cenu_diapazons">
+                        <p>Izvēlētā cena: <span id="cena_izvade">50</span> €</p>
+                </div>
             </form>
         </aside>
         <main class="search-results">

@@ -368,3 +368,260 @@ a {
 
 
 /* Profila elementu formatējums */
+/* Galvenā profila zona */
+.profile {
+    min-width: 0;
+    padding: 33px 28px 20px;
+    border-radius: 12px;
+    background: var(--cream);
+    color: var(--navy);
+}
+
+/* Profila attēls, vārds un apraksts */
+.profile-header {
+    display: grid;
+    grid-template-columns: 120px 165px minmax(0, 1fr);
+    align-items: start;
+    gap: 15px;
+    margin-bottom: 70px;
+}
+/*profila attēls*/
+.profile-avatar {
+    display: block;
+    width: 120px;
+    height: 141px;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+   /* background: var(--cream);*/
+    object-fit: cover;
+}
+/*Vārda un profila rediģēšanas poga */
+.profile-details {
+    /*min-width: 0;*/
+    padding-top: 9px;
+}
+
+.profile-details h1 {
+    margin: 0 0 39px;
+    font-size: 18px;
+    font-weight: normal;
+    /*overflow-wrap: anywhere;*/
+}
+/* arī ja šī būtu versija piekš fotogrāfa profila skata uz savu profilu*/
+.edit-profile-btn, .edit-portfolio-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    padding: 10px 16px;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: var(--green);
+    color: var(--navy);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.edit-profile-btn:hover, .edit-portfolio-btn:hover {
+    background: var(--terracotta);
+    color: var(--navy);
+}
+.edit-profile-btn:focus-visible, .edit-portfolio-btn:focus-visible {
+    outline: 3px solid var(--terracotta);
+    outline-offset: 3px;
+}
+
+.profile-description {
+   /* min-width: 0;*/
+    min-height: 132px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid var(--navy);
+    border-radius: 25px;
+    background: var(--green);
+    color: var(--navy);
+    text-align: center;
+}
+
+.profile-description p {
+    margin: 0;
+    /*overflow-wrap: anywhere;*/
+}
+/* ja būtu portfolio*/
+/* Portfolio virsraksts un poga /
+.portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 0 0 19px;
+    padding: 0 0 0 10px;
+}
+
+.portfolio-header h2 {
+    margin: 0;
+    color: var(--cream);
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.edit-portfolio-btn {
+    min-width: 180px;
+    flex-shrink: 0;
+}
+
+/* Portfolio kartīšu režģis /
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 20px;
+}
+
+.portfolio-card {
+    min-width: 0;
+    color: var(--cream);
+}
+
+/*Portfolio attēla vietturis /
+.portfolio-image {
+    width: 100%;
+    aspect-ratio: 260 / 168;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    background: var(--cream);
+    color: var(--navy);
+    text-align: center;
+}
+.portfolio-image span {
+    padding: 8px;
+}
+/* Portfolio darba nosaukums /
+.portfolio-card h3 {
+    margin: 14px 10px 8px;
+    color: var(--cream);
+    font-size: 18px;
+    font-weight: normal;
+    overflow-wrap: anywhere;
+}
+
+/* Katra darba apraksts /
+.portfolio-description {
+    min-height: 109px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    border: 2px solid var(--navy);
+    border-radius: 20px;
+    background: var(--green);
+    color: var(--navy);
+    text-align: center;
+}
+
+.portfolio-description p {
+    margin: 0;
+    /*overflow-wrap: anywhere;/
+}
+*/
+
+/*========================================
+   RESPONSĪVAIS PROFILA IZKĀRTOJUMS
+   ======================================== /
+
+@media (max-width: 1100px) {
+    .profile {
+        padding: 24px 18px;
+    }
+
+    .profile-header {
+        grid-template-columns: 100px minmax(130px, 0.7fr)
+            minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 125px;
+    }
+
+    .portfolio-grid {
+        column-gap: 16px;
+    }
+
+    .edit-profile-btn,
+    .edit-portfolio-btn {
+        min-width: 0;
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 760px) {
+    .profile-header {
+        grid-template-columns: 90px minmax(0, 1fr);
+    }
+
+    .profile-avatar {
+        width: 90px;
+        height: 110px;
+    }
+
+    .profile-details h1 {
+        margin-bottom: 15px;
+    }
+
+    .profile-description {
+        grid-column: 1 / -1;
+        min-height: 90px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 12px;
+    }
+
+    .portfolio-header {
+        padding-left: 0;
+    }
+
+    .edit-portfolio-btn {
+        min-height: 48px;
+    }
+
+    .portfolio-description {
+        min-height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile {
+        padding: 16px 12px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .profile-header {
+        grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 100px;
+    }
+}
+*/

@@ -7,5 +7,67 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
 </head>
+ <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+        <!-- ChatGPT ieteikums -->
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+            <!-- Vai kāds atceras kas vietnei bija izdomātais nosaukums?-->
+        </a>
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
+            <button type="submit" id="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+        </form>
+        <!-- klienta profila variants? -->
+        <button id="profila-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+        <!--<form action="{% url 'testsite:profils' %}" method="get">
+            <button id="profila-btn"> &lt;&lt; Atpakaļ</button>
+        </form>-->
+        
+    </header>
 <body>
+      <div class="mainpage">
+        <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
+            <h3>Aktīvās sarakstes</h3>
+            <div class="profili">
+                <article class="profils"> <!-- ChatCPT ieteikums -->
+                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Anna Bērziņa</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+                <article class="profils">
+                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
+                    <div class="profile-info">
+                        <p>Jānis Ozols</p>
+                        <a href="#" class="chat-btn">Sarakstīties</a>
+                    </div>
+                </article>
+            </div>
+        </aside>
+        <main class="profile">
+        <div class="container">
+      <!--  <main class="profile">  man patīk kā izstatās kad šo pieliek... pielikt pading kaut kur?-->
+
+            <!-- Profila augšējā sadaļa -->
+            <section class="profile-header">
+                <img
+                    src="{% static 'testsite/images/profilepic1.jpg' %}"
+                    alt="Profila attēls"
+                    class="profile-avatar"> <!--avatar? -->
+
+                <div class="profile-details">
+                    <h1>Vārds Uzvārds</h1>
+                    <button type="button" class="edit-profile-btn">Rediģēt profilu </button>
+                </div>
+
+                <div class="profile-description">
+                    <p>Apraksts</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+        </main>
+    </div>
 </body>

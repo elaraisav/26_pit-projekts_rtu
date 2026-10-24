@@ -11,9 +11,6 @@ def registracija(request):
 def sakumlapa(request):
     return render(request, 'testsite/sakumlapa.html')
 
-def aizmirsu_paroli(request):
-    return render(request, 'testsite/aizmirsu-paroli.html')
-
 def meklesana(request):
     return render(request, 'testsite/meklesana.html')
 

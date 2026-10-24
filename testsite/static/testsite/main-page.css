@@ -362,6 +362,120 @@ a {
   cursor: pointer; /* Cursor on hover */
 }
 
+/* Meklēšanas rezultātu kopējais konteiners */
+.meklesanas_rezultati {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Viens fotogrāfa rezultāts */
+.meklesanas_rezultats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding: 20px;
+    border-radius: 12px;
+
+    background: var(--cream);
+    color: var(--navy);
+
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+}
+
+/* Profila bilde, informācija un poga */
+.fotografa-galvene {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Fotogrāfa profila bilde */
+.fotografa-galvene .avatar {
+    flex-shrink: 0;
+
+    width: 120px;
+    height: 120px;
+
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Vārds, uzvārds un apraksts */
+.fotografa-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.fotografa-info h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.fotografa-info p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* Profila poga zem vārda */
+.fotografa-profila-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+    align-self: flex-start;
+
+    margin-top: 38px;
+    padding: 10px 16px;
+
+    border-radius: 8px;
+    background: var(--navy);
+    color: var(--cream);
+
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.fotografa-profila-btn:hover {
+    background: var(--terracotta);
+    color: var(--navy);
+}
+
+/* Portfolio sadaļa */
+.fotografa-portfolio {
+    min-width: 0;
+}
+
+.fotografa-portfolio h4 {
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+
+/* Pieci portfolio attēli vienā rindā */
+.portfolio-attelu-virkne {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.portfolio-attelu-virkne img {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 4 / 3;
+
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--green);
+}
+
 /* ... */
 
 

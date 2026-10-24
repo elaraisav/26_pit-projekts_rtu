@@ -15,11 +15,13 @@
         </a>
         <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
             <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
-            <button type="submit" id="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+            <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
         </form>
         <!-- fotogrāfa profils, klienta skats -->
-        <!-- klienta profila variants? -->
-        <button id="profila-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+        <form action="{% url 'testsite:profils' %}" method="get">
+            <button class="profile-btn">Mans Profils</button>
+        <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+        </form>
     </header>
 <body>
       <div class="mainpage">
@@ -47,24 +49,16 @@
         <div class="container">
             <!-- Profila augšējā sadaļa -->
             <section class="profile-header">
-
                 <img
                     src="{% static 'testsite/images/profilepic1.jpg' %}"
                     alt="Profila attēls"
                     class="profile-avatar">
-
                 <div class="profile-details">
                     <h1>Vārds Uzvārds</h1>
-                    <!--
-                    <button type="button" class="edit-profile-btn">
-                        Rediģēt profilu
-                    </button>-->
                 </div>
-
                 <div class="profile-description">
                     <p>Apraksts</p>
                 </div>
-
             </section>
 
             <!-- Portfolio virsraksts -->
@@ -72,32 +66,78 @@
 
                 <div class="portfolio-header">
                     <h2>Portfolio:</h2>
-
-                    <!--<button type="button" class="edit-portfolio-btn">
-                        Rediģēt portfolio
-                    </button>-->
                 </div>
 
                 <!-- Portfolio fotogrāfijas -->
                 <div class="portfolio-grid">
 
-                    {% for n in "123456" %}
-                    <article class="portfolio-card">
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/nature-01.jpg' %}"
+                            alt="Portfolio attēls 1">
+                    </div>
+                    <h3>Nosaukums 1</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 1</p>
+                    </div>
+                </article>
 
-                        <div class="portfolio-image">
-                            <span>Attēls</span>
-                        </div>
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/portrait-01.jpg' %}"
+                            alt="Portfolio attēls 2">
+                    </div>
+                    <h3>Nosaukums 2</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 2</p>
+                    </div>
+                </article>
 
-                        <h3>Nosaukums</h3>
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/portrait-02.jpg' %}"
+                            alt="Portfolio attēls 3">
+                    </div>
+                    <h3>Nosaukums 3</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 3</p>
+                    </div>
+                </article>
 
-                        <div class="portfolio-description">
-                            <p>Apraksts</p>
-                        </div>
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/nature-05.jpg' %}"
+                            alt="Portfolio attēls 4">
+                    </div>
+                    <h3>Nosaukums 4</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 4</p>
+                    </div>
+                </article>
 
-                    </article>
-                    {% endfor %}
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/nature-02.jpg' %}"
+                            alt="Portfolio attēls 5">
+                    </div>
+                    <h3>Nosaukums 5</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 5</p>
+                    </div>
+                </article>
 
-                </div>
+                <article class="portfolio-card">
+                    <div class="portfolio-image">
+                        <img src="{% static 'testsite/images/photos/nature-06.jpg' %}"
+                            alt="Portfolio attēls 6">
+                    </div>
+                    <h3>Nosaukums 6</h3>
+                    <div class="portfolio-description">
+                        <p>Apraksts 6</p>
+                    </div>
+                </article>
+
+            </div>
             </section>
 
         </main>

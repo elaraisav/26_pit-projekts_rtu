@@ -22,3 +22,9 @@ def profils_fotogr(request):
 
 def profils_fotogr_klienta(request):
     return render(request, 'testsite/profils_fotogr_klienta.html')
+
+def profila_regid(request):
+    return render(request, 'testsite/profila_regid.html')
+
+def portfolio_regid(request):
+    return render(request, 'testsite/portfolio_regid.html')

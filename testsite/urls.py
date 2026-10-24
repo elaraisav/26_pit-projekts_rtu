@@ -11,4 +11,6 @@ urlpatterns = [
     path('profils/', views.profils, name='profils'),
     path('profils_fotogr/', views.profils_fotogr, name='profils_fotogr'),
     path('profils_fotogr_klienta/', views.profils_fotogr_klienta, name='profils_fotogr_klienta'),
+    path('profila_regid/', views.profila_regid, name='profila_regid'),
+    path('portfolio_regid/', views.portfolio_regid, name='portfolio_regid'),
 ]

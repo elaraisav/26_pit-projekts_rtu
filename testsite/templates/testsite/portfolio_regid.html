@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio rediģēšana</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}"
+                 alt="Vietnes logo">
+        </a>
+
+        <form class="topbar-form"
+              action="{% url 'testsite:meklesana' %}"
+              method="get">
+            <input type="search"
+                   name="q"
+                   placeholder="Meklējiet fotogrāfu..."
+                   aria-label="Meklēt fotogrāfu">
+            <button type="submit" class="search-btn">Meklēt</button>
+        </form>
+
+        <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+    </header>
+
+    <main class="edit-page">
+        <section class="edit-panel edit-portfolio-panel">
+
+            <!-- Attēla pievienošana -->
+            <div class="portfolio-upload-column">
+                <label for="portfolioImage"
+                       class="portfolio-upload-area">
+                    <img id="portfolioPreview"
+                         src=""
+                         alt=""
+                         hidden>
+
+                    <span id="uploadText">
+                        Pievienot attēlu / Attēls
+                    </span>
+                </label>
+            </div>
+
+            <!-- Portfolio apraksts un pogas -->
+            <form class="edit-form"
+                  method="post"
+                  enctype="multipart/form-data"
+                  action="">
+                {% csrf_token %}
+
+                <input type="file"
+                       name="portfolio_image"
+                       id="portfolioImage"
+                       accept="image/*"
+                       hidden>
+
+                <label for="portfolioDescription"
+                       class="edit-description-label">
+                    Apraksts
+                </label>
+
+                <textarea id="portfolioDescription"
+                          name="description"
+                          class="edit-description-input"
+                          placeholder="Ievadiet attēla aprakstu...">{{ portfolio_item.description|default_if_none:"" }}</textarea>
+
+                <div class="edit-actions">
+                    <button type="submit"
+                            class="edit-save-button">
+                        Saglabāt portfolio izmaiņas
+                    </button>
+
+                    <button type="button"
+                            class="edit-delete-button"
+                            onclick="document.getElementById('deleteImageDialog').showModal()">
+                        Dzēst attēlu
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Attēla dzēšanas apstiprinājums -->
+        <dialog id="deleteImageDialog" class="confirm-dialog">
+            <h2>Dzēst attēlu?</h2>
+            <p>Vai tiešām vēlaties dzēst šo portfolio attēlu?</p>
+
+            <div class="dialog-actions">
+                <button type="button"
+                        class="edit-save-button"
+                        onclick="document.getElementById('deleteImageDialog').close()">
+                    Atcelt
+                </button>
+                <button class="edit-delete-button" type="submit" onclick="history.back()"> Jā, dzēst attēlu</button>
+            </div>
+        </dialog>
+    </main>
+<!--
+    <script>
+        const portfolioInput = document.getElementById("portfolioImage");
+        const portfolioPreview = document.getElementById("portfolioPreview");
+        const uploadText = document.getElementById("uploadText");
+
+        portfolioInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (file && file.type.startsWith("image/")) {
+                portfolioPreview.src = URL.createObjectURL(file);
+                portfolioPreview.hidden = false;
+                uploadText.hidden = true;
+            }
+        });
+    </script>-->
+</body>
+</html>

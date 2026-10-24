@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profila rediģēšana</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}"
+                 alt="Vietnes logo">
+        </a>
+
+        <form class="topbar-form"
+              action="{% url 'testsite:meklesana' %}"
+              method="get">
+            <input type="search"
+                   name="q"
+                   placeholder="Meklējiet fotogrāfu..."
+                   aria-label="Meklēt fotogrāfu">
+            <button type="submit" class="search-btn">Meklēt</button>
+        </form>
+
+        <button class="profile-btn" type="button"onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+    </header>
+
+    <main class="edit-page">
+        <section class="edit-panel edit-profile-panel">
+
+            <!-- Profila attēls -->
+            <div class="edit-photo-column">
+                <div class="edit-profile-photo">
+                    {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}"
+                             alt="Profila attēls"
+                             id="profilePreview">
+                    {% else %}
+                        <img src="{% static 'testsite/images/profilepic1.jpg' %}"
+                             alt="Profila attēls"
+                             id="profilePreview">
+                    {% endif %}
+                </div>
+
+                <label for="profileImage"
+                       class="edit-photo-button">
+                    Mainīt attēlu
+                </label>
+            </div>
+
+            <!-- Apraksts un saglabāšanas pogas -->
+            <form class="edit-form"
+                  method="post"
+                  enctype="multipart/form-data"
+                  action="">
+                {% csrf_token %}
+
+                <input type="file"
+                       name="profile_image"
+                       id="profileImage"
+                       accept="image/*"
+                       hidden>
+
+                <label class="edit-description-label"
+                       for="profileDescription">
+                    Apraksts
+                </label>
+
+                <textarea id="profileDescription"
+                          name="description"
+                          class="edit-description-input"
+                          placeholder="Ievadiet savu aprakstu...">{{ user.profile.description|default_if_none:"" }}</textarea>
+
+                <div class="edit-actions">
+                    <button type="submit"
+                            class="edit-save-button">
+                        Saglabāt profila izmaiņas
+                    </button>
+
+                    <button type="button"
+                            class="edit-delete-button"
+                            onclick="document.getElementById('deleteAccountDialog').showModal()">
+                        Dzēst kontu
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Konta dzēšanas apstiprinājums -->
+        <dialog id="deleteAccountDialog" class="confirm-dialog">
+            <h2>Dzēst kontu?</h2>
+            <p>Vai tiešām vēlaties dzēst savu kontu?</p>
+
+            <div class="dialog-actions">
+                <button class="edit-save-button" type="button"onclick="history.back()"> Atcelt</button>
+                <!--<button type="button"
+                        class="edit-save-button"
+                        onclick="document.getElementById('deleteAccountDialog').close()">
+                    Atcelt
+                </button>-->
+
+               <!-- <form method="post"
+                      action="{% url 'testsite:profils' %}"> <!-- konta_dzesana
+                    {% csrf_token %} -->
+                    <button class="edit-delete-button" type="button"onclick="history.back()"> Jā, dzēst kontu</button>
+               <!-- </form> -->
+            </div>
+        </dialog>
+    </main>
+<!--
+    <script>
+        const profileInput = document.getElementById("profileImage");
+        const profilePreview = document.getElementById("profilePreview");
+
+        profileInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (file && file.type.startsWith("image/")) {
+                profilePreview.src = URL.createObjectURL(file);
+            }
+        });
+    </script>-->
+</body>
+</html>

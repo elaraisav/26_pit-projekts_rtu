@@ -703,3 +703,271 @@ a {
     margin: 0;
     /*overflow-wrap: anywhere;*/
 }
+/*PROFILA UN PORTFOLIO REDIĢĒŠANAS LAPAS*/
+
+.edit-page {
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    padding: 28px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.edit-panel {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.2fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    min-height: 310px;
+    padding: 24px 32px;
+    border: 1px solid var(--navy);
+    background: var(--cream);
+    color: var(--navy);
+}
+
+/* Kreisā kolonna */
+.edit-photo-column,
+.portfolio-upload-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+/* Apaļais profila attēls */
+.edit-profile-photo {
+    width: min(100%, 175px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid var(--navy);
+    border-radius: 50%;
+    background: white;
+}
+
+.edit-profile-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Mainīt attēlu poga */
+.edit-photo-button {
+    display: none;
+}
+
+/* Profila attēla un pogas izkārtojums */
+.edit-profile-panel .edit-photo-column {
+    flex-direction: column;
+    gap: 14px;
+}
+
+.edit-profile-panel .edit-photo-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--navy);
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--navy);
+    cursor: pointer;
+    text-align: center;
+}
+
+.edit-profile-panel .edit-photo-button:hover {
+    background: var(--terracotta);
+}
+
+/* Labā kolonna: apraksts un pogas */
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 14px;
+}
+
+.edit-description-label {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.edit-description-input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 150px;
+    flex: 1;
+    padding: 12px;
+    resize: vertical;
+    border: 1px solid var(--navy);
+    border-radius: 0;
+    background: white;
+    color: var(--navy);
+    font: inherit;
+    line-height: 1.5;
+}
+
+.edit-description-input:focus {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+}
+
+/* Pogas zem apraksta */
+.edit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.edit-save-button,
+.edit-delete-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 52px;
+    padding: 10px 16px;
+    border: 1px solid var(--navy);
+    border-radius: 12px;
+    background: var(--green);
+    color: var(--navy);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.edit-save-button {
+    flex: 1 1 180px;
+}
+
+.edit-delete-button {
+    flex: 0 1 auto;
+}
+
+.edit-save-button:hover,
+.edit-delete-button:hover {
+    background: var(--terracotta);
+    color: var(--navy);
+}
+
+.edit-save-button:focus-visible,
+.edit-delete-button:focus-visible,
+.edit-photo-button:focus-visible,
+.portfolio-upload-area:focus-visible {
+    outline: 3px solid var(--terracotta);
+    outline-offset: 3px;
+}
+
+/* Portfolio attēla pievienošanas laukums */
+.portfolio-upload-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 230px;
+    overflow: hidden;
+    border: 1px solid var(--navy);
+    background: white;
+    color: var(--navy);
+    text-align: center;
+    cursor: pointer;
+}
+
+.portfolio-upload-area span {
+    padding: 12px;
+}
+
+.portfolio-upload-area img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: white;
+}
+
+/* Apstiprinājuma logs */
+.confirm-dialog {
+    width: min(90%, 420px);
+    padding: 24px;
+    border: 1px solid var(--navy);
+    border-radius: 12px;
+    background: var(--cream);
+    color: var(--navy);
+}
+
+.confirm-dialog::backdrop {
+    background: rgb(0 0 0 / 55%);
+}
+
+.confirm-dialog h2 {
+    margin-top: 0;
+    font-size: 21px;
+}
+
+.dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dialog-actions form {
+    display: flex;
+}
+
+/* Pielāgošana telefoniem un mazākiem ekrāniem */
+@media (max-width: 650px) {
+    .edit-page {
+        padding: 16px;
+    }
+
+    .edit-panel {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+        padding: 20px;
+    }
+
+    .edit-profile-panel .edit-photo-column {
+        gap: 12px;
+    }
+
+    .edit-profile-photo {
+        width: 145px;
+    }
+
+    .edit-description-input {
+        min-height: 140px;
+    }
+
+    .portfolio-upload-area {
+        min-height: 220px;
+    }
+
+    .edit-actions {
+        flex-direction: column;
+    }
+
+    .edit-save-button,
+    .edit-delete-button {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .dialog-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dialog-actions form {
+        width: 100%;
+    }
+}

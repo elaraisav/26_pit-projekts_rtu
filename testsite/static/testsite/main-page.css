@@ -323,7 +323,34 @@ a {
 }
 
 /* Meklēšanas lapas elementu formatējums */
-/* Fltru formatējums */
+/* Filtru kopējais konteiners */
+.filtri {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Atstarpe starp filtriem */
+}
+
+/* Katrs atsevišķais filtrs */
+.filtrs {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;  /* Neliela atstarpe starp label un select */
+}
+
+/* Vienots select un range platums */
+.filtrs select,
+.filtrs .slider {
+    width: 100%;
+}
+
+.filtrs label {
+    font-weight: 600;
+}
+
+.filtrs p {
+    margin: 4px 0 0;
+}
+
 /* Paša select lauka izskats */
 .sidebar select{
     padding: 6px 32px 6px 10px;

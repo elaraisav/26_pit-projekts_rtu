@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tērzētava</title>
+
+    {% load static %}
+
+    <link rel="stylesheet"
+          href="{% static 'testsite/main-page.css' %}">
+    <script src="{% static 'testsite/tezeretava.js' %}" defer></script>
+</head>
+
+<body class="chat-page">
+
+    <!-- Augšējā josla -->
+    <header class="topbar chat-topbar">
+        <a class="logo-link"
+           href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}"
+                 alt="Vietnes logo">
+        </a>
+    </header>
+
+    <div class="mainpage chat-layout">
+
+        <!-- Kreisais sānpanelis -->
+        <aside class="sidebar chat-sidebar">
+
+            <section class="chat-options">
+                <h2>Opcijas</h2>
+
+                <a class="chat-back-btn"
+                   href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ
+                </a>
+            </section>
+
+            <section class="chat-contacts">
+                <h2>Aktīvās sarakstes</h2>
+
+                <div class="profili">
+
+                    <article class="profils chat-contact">
+                        <img
+                            src="{% static 'testsite/images/profilepic1.jpg' %}"
+                            alt="Annas profila attēls"
+                            class="avatar">
+
+                        <div class="profile-info">
+                            <p>Anna Bērziņa</p>
+                            <a href="#" class="chat-btn"
+                               aria-current="page">
+                                Sazinies
+                            </a>
+                        </div>
+                    </article>
+
+                    <article class="profils chat-contact">
+                        <img
+                            src="{% static 'testsite/images/profilepic2.jpg' %}"
+                            alt="Jāņa profila attēls"
+                            class="avatar">
+
+                        <div class="profile-info">
+                            <p>Jānis Ozols</p>
+                            <a href="#" class="chat-btn">
+                                Sazinies
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+        </aside>
+
+        <!-- Galvenā tērzētavas zona -->
+        <main class="chat-main">
+
+            <!-- Sarunas galvene -->
+            <header class="chat-header">
+
+                <div class="chat-user">
+                    <img
+                        src="{% static 'testsite/images/profilepic1.jpg' %}"
+                        alt="Lietotāja profila attēls"
+                        class="chat-user-avatar">
+
+                    <p>Vārds Uzvārds</p>
+                </div>
+
+                <button type="button" class="chat-report-btn"
+                        id="report-user-btn">
+                    Ziņot par<br> lietotāju
+                </button>
+
+            </header>
+            <!-- Sarunas saturs -->
+            <section class="chat-conversation"
+                     aria-label="Ziņojumu saruna">
+
+                <!-- Kreisajā pusē: maksājuma pieprasījums -->
+                <div class="chat-left-content">
+
+                    <p class="chat-sender">Vārds Uzvārds</p>
+
+                    <article class="chat-payment-card">
+                        <p>Pieprasījums pēc<br> samaksas</p>
+
+                        <button type="button"
+                                class="chat-action-btn"
+                                id="pay-btn">
+                            Maksāt
+                        </button>
+                    </article>
+
+                    <!-- Attēlu augšupielāde -->
+                    <form class="chat-upload-card"
+                          id="upload-form"
+                          enctype="multipart/form-data">
+
+                        <label for="chat-file"
+                               class="chat-file-label">
+                            attēlu faili
+                        </label>
+
+                        <input
+                            type="file"
+                            id="chat-file"
+                            name="attachments"
+                            accept="image/*"
+                            multiple
+                            hidden>
+
+                        <button type="button"
+                                class="chat-action-btn"
+                                id="upload-btn">
+                            Lejupielādēt
+                        </button>
+
+                        <p id="selected-files"
+                           class="chat-file-status"
+                           aria-live="polite">
+                        </p>
+                    </form>
+
+                    <p class="chat-time chat-left-time">
+                        Laiks 00:00
+                    </p>
+
+                </div>
+
+                <!-- Labajā pusē: saņemtie ziņojumi -->
+                <div class="chat-right-content">
+
+                    <div class="chat-message-group">
+                        <p class="chat-sender">Vārds Uzvārds</p>
+
+                        <article class="chat-message">
+                            <p>Ziņa</p>
+                        </article>
+
+                        <article class="chat-message">
+                            <p>Ziņa</p>
+                        </article>
+
+                        <p class="chat-time">Laiks 00:00</p>
+                    </div>
+
+                    <div class="chat-message-group chat-second-group">
+                        <p class="chat-sender">Vārds Uzvārds</p>
+
+                        <article class="chat-message">
+                            <p>Ziņa</p>
+                        </article>
+
+                        <p class="chat-time">Laiks 00:00</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Ziņojuma rakstīšanas josla -->
+            <footer class="chat-compose">
+
+                <form class="chat-compose-form" id="message-form">
+                    <label for="message-input"
+                           class="visually-hidden">
+                        Rakstīt ziņojumu
+                    </label>
+
+                    <input
+                        type="text"
+                        id="message-input"
+                        name="message"
+                        placeholder="Rakstīšanas josla"
+                        autocomplete="off"
+                        required>
+
+                    <button type="submit"
+                            class="chat-send-btn">
+                        Sūtīt
+                    </button>
+                </form>
+
+            </footer>
+
+        </main>
+
+    </div>
+</body>
+</html>

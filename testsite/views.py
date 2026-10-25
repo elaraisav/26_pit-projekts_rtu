@@ -28,3 +28,6 @@ def profila_regid(request):
 
 def portfolio_regid(request):
     return render(request, 'testsite/portfolio_regid.html')
+
+def terzetava(request):
+    return render(request, 'testsite/terzetava.html')

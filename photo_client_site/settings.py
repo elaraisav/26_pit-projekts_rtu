@@ -127,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'lv'
 
 TIME_ZONE = 'UTC'
 
@@ -140,6 +140,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# Authentication
+# https://docs.djangoproject.com/en/6.1/topics/auth/default/
+
+# Our own user model (testsite/models.py). Must be set before the first migrate.
+AUTH_USER_MODEL = 'testsite.User'
+
+# Where @login_required sends visitors who are not logged in, and where to go after login/logout.
+LOGIN_URL = 'testsite:autorizacija'
+LOGIN_REDIRECT_URL = 'testsite:sakumlapa'
+LOGOUT_REDIRECT_URL = 'testsite:autorizacija'
 
 
 # Email

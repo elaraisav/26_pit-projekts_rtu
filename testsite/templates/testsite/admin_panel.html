@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administratora panelis</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/admin-panel.css' %}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+        </a>
+        <div class="topbar-actions">
+            <a class="topbar-btn" href="{% url 'testsite:sakumlapa' %}">Uz vietni</a>
+            <button class="topbar-btn" type="button" disabled> Iziet </button>
+        </div>
+    </header>
+    <div class="main-panel">
+        <h1 class="dashboard-title">
+            Sveicieni, administrator!
+        </h1>
+        <main class="info-panels">
+            <!-- 1. ZIŅOJUMU SARAKSTS -->
+            <section class="info-panel messages-panel">
+                <h2>Ziņojumu saraksts</h2>
+                <div class="message-list">
+                    <div class="message-row">
+                        <span class="message-dot"></span>
+                        <span>Ziņojums #1042</span>
+                        <button class="panel-btn" type="button">
+                            Skatīt ziņojumu
+                        </button>
+                    </div>
+                    <div class="message-row">
+                        <span class="message-dot"></span>
+                        <span>Ziņojums #1041</span>
+                        <button class="panel-btn" type="button">
+                            Skatīt ziņojumu
+                        </button>
+                    </div>
+                    <div class="message-row">
+                        <span class="message-dot"></span>
+                        <span>Ziņojums #1040</span>
+                        <button class="panel-btn" type="button">
+                            Skatīt ziņojumu
+                        </button>
+                    </div>
+                    <div class="message-row">
+                        <span class="message-dot"></span>
+                        <span>Ziņojums #1039</span>
+                        <button class="panel-btn" type="button">
+                            Skatīt ziņojumu
+                        </button>
+                    </div>
+                    <div class="message-row message-more">
+                        <span class="message-dot"></span>
+                        <span>Vēl citi ziņojumi...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. DATUBĀZES DARBĪBA -->
+            <section class="info-panel database-panel">
+                <h2>Datubāzes darbība</h2>
+                <div class="monitor-grid">
+                    <div class="monitor-chart">
+                        <h3>Aizpildījums</h3>
+                        <div class="pie-chart database-pie">
+                            <span class="pie-label pie-label-top">25%</span>
+                            <span class="pie-label pie-label-bottom">75%</span>
+                        </div>
+                        <p class="chart-caption">Izmantoti 75%</p>
+                    </div>
+                    <div class="monitor-details">
+                        <h3>Datubāzes darbības līknes</h3>
+                        <div class="chart-area">
+                            <svg viewBox="0 0 300 100"
+                                class="line-chart"
+                                role="img"
+                                aria-label="Datubāzes aktivitātes grafiks">
+                                <path class="chart-line line-one"
+                                    d="M5 65 L35 38 L65 55 L95 22 L125 48 L155 32 L185 60 L215 44 L245 68 L275 51 L295 62"/>
+                                <path class="chart-line line-two"
+                                    d="M5 78 L35 60 L65 25 L95 43 L125 65 L155 54 L185 34 L215 70 L245 49 L275 75 L295 64"/>
+                                <path class="chart-line line-three"
+                                    d="M5 50 L35 70 L65 58 L95 72 L125 55 L155 76 L185 65 L215 79 L245 60 L275 67 L295 72"/>
+                            </svg>
+                        </div>
+                        <h3>Kļūdu paziņojumi</h3>
+                        <div class="error-log">
+                            <p>2026-10-24 14:23:07 — WARN: lēns vaicājums (283 ms).</p>
+                            <p>2026-10-24 14:23:09 — ERROR: savienojuma mēģinājums neizdevās.</p>
+                            <p>2026-10-24 14:24:01 — WARN: novērota paaugstināta slodze.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. PAKALPOJUMA METRIKAS -->
+            <section class="info-panel metrics-panel">
+                <h2>Pakalpojuma metrikas</h2>
+                <div class="metric-cards">
+                    <article class="metric-card">
+                        <strong>+44</strong>
+                        <span>Reģistrējušies klienti</span>
+                    </article>
+                    <article class="metric-card">
+                        <strong>+75</strong>
+                        <span>Unikāli apmeklētāji</span>
+                    </article>
+                    <article class="metric-card">
+                        <strong>+12</strong>
+                        <span>Aktīvi pakalpojumi</span>
+                    </article>
+                </div>
+                <div class="revenue-panel">
+                    <h3>Ieņēmumi / izdevumi</h3>
+                    <svg viewBox="0 0 400 100"
+                        class="line-chart revenue-chart"
+                        role="img"
+                        aria-label="Ieņēmumu un izdevumu salīdzinājums">
+                        <path class="chart-line line-one"
+                            d="M5 82 L45 55 L85 28 L125 48 L165 20 L205 42 L245 30 L285 57 L325 76 L365 50 L395 68"/>
+                        <path class="chart-line line-two"
+                            d="M5 90 L45 70 L85 52 L125 65 L165 48 L205 60 L245 49 L285 73 L325 88 L365 68 L395 80"/>
+                    </svg>
+                </div>
+            </section>
+
+            <!-- 4. KRĀTUVES DARBĪBA -->
+            <section class="info-panel storage-panel">
+                <h2>Krātuves darbība</h2>
+                <div class="monitor-grid">
+                    <div class="monitor-chart">
+                        <h3>Aizpildījums</h3>
+                        <div class="pie-chart storage-pie">
+                            <span class="pie-label pie-label-top">25%</span>
+                            <span class="pie-label pie-label-bottom">75%</span>
+                        </div>
+                        <p class="chart-caption">Izmantoti 75%</p>
+                    </div>
+                    <div class="monitor-details">
+                        <h3>Krātuves darbības līknes</h3>
+                        <div class="chart-area">
+                            <svg viewBox="0 0 300 100"
+                                class="line-chart"
+                                role="img"
+                                aria-label="Krātuves aktivitātes grafiks">
+                                <path class="chart-line line-one"
+                                    d="M5 72 L35 48 L65 60 L95 25 L125 44 L155 32 L185 62 L215 50 L245 70 L275 46 L295 63"/>
+                                <path class="chart-line line-two"
+                                    d="M5 80 L35 65 L65 30 L95 47 L125 62 L155 52 L185 40 L215 72 L245 54 L275 76 L295 66"/>
+                                <path class="chart-line line-three"
+                                    d="M5 54 L35 72 L65 61 L95 73 L125 57 L155 76 L185 66 L215 80 L245 63 L275 70 L295 74"/>
+                            </svg>
+                        </div>
+                        <h3>Kļūdu paziņojumi</h3>
+                        <div class="error-log">
+                            <p>2026-10-24 14:31:52 — INFO: krātuves pārbaude pabeigta.</p>
+                            <p>2026-10-24 14:31:52 — WARN: brīvas vietas palicis mazāk.</p>
+                            <p>2026-10-24 14:32:10 — ERROR: savienojuma pārtraukums.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

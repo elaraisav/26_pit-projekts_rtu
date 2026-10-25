@@ -28,3 +28,6 @@ def profila_regid(request):
 
 def portfolio_regid(request):
     return render(request, 'testsite/portfolio_regid.html')
+
+def admin_panel(request):
+    return render(request, 'testsite/admin_panel.html')

@@ -84,7 +84,7 @@ a {
     min-width: 125px;
     min-height: 40px;
     padding: 8px 16px;
-    border: 2px solid var(--navy);
+    /*border: 2px solid var(--navy);*/
     border-radius: 8px;
     background: var(--navy);
     color: var(--cream);

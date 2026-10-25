@@ -594,10 +594,10 @@ a {
     justify-content: center;
     min-height: 64px;
     padding: 10px 16px;
-    border: 2px solid var(--navy);
+    /*border: 2px solid var(--navy);*/
     border-radius: 12px;
-    background: var(--green);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;

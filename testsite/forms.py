@@ -41,8 +41,14 @@ class RegistrationForm(UserCreationForm):
         # The rules are shown in the error message when a password is rejected.
         self.fields['password1'].help_text = ''
 
+    def clean_username(self):
+        # Skip UserCreationForm's duplicate check (see validate_unique below).
+        return self.cleaned_data['username']
+
     def clean_email(self):
-        email = self.cleaned_data['email'].lower()
-        if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('Lietotājs ar šādu e-pastu jau eksistē.')
-        return email
+        return self.cleaned_data['email'].lower()
+
+    # Username/e-mail uniqueness is not reported here: the view checks it and
+    # shows the same page either way, so the form never reveals which accounts exist.
+    def validate_unique(self):
+        pass

@@ -7,7 +7,9 @@
 
     {% load static %}
 
-    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'testsite/main-page.css' %}">
+    <script src="{% static 'testsite/chat.js' %}" defer></script>
 </head>
 
 <body class="chat-page">
@@ -28,137 +30,84 @@
 
             <section class="chat-options">
                 <h2>Opcijas</h2>
-                <a class="chat-back-btn" href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ</a>
+
+                <a class="chat-back-btn"
+                   href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ
+                </a>
+
+                <!-- Start a conversation with someone of the other role -->
+                <form class="chat-new-form" method="post" action="{% url 'testsite:chat_start' %}">
+                    {% csrf_token %}
+                    <label for="chat-new-user">
+                        {% if user.is_photographer %}Jauna saruna ar klientu{% else %}Jauna saruna ar fotogrāfu{% endif %}
+                    </label>
+                    {% if new_contacts %}
+                        <select id="chat-new-user" name="user_id" required>
+                            {% for contact in new_contacts %}
+                                <option value="{{ contact.pk }}">{{ contact.get_full_name|default:contact.username }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="chat-action-btn">Sākt sarunu</button>
+                    {% else %}
+                        <p class="chat-empty">Ar visiem jau ir saruna.</p>
+                    {% endif %}
+                </form>
             </section>
 
             <section class="chat-contacts">
                 <h2>Aktīvās sarakstes</h2>
 
                 <div class="profili">
+                    {% for conversation, other in conversations %}
+                        <article class="profils chat-contact">
+                            <span class="avatar chat-initials" aria-hidden="true">{{ other.get_full_name|default:other.username|slice:":1"|upper }}</span>
 
-                    <article class="profils chat-contact">
-                        <img
-                            src="{% static 'testsite/images/profilepic1.jpg' %}"
-                            alt="Annas profila attēls"
-                            class="avatar">
-
-                        <div class="profile-info">
-                            <p>Anna Bērziņa</p>
-                            <a href="#" class="chat-btn"
-                               aria-current="page">
-                                Sazinies
-                            </a>
-                        </div>
-                    </article>
-
-                    <article class="profils chat-contact">
-                        <img
-                            src="{% static 'testsite/images/profilepic2.jpg' %}"
-                            alt="Jāņa profila attēls"
-                            class="avatar">
-
-                        <div class="profile-info">
-                            <p>Jānis Ozols</p>
-                            <a href="#" class="chat-btn">
-                                Sazinies
-                            </a>
-                        </div>
-                    </article>
-
+                            <div class="profile-info">
+                                <p>{{ other.get_full_name|default:other.username }}</p>
+                                <a href="{% url 'testsite:chat_conversation' conversation.pk %}" class="chat-btn"
+                                   {% if conversation == active %}aria-current="page"{% endif %}>
+                                    Sazinies
+                                </a>
+                            </div>
+                        </article>
+                    {% empty %}
+                        <p class="chat-empty">Vēl nav sarunu.</p>
+                    {% endfor %}
                 </div>
             </section>
         </aside>
 
         <!-- Galvenā tērzētavas zona -->
-        <main class="chat-main">
+        {% if active %}
+        <main class="chat-main"
+              data-conversation-id="{{ active.pk }}"
+              data-user-id="{{ user.pk }}">
 
             <!-- Sarunas galvene -->
             <header class="chat-header">
 
                 <div class="chat-user">
-                    <img
-                        src="{% static 'testsite/images/profilepic1.jpg' %}"
-                        alt="Lietotāja profila attēls"
-                        class="chat-user-avatar">
+                    <span class="chat-user-avatar chat-initials" aria-hidden="true">{{ active_other.get_full_name|default:active_other.username|slice:":1"|upper }}</span>
 
-                    <p>Vārds Uzvārds</p>
+                    <div>
+                        <p>{{ active_other.get_full_name|default:active_other.username }}</p>
+                        <p class="chat-user-role">{{ active_other.get_role_display }}</p>
+                    </div>
                 </div>
 
-                <!-- <button type="button" class="chat-report-btn" id="report-user-btn"> Ziņot par<br> lietotāju </button>-->
-                <form action="{% url 'testsite:report_submission' %}" > <button class="chat-report-btn" id="report-user-btn">Ziņot par<br> lietotāju</button> </form>
+                <!-- Report page from main (report_submission) -->
+                <form action="{% url 'testsite:report_submission' %}">
+                    <button class="chat-report-btn" id="report-user-btn">Ziņot par<br> lietotāju</button>
+                </form>
 
             </header>
-            <!-- Sarunas saturs -->
+
+            <!-- Sarunas saturs: the other person's messages on the left, yours on the right -->
             <section class="chat-conversation"
-                     aria-label="Ziņojumu saruna">
-
-                <!-- Kreisajā pusē: maksājuma pieprasījums -->
-                <div class="chat-left-content">
-
-                    <p class="chat-sender">Vārds Uzvārds</p>
-
-                    <article class="chat-payment-card">
-                        <p>Pieprasījums pēc<br> samaksas</p>
-
-                        <button type="button"
-                                class="chat-action-btn"
-                                id="pay-btn">
-                            Maksāt
-                        </button>
-                    </article>
-
-                    <!-- Attēlu augšupielāde -->
-                    <form class="chat-upload-card"
-                          id="upload-form"
-                          enctype="multipart/form-data">
-
-                        <label for="chat-file" class="chat-file-label"> attēlu faili</label>
-                        <input
-                            type="file"
-                            id="chat-file"
-                            name="attachments"
-                            accept="image/*"
-                            multiple
-                            hidden>
-
-                        <button type="button"class="chat-action-btn" id="upload-btn">Lejupielādēt</button>
-
-                        <p id="selected-files" class="chat-file-status" aria-live="polite"></p>
-                    </form>
-
-                    <p class="chat-time chat-left-time"> Laiks 00:00</p>
-
-                </div>
-
-                <!-- Labajā pusē: saņemtie ziņojumi -->
-                <div class="chat-right-content">
-
-                    <div class="chat-message-group">
-                        <p class="chat-sender">Vārds Uzvārds</p>
-
-                        <article class="chat-message">
-                            <p>Ziņa</p>
-                        </article>
-
-                        <article class="chat-message">
-                            <p>Ziņa</p>
-                        </article>
-
-                        <p class="chat-time">Laiks 00:00</p>
-                    </div>
-
-                    <div class="chat-message-group chat-second-group">
-                        <p class="chat-sender">Vārds Uzvārds</p>
-
-                        <article class="chat-message">
-                            <p>Ziņa</p>
-                        </article>
-
-                        <p class="chat-time">Laiks 00:00</p>
-                    </div>
-
-                </div>
-
+                     id="chat-log"
+                     aria-label="Ziņojumu saruna"
+                     aria-live="polite">
+                <p class="chat-empty" id="chat-empty">Vēl nav ziņu. Uzraksti pirmo!</p>
             </section>
 
             <!-- Ziņojuma rakstīšanas josla -->
@@ -176,6 +125,7 @@
                         name="message"
                         placeholder="Rakstīšanas josla"
                         autocomplete="off"
+                        maxlength="2000"
                         required>
 
                     <button type="submit"
@@ -183,10 +133,23 @@
                         Sūtīt
                     </button>
                 </form>
+                <p class="chat-status" id="chat-status" role="status"></p>
 
             </footer>
 
         </main>
+        {{ history|json_script:"chat-history" }}
+        {% else %}
+        <main class="chat-main chat-main-empty">
+            <p>
+                {% if user.is_photographer %}
+                    Te būs tavas sarunas ar klientiem. Izvēlies klientu kreisajā pusē, lai sāktu sarunu.
+                {% else %}
+                    Te būs tavas sarunas ar fotogrāfiem. Izvēlies fotogrāfu kreisajā pusē, lai sāktu sarunu.
+                {% endif %}
+            </p>
+        </main>
+        {% endif %}
 
     </div>
 </body>

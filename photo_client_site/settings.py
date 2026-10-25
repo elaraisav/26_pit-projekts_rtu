@@ -54,6 +54,7 @@ ALLOWED_HOSTS = [h for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(','
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',  # Must be first: makes runserver use Daphne (ASGI) for Channels
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'testsite', # testsite where the app is
+    'chat',  # one-on-one chat between clients and photographers
 ]
 
 MIDDLEWARE = [
@@ -92,6 +94,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'photo_client_site.wsgi.application'
+ASGI_APPLICATION = 'photo_client_site.asgi.application'
+
+# Channels: passes chat messages between the open WebSocket connections.
+# In-memory works for a single server process (development). For production
+# with several processes this has to become channels_redis.
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 
 # Database

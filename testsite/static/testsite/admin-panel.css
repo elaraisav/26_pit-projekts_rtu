@@ -94,7 +94,7 @@ a {
 
 .topbar-btn:not(:disabled):hover {
     background: var(--terracotta);
-    color: var(--navy);
+    color: var(--cream);
 }
 
 .topbar-btn:disabled {
@@ -166,47 +166,62 @@ a {
 }
 
 /* Ziņojumu saraksts */
-.message-list {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
+.message-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
-.message-row {
-    display: grid;
-    grid-template-columns: 12px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-    min-height: 38px;
-    padding: 3px 8px;
+.message-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.message-table td {
+    padding: 5px 4px;
+    vertical-align: middle;
+}
+
+.message-indicator {
+    width: 24px;
+    text-align: center;
 }
 
 .message-dot {
+    display: inline-block;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--navy);
 }
 
-.panel-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 8px 13px;
+.message-id {
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.message-action {
+    width: 158px;
+    text-align: right;
+}
+
+.message-table .panel-btn {
+    width: 100%;
+    min-height: 37px;
+    padding: 6px 8px;
     border: 2px solid var(--navy);
     border-radius: 8px;
     background: var(--green);
     color: var(--navy);
+    font-size: 14px;
+    white-space: nowrap;
     cursor: pointer;
-    transition:
-        background-color 0.2s,
-        color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.panel-btn:hover {
+.message-table .panel-btn:hover {
     background: var(--terracotta);
-    color: var(--navy);
+    color: var(--cream);
 }
 
 /* Datubāzes un krātuves paneļi */
@@ -351,9 +366,7 @@ a {
     background: var(--green);
     color: var(--navy);
     text-align: center;
-    transition:
-        background-color 0.2s,
-        color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .metric-card strong {
@@ -368,6 +381,7 @@ a {
 
 .metric-card:hover {
     background: var(--terracotta);
+    color: var(--cream);
 }
 
 .revenue-panel {

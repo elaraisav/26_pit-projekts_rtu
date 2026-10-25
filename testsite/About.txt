@@ -1,6 +1,6 @@
-Photo_client_site is project configuration (i think?), testsite is the test version of our actual app/website.
+Photo_client_site is project configuration, testsite is the test version of our actual app/website.
 urls.py was created and serves a slightly different purpose than the one in the projec's one.
-he project's urls.py directs traffic to the app; the app's urls.py directs traffic to individual pages.
+The project's urls.py directs traffic to the app; the app's urls.py directs traffic to individual pages.
 
 Terminal command: python manage.py runserver
 URL via command: http://127.0.0.1:8000/

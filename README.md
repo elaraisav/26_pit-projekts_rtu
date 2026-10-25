@@ -196,7 +196,6 @@ Abus failus (`pyproject.toml` un `uv.lock`) iekļauj vienā commit ar kodu, kas 
 │   └── wsgi.py              Ieejas punkts WSGI serverim (izvietošanai)
 ├── scripts/
 │   └── setup_env.py         Izveido .env ar jaunu slepeno atslēgu
-├── temp/                    Pagaidu faili CodeQL darbībai (tiks dzēsti)
 ├── .env.example             Vides mainīgo paraugs
 ├── .gitignore               Faili, kurus Git neseko
 ├── LICENSE                  MIT licence

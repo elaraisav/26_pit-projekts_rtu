@@ -31,3 +31,6 @@ def portfolio_regid(request):
 
 def terzetava(request):
     return render(request, 'testsite/terzetava.html')
+
+def report_submission(request):
+    return render(request, 'testsite/report_submission.html')

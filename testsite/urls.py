@@ -6,6 +6,7 @@ app_name = 'testsite'
 urlpatterns = [
     path('', views.autorizacija, name='autorizacija'),
     path('registracija/', views.registracija, name='registracija'),
+    path('logout/', views.logout_view, name='logout'),
     path('sakumlapa/', views.sakumlapa, name='sakumlapa'),
     path('meklesana/', views.meklesana, name='meklesana'),
     path('profils/', views.profils, name='profils'),

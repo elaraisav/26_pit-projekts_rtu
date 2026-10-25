@@ -115,6 +115,15 @@ a {
     white-space: nowrap;
 }
 
+/* Several buttons on the right side of the header (profile, log out) */
+.topbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    justify-self: end;
+    gap: 8px;
+}
+
 .search-btn:hover,
 .profile-btn:hover {
     background: var(--terracotta);

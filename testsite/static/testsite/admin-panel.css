@@ -43,11 +43,12 @@ a {
 /* Augšējā josla */
 .topbar {
     display: flex;
+    grid-template-columns: 1fr minmax(250px, 600px) 1fr;
     align-items: center;
-    gap: 16px;
-    min-height: 76px;
-    padding: 10px 20px;
-    border-bottom: 2px solid var(--navy);
+    gap: 24px;
+    width: 100%;
+    min-height: 100px;
+    padding: 16px 28px;
     background: var(--green);
 }
 
@@ -55,8 +56,8 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 150px;
-    height: 40px;
+    width: 160px;
+    height: 60px;
     margin-right: auto;
     overflow: hidden;
     border: 2px solid var(--navy);

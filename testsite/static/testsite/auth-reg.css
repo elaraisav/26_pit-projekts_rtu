@@ -6,8 +6,13 @@
     #D68A71 (Ķieģeļsarkans)
 */
 /* Autorizācijas lapas formatējums */
-/* Pamata formatējums, attiecas uz visu, ja nav specifizēts savādāk */
-*{
+/* Attiecas uz visu un katru elementu, ja nav specifizēts savādāk */
+* {
+    box-sizing: border-box;
+}
+
+/* Lapas pamata dizains, īpašības */
+body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,8 +29,9 @@ body{
     margin: 0;
     padding: 0;
 }
+
 /* Konteineris 'auth' */
-.auth{
+.auth {
     margin: 50px auto;
     margin-top: 150px;
     margin-bottom: 50px;
@@ -36,8 +42,9 @@ body{
     background: #70A288; 
     text-align: center;
 }
+
 /* Virsraksts */
-h1{
+h1 {
     margin-top: 20px;
     margin-bottom: 15px;
     font-size: 36px;
@@ -45,8 +52,9 @@ h1{
     text-align: center;
     color:#FDF9ED;
 }
+
 /* Ievadlauku dizains */
-.auth-form input{
+.auth-form input {
     display: block;
     align-self: center;
     align-items: center;
@@ -62,8 +70,9 @@ h1{
     color: #031D44;
     background-color: #FDF9ED;
 }
+
 /* Visu pogu, kas ir konteinerī auth, formatējums */
-.auth button{
+.auth button {
     width: auto;
     height: 25px;
     padding: 5px;
@@ -73,12 +82,14 @@ h1{
     background-color: #031D44;
     cursor: pointer;
 }
+
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */
 .auth button:hover {
     background-color: #D68A71;
 }
+
 /* Tālāko pogu izkārtojums */
-.auth-buttons{
+.auth-buttons {
     display: flex;
     gap: 10px;
     margin-top: 10px;
@@ -88,7 +99,7 @@ h1{
 
 /* Registracijas lapas formatējums */
 /* Konteineris 'reg' */
-.reg{
+.reg {
     margin: 50px auto;
     margin-top: 100px;
     margin-bottom: 50px;
@@ -99,8 +110,9 @@ h1{
     background: #70A288; 
     text-align: center;
 }
+
 /* Reģistrācijas ievadlauku formatējums */
-.reg-form input{
+.reg-form input {
     display: block;
     align-self: center;
     align-items: center;
@@ -135,7 +147,7 @@ h1{
     background-color: #FDF9ED;
 }
 /* Reģistrācjas pogu formatējums */
-.reg button{
+.reg button {
     width: auto;
     height: 25px;
     padding: 5px;
@@ -145,11 +157,13 @@ h1{
     background-color: #031D44;
     cursor: pointer;
 }
+
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */
 .reg button:hover {
     background-color: #D68A71;
 }
-.reg-button{
+
+.reg-button {
     margin-top: 10px;
     /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
     flex-wrap: wrap;

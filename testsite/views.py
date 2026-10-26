@@ -87,3 +87,6 @@ def terzetava(request):
 @login_required
 def report_submission(request):
     return render(request, 'testsite/report_submission.html')
+
+def admin_panel(request):
+    return render(request, 'testsite/admin_panel.html')

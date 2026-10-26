@@ -209,10 +209,10 @@ a {
     width: 100%;
     min-height: 37px;
     padding: 6px 8px;
-    border: 2px solid var(--navy);
+    /* border: 2px solid var(--navy); */
     border-radius: 8px;
-    background: var(--green);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
     font-size: 14px;
     white-space: nowrap;
     cursor: pointer;
@@ -261,8 +261,8 @@ a {
 .database-pie,
 .storage-pie {
     background: conic-gradient(
-        var(--green) 0% 25%,
-        var(--terracotta) 25% 100%
+        var(--terracotta) 0% 25%,
+        var(--green) 25% 100%
     );
 }
 
@@ -363,8 +363,8 @@ a {
     padding: 9px 6px;
     border: 2px solid var(--navy);
     border-radius: 13px;
-    background: var(--green);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
     text-align: center;
     transition: background-color 0.2s, color 0.2s;
 }

@@ -1511,30 +1511,3 @@ a {
     outline: 3px solid var(--terracotta);
     outline-offset: 3px;
 }
-
-/* Pielāgošana mazākiem ekrāniem */
-@media (max-width: 500px) {
-    .report-panel {
-        padding: 22px 16px;
-    }
-
-    .report-recipient,
-    .report-field {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-
-    .report-field label {
-        padding-top: 0;
-    }
-
-    .report-actions {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .report-submit,
-    .report-cancel {
-        width: 100%;
-    }
-}

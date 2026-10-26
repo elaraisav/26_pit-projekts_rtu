@@ -1,0 +1,411 @@
+/* Administratora panelis */
+:root {
+    --navy: #031D44;
+    --blue: #043B62;
+    --green: #70A288;
+    --cream: #FDF9ED;
+    --terracotta: #D68A71;
+
+    --page-bg: var(--blue);
+    --panel-bg: var(--cream);
+    --panel-border: var(--navy);
+    --button-bg: var(--navy);
+    --button-text: var(--cream);
+    --text: var(--navy);
+
+    --chart-one: var(--navy);
+    --chart-two: var(--blue);
+    --chart-three: #70A288;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--cream);
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 15px;
+}
+
+button,
+a {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Augšējā josla */
+.topbar {
+    display: flex;
+    grid-template-columns: 1fr minmax(250px, 600px) 1fr;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    min-height: 100px;
+    padding: 16px 28px;
+    background: var(--green);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 60px;
+    margin-right: auto;
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    background: var(--cream);
+}
+
+.logo-link img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 125px;
+    min-height: 40px;
+    padding: 8px 16px;
+    /*border: 2px solid var(--navy);*/
+    border-radius: 8px;
+    background: var(--navy);
+    color: var(--cream);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.topbar-btn:not(:disabled):hover {
+    background: var(--terracotta);
+    color: var(--cream);
+}
+
+.topbar-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Galvenā lapas sadaļa */
+.main-panel {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 16px 24px 28px;
+}
+
+.dashboard-title {
+    margin: 4px 0 22px;
+    color: var(--cream);
+    font-size: clamp(19px, 2vw, 24px);
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Centrālie 4 paneļi */
+.info-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "messages database"
+        "metrics storage";
+    gap: 20px;
+    align-items: stretch;
+}
+
+.info-panel {
+    min-width: 0;
+    padding: 22px;
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 32px;
+    background: var(--cream);
+    color: var(--navy);
+    box-shadow: 0 5px 14px rgb(3 29 68 / 12%);
+}
+
+.info-panel h2 {
+    margin: 0 0 14px;
+    padding: 0 10px 9px;
+    border-bottom: 2px solid var(--navy);
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.messages-panel {
+    grid-area: messages;
+}
+
+.database-panel {
+    grid-area: database;
+}
+
+.metrics-panel {
+    grid-area: metrics;
+}
+
+.storage-panel {
+    grid-area: storage;
+}
+
+/* Ziņojumu saraksts */
+.message-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.message-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.message-table td {
+    padding: 5px 4px;
+    vertical-align: middle;
+}
+
+.message-indicator {
+    width: 24px;
+    text-align: center;
+}
+
+.message-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--navy);
+}
+
+.message-id {
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.message-action {
+    width: 158px;
+    text-align: right;
+}
+
+.message-table .panel-btn {
+    width: 100%;
+    min-height: 37px;
+    padding: 6px 8px;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--navy);
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.message-table .panel-btn:hover {
+    background: var(--terracotta);
+    color: var(--cream);
+}
+
+/* Datubāzes un krātuves paneļi */
+.monitor-grid {
+    display: grid;
+    grid-template-columns: minmax(105px, 0.7fr)
+                           minmax(0, 1.3fr);
+    min-width: 0;
+}
+
+.monitor-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 0 12px 12px 0;
+}
+
+.info-panel h3 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.pie-chart {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 96px;
+    max-width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid var(--navy);
+    border-radius: 50%;
+}
+
+.database-pie,
+.storage-pie {
+    background: conic-gradient(
+        var(--green) 0% 25%,
+        var(--terracotta) 25% 100%
+    );
+}
+
+.pie-label {
+    position: absolute;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pie-label-top {
+    top: 22%;
+    right: 12%;
+}
+
+.pie-label-bottom {
+    bottom: 28%;
+    left: 10%;
+}
+
+.chart-caption {
+    margin: 8px 0 0;
+    font-size: 11px;
+    text-align: center;
+}
+
+.monitor-details {
+    min-width: 0;
+    padding-left: 14px;
+    border-left: 2px solid var(--green);
+}
+
+.chart-area {
+    min-width: 0;
+    height: 76px;
+    margin: 0 0 12px;
+    border-bottom: 2px solid var(--navy);
+}
+
+.line-chart {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.chart-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.line-one {
+    stroke: var(--navy);
+}
+
+.line-two {
+    stroke: var(--blue);
+    stroke-dasharray: 6 4;
+}
+
+.line-three {
+    stroke: var(--green);
+    stroke-dasharray: 2 4;
+}
+
+.error-log {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    color: var(--navy);
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.error-log p {
+    margin: 4px 0;
+    padding-bottom: 3px;
+    border-bottom: 1px dotted var(--green);
+}
+
+/* Pakalpojuma metrikas */
+.metric-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 18px 0 22px;
+}
+
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 74px;
+    padding: 9px 6px;
+    border: 2px solid var(--navy);
+    border-radius: 13px;
+    background: var(--green);
+    color: var(--navy);
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.metric-card strong {
+    margin-bottom: 4px;
+    font-size: 22px;
+}
+
+.metric-card span {
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.metric-card:hover {
+    background: var(--terracotta);
+    color: var(--cream);
+}
+
+.revenue-panel {
+    overflow: hidden;
+    border: 2px solid var(--navy);
+    border-radius: 14px;
+    background: var(--green);
+    color: var(--navy);
+}
+
+.revenue-panel h3 {
+    margin: 0;
+    padding: 12px 12px 0;
+    text-align: left;
+}
+
+.revenue-chart {
+    height: 82px;
+    padding: 0 8px 5px;
+}
+
+/* Piekļūstamība */
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--terracotta);
+    outline-offset: 3px;
+}

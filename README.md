@@ -3,9 +3,9 @@
 Rīgas Tehniskās Universitātes (RTU) kursa projekts: tīmekļa platformas **makets**, kurā fotogrāfi var kopīgot fotogrāfijas ar saviem klientiem, bet klienti - viegli atrast sev piemērotus fotogrāfus.
 
 Platformā pašlaik ir īstenotas sekojošās funkcionalitātes:
-- Pilnīgi: (TODO);
+- Pilnīgi: autorizācija, reģistrācija un izrakstīšanās;
 - Daļēji: (TODO);
-- Statiski (fiksēts saturs): (TODO).
+- Statiski (fiksēts saturs): pārējās lapas (skat. tabulu zemāk).
 
 ## Ātrā palaišana
 
@@ -20,9 +20,12 @@ uv run python manage.py migrate
 uv run python manage.py runserver
 ```
 
-Pēc tam atver <http://127.0.0.1:8000/> – redzēsi maketa autorizācijas lapu.
+Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo lietotāju izveido lapā `/registracija/`.
 
 `scripts/setup_env.py` izveido `.env` failu ar jaunu slepeno atslēgu; bez tā serveris nestartēsies.
+
+> [!NOTE]
+> Ja jau ir vecā `db.sqlite3` no laika pirms autorizācijas, `migrate` beigsies ar kļūdu. Izdzēs `db.sqlite3` (tajā nav noderīgu datu) un izpildi `migrate` vēlreiz – skat. [uzstādīšanas ceļvedi](docs/setup.md#ja-jau-ir-vecā-dbsqlite3). Administratora kontu izveido ar `uv run python manage.py createsuperuser`.
 
 > [!IMPORTANT]
 > Pakotnes pievieno tikai ar `uv add <pakotne>`, nekad ar `pip install` – citādi tās netiks pierakstītas `pyproject.toml` un `uv.lock`, un citiem projekts nestrādās.
@@ -39,8 +42,10 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi maketa autorizācijas lapu.
 
 | Adrese | Lapa | Statuss |
 |---|---|---|
-| `/` | Autorizācija | makets |
-| `/registracija/` | Reģistrācija | makets |
+| `/` | Autorizācija | darbojas |
+| `/registracija/` | Reģistrācija | darbojas |
+| `/registracija/nosutita/` | Paziņojums „Verifikācija nosūtīta uz epastu" | darbojas |
+| `/logout/` | Izrakstīšanās (tikai `POST`, poga lapā) | darbojas |
 | `/sakumlapa/` | Sākumlapa | makets |
 | `/meklesana/` | Fotogrāfu meklēšana un rezultāti | makets |
 | `/profils/` | Klienta profils (paša skats) | makets |
@@ -49,7 +54,9 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi maketa autorizācijas lapu.
 | `/profila_regid/` | Profila rediģēšana (`regid` = rediģēt) | makets |
 | `/portfolio_regid/` | Portfolio rediģēšana | makets |
 
-Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. Statuss tiks mainīts, kad lapa sāks strādāt ar reāliem datiem.
+Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. Statuss „darbojas" nozīmē, ka lapa strādā ar reāliem datiem. Statuss tiks mainīts, kad lapa sāks strādāt ar reāliem datiem.
+
+Visas lapas, izņemot `/`, `/registracija/` un `/registracija/nosutita/`, pieprasa pieteikšanos.
 
 ## Dokumentācija
 

@@ -96,7 +96,8 @@ Sapludinot PR, GitHub piedāvā izdzēst arī attālināto zaru. Dzēs to tikai 
 ## Atkarības un migrācijas
 
 - Pakotnes pievieno tikai ar `uv add`; `pyproject.toml` un `uv.lock` iekļauj tajā pašā commit. Sīkāk: [konfigurācija](configuration.md#atkarību-pārvaldība).
-- Kad parādīsies datubāzes modeļi, migrāciju faili ir kopīgs kods. Ja divi cilvēki paralēli maina modeļus, migrācijas var konfliktēt. Pirms `makemigrations` izpildi `git pull` un paziņo komandai, ka maini modeļus.
+- Migrāciju faili ir kopīgs kods. Ja divi cilvēki paralēli maina modeļus, migrācijas var konfliktēt. Pirms `makemigrations` izpildi `git pull` un paziņo komandai, ka maini modeļus.
+- Ja PR maina lietotāja modeli vai citādi neļauj turpināt ar esošo `db.sqlite3`, to norāda PR aprakstā, un pēc sapludināšanas paziņo komandai, ka jāatjauno datubāze ([sīkāk](setup.md#ja-jau-ir-vecā-dbsqlite3)).
 - `.env` un `db.sqlite3` nekad nepievieno repozitorijam.
 
 ## Dependabot

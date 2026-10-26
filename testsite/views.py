@@ -1,9 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.http import Http404, HttpResponseBadRequest, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
+
+from chat.models import Conversation, can_chat, chat_partners_for, chat_users
 
 from .forms import LoginForm, RegistrationForm
 from .models import User
@@ -80,9 +83,68 @@ def profila_regid(request):
 def portfolio_regid(request):
     return render(request, 'testsite/portfolio_regid.html')
 
+# Chat page (design: terzetava.html). With no id it opens the newest conversation.
+# Who may chat is decided in chat/models.py (can_chat); admin accounts only see a note.
 @login_required
-def terzetava(request):
-    return render(request, 'testsite/terzetava.html')
+def terzetava(request, conversation_id=None):
+    user = request.user
+    allowed = can_chat(user)
+    # Evaluated once and reused for the sidebar, the active conversation and talked_to.
+    conversations = (list(Conversation.objects.for_user(user).usable().select_related('client', 'photographer'))
+                     if allowed else [])
+
+    if conversation_id is not None:
+        active = next((conversation for conversation in conversations if conversation.pk == conversation_id), None)
+        if active is None:
+            raise Http404
+    else:
+        active = conversations[0] if conversations else None
+
+    # People of the other role you don't have a conversation with yet,
+    # for the "start a new conversation" list.
+    new_contacts = []
+    if allowed:
+        talked_to = {conversation.other_participant(user).pk for conversation in conversations}
+        new_contacts = chat_partners_for(user).exclude(pk__in=talked_to).order_by('first_name', 'last_name', 'username')
+
+    history = []
+    if active is not None:
+        history = [message.to_json() for message in active.messages.select_related('sender')]
+
+    return render(request, 'testsite/terzetava.html', {
+        'chat_allowed': allowed,
+        'conversations': [(conversation, conversation.other_participant(user)) for conversation in conversations],
+        'active': active,
+        'active_other': active.other_participant(user) if active else None,
+        'history': history,
+        'new_contacts': new_contacts,
+    })
+
+# Messages newer than ?after=<id>, as JSON. chat.js calls this whenever its WebSocket
+# (re)connects, so messages sent while the page was loading or offline still show up.
+@login_required
+def chat_messages(request, conversation_id):
+    conversation = Conversation.objects.for_user(request.user).usable().filter(pk=conversation_id).first()
+    if conversation is None or not can_chat(request.user):
+        raise Http404
+    after = request.GET.get('after', '0')
+    after = int(after) if after.isdigit() else 0
+    messages_after = conversation.messages.filter(pk__gt=after).select_related('sender').order_by('pk')
+    return JsonResponse({'messages': [message.to_json() for message in messages_after]})
+
+@login_required
+@require_POST
+def chat_start(request):
+    user_id = request.POST.get('user_id', '')
+    if not user_id.isdigit():
+        raise Http404
+    # Only people who may chat can be picked; anyone else (e.g. admin) is "not found".
+    other = get_object_or_404(chat_users(), pk=int(user_id))
+    try:
+        conversation = Conversation.get_or_create_between(request.user, other)
+    except ValueError:
+        return HttpResponseBadRequest("Invalid chat request.")
+    return redirect('testsite:chat_conversation', conversation_id=conversation.pk)
 
 @login_required
 def report_submission(request):

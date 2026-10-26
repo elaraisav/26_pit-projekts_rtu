@@ -3,7 +3,7 @@
 Rīgas Tehniskās Universitātes (RTU) kursa projekts: tīmekļa platformas **makets**, kurā fotogrāfi var kopīgot fotogrāfijas ar saviem klientiem, bet klienti - viegli atrast sev piemērotus fotogrāfus.
 
 Platformā pašlaik ir īstenotas sekojošās funkcionalitātes:
-- Pilnīgi: autorizācija, reģistrācija un izrakstīšanās;
+- Pilnīgi: autorizācija, reģistrācija, izrakstīšanās un tērzētava (sarunas starp klientu un fotogrāfu reāllaikā);
 - Daļēji: (TODO);
 - Statiski (fiksēts saturs): pārējās lapas (skat. tabulu zemāk).
 
@@ -35,6 +35,7 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 - [Python](https://www.python.org/) 3.13+ – programmēšanas valoda.
 - [Django](https://www.djangoproject.com/) 6.1 – tīmekļa ietvars: lapas, maršruti, datubāzes piekļuve.
 - [uv](https://docs.astral.sh/uv/) – Python versijas, virtuālās vides un atkarību pārvaldība.
+- [Django Channels](https://channels.readthedocs.io/) un [Daphne](https://github.com/django/daphne) – WebSocket savienojumi tērzētavai (`runserver` darbojas ar Daphne).
 - [SQLite](https://sqlite.org/) – lokālā datubāze (Django noklusējums).
 - [Silo](https://hub.docker.com/r/pgsty/silo) Docker konteinerī – objektu krātuve (object storage) attēliem, savietojama ar S3 (**plānots**).
 
@@ -53,13 +54,18 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
 | `/profila_regid/` | Profila rediģēšana (`regid` = rediģēt) | makets |
 | `/portfolio_regid/` | Portfolio rediģēšana | makets |
-| `/terzetava/` | Tērzētava (klienta skats) | makets |
+| `/terzetava/` | Tērzētava: sarunu saraksts un jaunas sarunas sākšana (klientam un fotogrāfam) | darbojas |
+| `/terzetava/<id>/` | Konkrēta saruna | darbojas |
+| `/terzetava/<id>/messages/` | Jaunākās sarunas ziņas JSON formātā (tās pieprasa `chat.js` pēc savienojuma atjaunošanas) | darbojas |
+| `/terzetava/start/` | Jaunas sarunas sākšana (tikai `POST`) | darbojas |
 | `/report_submission/` | Sūdzības ziņojuma iesniegšana par lietotāju | makets |
 | `/admin_panel/` | Administratora panelis par sistēmas darbību | makets |
 
 Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. Statuss „darbojas" nozīmē, ka lapa strādā ar reāliem datiem. Statuss tiks mainīts, kad lapa sāks strādāt ar reāliem datiem.
 
-Visas lapas, izņemot `/`, `/registracija/` un `/registracija/nosutita/`, pieprasa pieteikšanos.
+Visas lapas, izņemot `/`, `/registracija/` un `/registracija/nosutita/`, pieprasa pieteikšanos. Izņēmums ir makets `/admin_panel/`: tam pieteikšanās pagaidām nav jāpieprasa.
+
+Tērzētavā sarunu var sākt tikai klients ar fotogrāfu. Administratoru konti tajā nepiedalās.
 
 ## Dokumentācija
 

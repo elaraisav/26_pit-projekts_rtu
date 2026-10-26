@@ -18,4 +18,7 @@ urlpatterns = [
     path('terzetava/', views.terzetava, name='terzetava'),
     path('report_submission/', views.report_submission, name='report_submission'),
     path('admin_panel/', views.admin_panel, name='admin_panel'),
+    path('terzetava/<int:conversation_id>/', views.terzetava, name='chat_conversation'),
+    path('terzetava/<int:conversation_id>/messages/', views.chat_messages, name='chat_messages'),
+    path('terzetava/start/', views.chat_start, name='chat_start'),
 ]

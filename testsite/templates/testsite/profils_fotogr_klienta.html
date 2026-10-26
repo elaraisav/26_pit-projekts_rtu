@@ -55,6 +55,9 @@
                     class="profile-avatar">
                 <div class="profile-details">
                     <h1>Vārds Uzvārds</h1>
+                    <form action="{% url 'testsite:terzetava' %}" method="get">
+                        <button class="edit-profile-btn">Sazināties</button>
+                    </form>
                 </div>
                 <div class="profile-description">
                     <p>Apraksts</p>

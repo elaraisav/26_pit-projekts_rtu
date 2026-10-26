@@ -144,12 +144,18 @@ h1 {
     color: #031D44;
     background-color: #FDF9ED;
 }
+
+.reg-form button {
+    align-self: center;
+}
+
 /* Role select (client / photographer) */
 .role-label{
     margin-bottom: 5px;
     font-size: 18px;
     color: #FDF9ED;
 }
+
 .reg-form select{
     display: block;
     align-self: center;
@@ -162,6 +168,7 @@ h1 {
     color: #031D44;
     background-color: #FDF9ED;
 }
+
 /* Reģistrācjas pogu formatējums */
 .reg button {
     width: 200px;

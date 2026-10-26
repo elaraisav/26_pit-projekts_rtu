@@ -949,26 +949,6 @@ a {
     color: var(--cream);
 }
 
-/* Augšējā josla */
-.chat-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 55px;
-    height: 55px;
-    padding: 5px 19px;
-    border: 1px solid var(--navy);
-    /*background: var(--cream);*/
-    background: var(--green);
-}
-
-.chat-topbar .logo-link img {
-    width: 129px;
-    height: 32px;
-    border: 1px solid var(--navy);
-    border-radius: 8px;
-}
-
 /* Galvenais režģis */
 .chat-layout {
     display: grid;

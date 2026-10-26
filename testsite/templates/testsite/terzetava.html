@@ -13,11 +13,9 @@
 <body class="chat-page">
 
     <!-- Augšējā josla -->
-    <header class="topbar chat-topbar">
-        <a class="logo-link"
-           href="{% url 'testsite:sakumlapa' %}">
-            <img src="{% static 'testsite/images/logo.png' %}"
-                 alt="Vietnes logo">
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
         </a>
     </header>
 
@@ -37,31 +35,20 @@
                 <div class="profili">
 
                     <article class="profils chat-contact">
-                        <img
-                            src="{% static 'testsite/images/profilepic1.jpg' %}"
-                            alt="Annas profila attēls"
-                            class="avatar">
+                        <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="Annas profila attēls" class="avatar">
 
                         <div class="profile-info">
                             <p>Anna Bērziņa</p>
-                            <a href="#" class="chat-btn"
-                               aria-current="page">
-                                Sazinies
-                            </a>
+                            <a href="#" class="chat-btn" aria-current="page">Sazinies</a>
                         </div>
                     </article>
 
                     <article class="profils chat-contact">
-                        <img
-                            src="{% static 'testsite/images/profilepic2.jpg' %}"
-                            alt="Jāņa profila attēls"
-                            class="avatar">
+                        <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="Jāņa profila attēls" class="avatar">
 
                         <div class="profile-info">
                             <p>Jānis Ozols</p>
-                            <a href="#" class="chat-btn">
-                                Sazinies
-                            </a>
+                            <a href="#" class="chat-btn">Sazinies</a>
                         </div>
                     </article>
 

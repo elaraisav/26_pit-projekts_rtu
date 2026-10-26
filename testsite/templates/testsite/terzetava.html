@@ -7,9 +7,7 @@
 
     {% load static %}
 
-    <link rel="stylesheet"
-          href="{% static 'testsite/main-page.css' %}">
-    <script src="{% static 'testsite/tezeretava.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
 </head>
 
 <body class="chat-page">
@@ -21,6 +19,9 @@
             <img src="{% static 'testsite/images/logo.png' %}"
                  alt="Vietnes logo">
         </a>
+        <form action="{% url 'testsite:terzetava' %}" method="get">
+        <button class="profile-btn">Tērzētava</button>
+        </form>
     </header>
 
     <div class="mainpage chat-layout">

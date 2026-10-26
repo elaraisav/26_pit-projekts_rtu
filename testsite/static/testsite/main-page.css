@@ -98,7 +98,6 @@ a {
     outline: 2px solid var(--terracotta);
 }
 
-/* Pogu formatējums nestrādā, pārbaudīt */
 .search-btn,
 .profile-btn {
     display: inline-flex;
@@ -391,7 +390,7 @@ a {
 /* Opciju izskats */
 .sidebar select option{
     background-color: var(--cream);
-    color: var(--navy);
+    color: var(--cream);
 }
 
 /* Nevienmēr strādās, atkarīgs no pārlūkprogrammas */

@@ -144,10 +144,11 @@ a {
     grid-template-columns: 260px minmax(0, 1fr);
     align-items: start;
     gap: 28px;
-    max-width: 1800px;
+   /* max-width: 1800px;*/
     min-height: calc(100vh - 100px);
     margin: 0 auto;
     padding: 28px;
+    width: 100%
 }
 
 /* Aktīvās sarakstes */
@@ -933,62 +934,13 @@ a {
     display: flex;
 }
 
-/* Pielāgošana telefoniem un mazākiem ekrāniem /
-@media (max-width: 650px) {
-    .edit-page {
-        padding: 16px;
-    }
-
-    .edit-panel {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 22px;
-        padding: 20px;
-    }
-
-    .edit-profile-panel .edit-photo-column {
-        gap: 12px;
-    }
-
-    .edit-profile-photo {
-        width: 145px;
-    }
-
-    .edit-description-input {
-        min-height: 140px;
-    }
-
-    .portfolio-upload-area {
-        min-height: 220px;
-    }
-
-    .edit-actions {
-        flex-direction: column;
-    }
-
-    .edit-save-button,
-    .edit-delete-button {
-        width: 100%;
-        min-height: 48px;
-    }
-
-    .dialog-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .dialog-actions form {
-        width: 100%;
-    }
-}
-    */
-
 
 /*TĒRZĒTAVAS LAPA*/
 /* Lapas kopējais izkārtojums */
 .chat-page {
     min-height: 100vh;
-    background: var(--cream);
-    color: var(--navy);
+    background: var(--blue);
+    color: var(--cream);
 }
 
 /* Augšējā josla */
@@ -1000,7 +952,8 @@ a {
     height: 55px;
     padding: 5px 19px;
     border: 1px solid var(--navy);
-    background: var(--cream);
+    /*background: var(--cream);*/
+    background: var(--green);
 }
 
 .chat-topbar .logo-link img {
@@ -1021,7 +974,7 @@ a {
     min-height: calc(100vh - 55px);
     margin: 0;
     padding: 0 11px 0 0;
-    background: var(--cream);
+    background: var(--blue);
 }
 
 /* Kreisais sānpanelis */
@@ -1031,7 +984,7 @@ a {
     border: 1px solid var(--navy);
     border-top: 0;
     border-radius: 0;
-    background: var(--cream);
+    background: var(--green);
     color: var(--navy);
 }
 
@@ -1050,7 +1003,8 @@ a {
 
 .chat-options h2 {
     padding: 3px 10px;
-    background: var(--green);
+    background: var(--navy);
+    color: var(--cream);
     border-bottom: 1px solid var(--navy);
 }
 
@@ -1058,20 +1012,22 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 7px 9px;
     width: 108px;
     min-height: 46px;
     margin: 16px auto;
-    padding: 8px;
     border: 1px solid var(--navy);
     border-radius: 11px;
-    background: var(--cream);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
     text-align: center;
     font-size: 14px;
+    text-decoration: none;
 }
 
 .chat-back-btn:hover {
-    background: var(--green);
+    background: var(--terracotta);
+    color: var(--navy);
 }
 
 /* Aktīvo sarakstu sadaļa */
@@ -1082,7 +1038,8 @@ a {
 .chat-contacts > h2 {
     margin: 0 -8px 10px;
     padding: 6px 8px;
-    background: var(--green);
+    background: var(--navy);
+    color: var(--cream);
     border-bottom: 1px solid var(--navy);
 }
 
@@ -1154,7 +1111,7 @@ a {
     padding: 16px;
     border: 1px solid var(--navy);
     border-top: 0;
-    background: var(--green);
+    background: var(--cream);
 }
 
 .chat-user {
@@ -1179,6 +1136,7 @@ a {
     margin: 0;
     font-size: 14px;
     overflow-wrap: anywhere;
+    color: var(--navy);
 }
 
 .chat-report-btn {
@@ -1211,7 +1169,7 @@ a {
     padding: 10px 16px;
     border: 1px solid var(--navy);
     border-top: 0;
-    background: var(--green);
+    background: var(--blue);
 }
 
 .chat-left-content,

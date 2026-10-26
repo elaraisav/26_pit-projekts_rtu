@@ -141,8 +141,8 @@ def chat_start(request):
     other = get_object_or_404(chat_users(), pk=int(user_id))
     try:
         conversation = Conversation.get_or_create_between(request.user, other)
-    except ValueError as error:
-        return HttpResponseBadRequest(str(error))
+    except ValueError:
+        return HttpResponseBadRequest("Invalid chat request.")
     return redirect('testsite:chat_conversation', conversation_id=conversation.pk)
 
 @login_required

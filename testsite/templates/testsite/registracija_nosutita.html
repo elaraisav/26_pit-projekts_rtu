@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikācija</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/auth-reg.css' %}">
+</head>
+<body>
+    <div class="reg">
+        <h1>Verifikācija nosūtīta uz epastu</h1>
+        <div class="reg-button">
+            <form action="{% url 'testsite:autorizacija' %}" method="get">
+                <button id="atgriesties-btn">Uz pieteikšanos</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

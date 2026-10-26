@@ -6,6 +6,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from .forms import LoginForm, RegistrationForm
+from .models import User
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -32,12 +33,19 @@ def registracija(request):
 
     form = RegistrationForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        user = form.save()
-        login(request, user)
-        messages.success(request, 'Reģistrācija veiksmīga!')
-        return redirect('testsite:sakumlapa')
+        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        # Create the user only if both are new. The visitor sees the same page
+        # in both cases and is not logged in; logging in stands in for verification.
+        if not (User.objects.filter(username__iexact=username).exists()
+                or User.objects.filter(email__iexact=email).exists()):
+            form.save()
+        return redirect('testsite:registracija_nosutita')
 
     return render(request, 'testsite/registracija.html', {'form': form})
+
+def registracija_nosutita(request):
+    return render(request, 'testsite/registracija_nosutita.html')
 
 @require_POST
 def logout_view(request):

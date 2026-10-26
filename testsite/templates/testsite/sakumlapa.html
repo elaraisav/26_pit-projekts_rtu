@@ -19,12 +19,18 @@
             <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
             <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
         </form>
-        <form action="{% url 'testsite:profils' %}" method="get">
-            <button class="profile-btn">Mans Profils</button>
-        </form>
-        <form action="{% url 'testsite:profils_fotogr' %}" method="get">
-                <button class="profile-btn">test-uz fotografa profilu</button>
-        </form>
+        <div class="topbar-actions">
+            <form action="{% url 'testsite:profils' %}" method="get">
+                <button class="profile-btn">Mans Profils</button>
+            </form>
+            <form action="{% url 'testsite:profils_fotogr' %}" method="get">
+                    <button class="profile-btn">test-uz fotografa profilu</button>
+            </form>
+            <form action="{% url 'testsite:logout' %}" method="post">
+                {% csrf_token %}
+                <button class="profile-btn" type="submit">Iziet</button>
+            </form>
+        </div>
     </header>
     <div class="mainpage">
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->

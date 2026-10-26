@@ -79,3 +79,11 @@ def profila_regid(request):
 @login_required
 def portfolio_regid(request):
     return render(request, 'testsite/portfolio_regid.html')
+
+@login_required
+def terzetava(request):
+    return render(request, 'testsite/terzetava.html')
+
+@login_required
+def report_submission(request):
+    return render(request, 'testsite/report_submission.html')

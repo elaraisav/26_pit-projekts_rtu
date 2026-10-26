@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iesniegt ziņojumu</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}"
+                 alt="Vietnes logo">
+        </a>
+
+        <form class="topbar-form"
+              action="{% url 'testsite:meklesana' %}"
+              method="get">
+            <input type="search"
+                   name="q"
+                   placeholder="Meklējiet fotogrāfu..."
+                   aria-label="Meklēt fotogrāfu">
+            <button type="submit" class="search-btn">Meklēt</button>
+        </form>
+        <form> <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button></form>
+    </header>
+
+    <main class="report-page">
+        <section class="report-panel">
+
+            <h1>Iesniegt ziņojumu</h1>
+            <form method="post" class="report-form" action="">
+                {% csrf_token %}
+                <div class="report-recipient">
+                    <span>Pret:</span>
+                    <p> &lt;{{ user.get_full_name|default:user.username }}&gt;</p>
+                </div>
+
+                <div class="report-field report-reason">
+                    <label for="reportReason">Iemesls:</label>
+                    <select id="reportReason"
+                            name="level"
+                            required>
+                        <option value="" selected disabled>
+                            Izvēlies...
+                        </option>
+                        <option value="spam">Surogātpasts</option>
+                        <option value="inappropriate">
+                            Nepiemērots saturs
+                        </option>
+                        <option value="harassment">
+                            Aizskaroša uzvedība
+                        </option>
+                        <option value="other">Cits iemesls</option>
+                    </select>
+                </div>
+
+                <div class="report-field report-description">
+                    <label for="reportDescription">Apraksts:</label>
+
+                    <textarea id="reportDescription"
+                              name="description"
+                              placeholder="Ievadi tekstu..."
+                              required></textarea>
+                </div>
+
+                <div class="report-actions">
+                    <button type="submit" class="report-submit">Iesniegt </button>
+                    <button type="button" class="report-cancel">Atcelt</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -41,16 +41,19 @@ Pēc uzstādīšanas lokāli parādīsies arī (repozitorijā tie netiek iekļau
 
 ## `testsite/` – lietotne
 
-Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu (sk. [README](../README.md#lapas)).
+Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu, izņemot autorizāciju un reģistrāciju (sk. [README](../README.md#lapas)).
 
 | Ceļš | Uzdevums |
 |---|---|
 | `urls.py` | Lietotnes maršruti: kura adrese atver kuru lapu. |
 | `views.py` | Funkcijas, kas pieņem pieprasījumu un atgriež lapu. |
-| `models.py` | Datubāzes tabulu apraksts. Pagaidām tukšs. |
+| `models.py` | Datubāzes tabulu apraksts. Pagaidām tikai lietotājs `User` (lietotājvārds, unikāls e-pasts, loma: klients vai fotogrāfs). |
+| `forms.py` | Autorizācijas un reģistrācijas formas. |
+| `admin.py` | Reģistrē `User` Django administrācijas panelī (`/admin/`). |
 | `templates/testsite/` | HTML veidnes (lapas). |
 | `static/testsite/` | CSS, JavaScript un attēli, ko lapas ielādē. |
-| `admin.py`, `apps.py`, `tests.py`, `migrations/` | Django standarta faili; pagaidām gandrīz tukši. |
+| `migrations/` | Datubāzes izmaiņu vēsture (pagaidām `0001_initial`). Kopīgs kods, sk. [līdzdalība](contributing.md#atkarības-un-migrācijas). |
+| `tests.py`, `apps.py` | Testi (pagaidām reģistrācijas) un Django standarta konfigurācija. |
 
 ### Kā pieprasījums nonāk līdz lapai
 

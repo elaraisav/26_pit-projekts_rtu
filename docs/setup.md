@@ -66,6 +66,30 @@ uv run python manage.py migrate
 
 Virtuālā vide nav jāaktivizē – `uv run` to izmanto automātiski. Visas projekta komandas raksti ar `uv run` priekšā.
 
+### Ja jau ir vecā `db.sqlite3`
+
+Projekts izmanto savu lietotāja modeli (`testsite.User`), un to var izvēlēties tikai pirms pirmās `migrate`. Ja `db.sqlite3` tika izveidota pirms tam, `migrate` apstāsies ar kļūdu `InconsistentMigrationHistory` (skat. [problēmu novēršanu](troubleshooting.md)). Vecā datubāze nesatur noderīgus datus, tāpēc to var droši izdzēst un izveidot no jauna:
+
+1. Aptur serveri, ja tas darbojas (`Ctrl+C`).
+2. Izdzēs failu `db.sqlite3` projekta mapē.
+3. Izveido tabulas no jauna:
+
+```bash
+uv run python manage.py migrate
+```
+
+Ja vecā datubāze tev tomēr jāsaglabā, pārvieto to uz mapi ārpus projekta, nevis pārsauc projekta mapē: kopija ar citu nosaukumu (piemēram, `db.sqlite3.bak`) Git redzētu kā neiekļautu failu, jo `.gitignore` ignorē tikai `db.sqlite3`.
+
+### Administratora konts (neobligāti)
+
+Lai pārskatītu lietotājus un viņu lomas, izveido administratoru (e-pasts ir obligāts, jo tam jābūt unikālam):
+
+```bash
+uv run python manage.py createsuperuser
+```
+
+Pēc servera palaišanas ieej <http://127.0.0.1:8000/admin/>.
+
 ### Ja `.env` jāizveido manuāli
 
 `scripts/setup_env.py` to izdara automātiski. Ja tomēr vajag ar roku:
@@ -89,7 +113,7 @@ uv run python manage.py runserver
 
 Terminālī parādīsies brīdinājums `WARNING: This is a development server…` – lokālajai izstrādei to var ignorēt.
 
-Atver <http://127.0.0.1:8000/>. Ja viss izdevies, redzēsi maketa autorizācijas lapu.
+Atver <http://127.0.0.1:8000/>. Ja viss izdevies, redzēsi autorizācijas lapu. Pirmo lietotāju izveido lapā `/registracija/` (pēc tam piesakies sākumlapā) vai ar `createsuperuser`. Visas lapas, izņemot autorizāciju un reģistrāciju, pieprasa pieteikšanos; bez tās notiek pāradresācija uz autorizācijas lapu.
 
 Serveri aptur terminālī ar `Ctrl+C` (arī macOS – Control, nevis Command).
 

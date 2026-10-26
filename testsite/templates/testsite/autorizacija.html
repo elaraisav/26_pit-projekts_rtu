@@ -11,18 +11,25 @@
     <div class="auth">
         <h1>Autorizācija</h1>
         <!-- Connect pages via urls defined in apps urls.py -->
-        <form class="auth-form" action="{% url 'testsite:sakumlapa' %}" method="get">
-            <input type="text" name="username" placeholder="Lietotājvārds" required>
-            <input type="text"  name="password" placeholder="Parole" required> <!-- japapildina te ar konkr ievadnosacījumiem-->
-            <button type="submit" id="iesniegt-btn">Iesniegt</button> <!-- Jāveic iesniegsanas funk., veiksmīhā gadījumā pārved uz sakumlapa.html -->
+        <form class="auth-form" action="{% url 'testsite:autorizacija' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% if form.non_field_errors %}
+                <ul class="form-errors">
+                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+            {{ form.username }}
+            {{ form.password }}
+            <button type="submit" id="iesniegt-btn">Iesniegt</button>
         </form>
         <div class="auth-buttons">
             <form action="{% url 'testsite:registracija' %}" method="get">
-                <button id="registreties-btn">Reģistrēties</button> <!-- Jāaizved uz registreties.html -->
+                <button id="registreties-btn">Reģistrēties</button>
             </form>
             <button id="aizmirsu-paroli-btn" disabled>Aizmirsu paroli</button> <!-- Jāaizved uz lapu aizmirsu-paroli.html-->
         </div>
     </div>
-    <a href="{% url 'testsite:admin_panel' %}" style="color: deeppink;">Tests - Uz administratora paneli</a>
+  <!-- <a href="{% url 'testsite:admin_panel' %}" style="color: deeppink;">Tests - Uz administratora paneli</a> -->
 </body>
 </html>

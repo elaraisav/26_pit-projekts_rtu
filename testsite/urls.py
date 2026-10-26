@@ -17,4 +17,5 @@ urlpatterns = [
     path('portfolio_regid/', views.portfolio_regid, name='portfolio_regid'),
     path('terzetava/', views.terzetava, name='terzetava'),
     path('report_submission/', views.report_submission, name='report_submission'),
+    path('admin_panel/', views.admin_panel, name='admin_panel'),
 ]

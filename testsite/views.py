@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 from chat.models import Conversation, can_chat, chat_partners_for, chat_users
 
 from .forms import LoginForm, RegistrationForm
+from .models import User
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.

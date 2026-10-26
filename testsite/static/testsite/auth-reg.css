@@ -54,6 +54,11 @@ h1 {
 }
 
 /* Ievadlauku dizains */
+.auth-form {
+    display: flex; 
+    flex-direction: column;
+}
+
 .auth-form input {
     display: block;
     align-self: center;
@@ -71,10 +76,14 @@ h1 {
     background-color: #FDF9ED;
 }
 
+.auth-form button {
+    align-self: center;
+}
+
 /* Visu pogu, kas ir konteinerī auth, formatējums */
 .auth button {
-    width: auto;
-    height: 25px;
+    width: 200px;
+    height: auto;
     padding: 5px;
     border-radius: 5px;
     font-size: 16px;
@@ -91,6 +100,8 @@ h1 {
 /* Tālāko pogu izkārtojums */
 .auth-buttons {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
     margin-top: 10px;
     /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
@@ -112,6 +123,11 @@ h1 {
 }
 
 /* Reģistrācijas ievadlauku formatējums */
+.reg-form {
+    display: flex; 
+    flex-direction: column;
+}
+
 .reg-form input {
     display: block;
     align-self: center;
@@ -128,12 +144,18 @@ h1 {
     color: #031D44;
     background-color: #FDF9ED;
 }
+
+.reg-form button {
+    align-self: center;
+}
+
 /* Role select (client / photographer) */
 .role-label{
     margin-bottom: 5px;
     font-size: 18px;
     color: #FDF9ED;
 }
+
 .reg-form select{
     display: block;
     align-self: center;
@@ -146,10 +168,11 @@ h1 {
     color: #031D44;
     background-color: #FDF9ED;
 }
+
 /* Reģistrācjas pogu formatējums */
 .reg button {
-    width: auto;
-    height: 25px;
+    width: 200px;
+    height: auto;
     padding: 5px;
     border-radius: 5px;
     font-size: 16px;
@@ -164,6 +187,10 @@ h1 {
 }
 
 .reg-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     margin-top: 10px;
     /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
     flex-wrap: wrap;
@@ -182,7 +209,3 @@ h1 {
     color: #FDF9ED;
     background-color: #D68A71;
 }
-
-/* Aizmirsu paroli lapas formatējums */
-/* :P */
-

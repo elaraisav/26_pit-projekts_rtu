@@ -9,17 +9,7 @@
 </head>
 <body>
     <div class="reg">
-<<<<<<< HEAD
         <h1>Reģistrācija</h1>
-        <form class="reg-form"> <!-- Jāpieliek funkcionalitāte !!!-->
-            <input type="text" id="lietotajvards-input" placeholder="Lietotājvārds" required>
-            <input type="text" id="parole-input" placeholder="Parole" required> <!-- japapildina te ar konkr ievadnosacījumiem-->
-            <input type="text" id="vards-input" placeholder="Vārds" required>
-            <input type="text" id="uzvards-input" placeholder="Uzvārds" required>
-            <input type="text" id="epasts-input" placeholder="E-Pasts" required>
-            <button type="submit" id="registreties-btn">Reģistrēties</button> <!-- izpilda registracijas funkciju -->
-=======
-        <h1>Registracija</h1>
         <form class="reg-form" action="{% url 'testsite:registracija' %}" method="post">
             {% csrf_token %}
             {% if form.non_field_errors %}
@@ -42,7 +32,6 @@
             <label class="role-label" for="{{ form.role.id_for_label }}">Es esmu:</label>
             {{ form.role }}
             <button type="submit" id="registreties-btn">Reģistrēties</button>
->>>>>>> 24e1a0e2541c9ddeafdfa58b400b8a2ca188b03c
         </form>
         <div class="reg-button">
             <form action="{% url 'testsite:autorizacija' %}" method="get">

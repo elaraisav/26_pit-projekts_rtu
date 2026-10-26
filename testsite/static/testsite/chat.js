@@ -19,6 +19,10 @@
     const GROUP_GAP_MS = 5 * 60 * 1000;
     let lastGroup = null;
 
+    // Ids of messages already on the page, so live and fetched messages never show twice.
+    const shownIds = new Set();
+    let lastId = 0;
+
     function formatTime(date) {
         const time = date.toLocaleTimeString('lv-LV', {hour: '2-digit', minute: '2-digit'});
         if (date.toDateString() === new Date().toDateString()) {
@@ -36,6 +40,12 @@
     }
 
     function addMessage(message) {
+        if (shownIds.has(message.id)) {
+            return;
+        }
+        shownIds.add(message.id);
+        lastId = Math.max(lastId, message.id);
+
         const created = new Date(message.created_at);
         const mine = message.sender_id === userId;
 
@@ -75,18 +85,46 @@
     history.forEach(addMessage);
     scrollToBottom();
 
+    // Fetches messages newer than the last one shown: those sent while the page
+    // was loading or while the connection was down.
+    function fetchMissed() {
+        fetch(`/terzetava/${conversationId}/messages/?after=${lastId}`, {credentials: 'same-origin'})
+            .then(function (response) {
+                return response.ok ? response.json() : {messages: []};
+            })
+            .then(function (data) {
+                const stick = isNearBottom();
+                data.messages.forEach(addMessage);
+                if (stick) {
+                    scrollToBottom();
+                }
+            })
+            .catch(function () {
+                // The live connection still works; nothing else to do.
+            });
+    }
+
     // WebSocket connection, reconnecting with a growing delay if it drops.
+    // If it never manages to open, 3 times in a row before the page was ever connected,
+    // stop: the user is probably logged out or not allowed in this conversation.
+    // After a successful connection, drops (e.g. a server restart) keep retrying.
+    const MAX_REFUSED = 3;
     let socket = null;
     let retryDelay = 1000;
+    let everOpened = false;
+    let refusedInARow = 0;
 
     function connect() {
         const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
         socket = new WebSocket(`${scheme}://${window.location.host}/ws/chat/${conversationId}/`);
 
         socket.addEventListener('open', function () {
+            everOpened = true;
+            refusedInARow = 0;
             retryDelay = 1000;
             status.textContent = '';
             input.disabled = false;
+            fetchMissed();
         });
 
         socket.addEventListener('message', function (event) {
@@ -100,6 +138,13 @@
 
         socket.addEventListener('close', function () {
             input.disabled = true;
+            if (!everOpened) {
+                refusedInARow += 1;
+                if (refusedInARow >= MAX_REFUSED) {
+                    status.textContent = 'Neizdevās savienoties. Pārlādē lapu vai pieslēdzies vēlreiz.';
+                    return;
+                }
+            }
             status.textContent = 'Savienojums pārtrūka. Mēģinu savienoties vēlreiz…';
             setTimeout(connect, retryDelay);
             retryDelay = Math.min(retryDelay * 2, 15000);

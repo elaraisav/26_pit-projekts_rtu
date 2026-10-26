@@ -35,6 +35,10 @@
                    href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ
                 </a>
 
+                {% if not chat_allowed %}
+                <!-- Admin accounts don't take part in the chat -->
+                <p class="chat-empty">Administratoru konti sarakstē nepiedalās.</p>
+                {% else %}
                 <!-- Start a conversation with someone of the other role -->
                 <form class="chat-new-form" method="post" action="{% url 'testsite:chat_start' %}">
                     {% csrf_token %}
@@ -52,6 +56,7 @@
                         <p class="chat-empty">Ar visiem jau ir saruna.</p>
                     {% endif %}
                 </form>
+                {% endif %}
             </section>
 
             <section class="chat-contacts">
@@ -142,7 +147,9 @@
         {% else %}
         <main class="chat-main chat-main-empty">
             <p>
-                {% if user.is_photographer %}
+                {% if not chat_allowed %}
+                    Administratoru konti sarakstē nepiedalās.
+                {% elif user.is_photographer %}
                     Te būs tavas sarunas ar klientiem. Izvēlies klientu kreisajā pusē, lai sāktu sarunu.
                 {% else %}
                     Te būs tavas sarunas ar fotogrāfiem. Izvēlies fotogrāfu kreisajā pusē, lai sāktu sarunu.

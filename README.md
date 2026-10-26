@@ -53,7 +53,7 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
 | `/profila_regid/` | Profila rediģēšana (`regid` = rediģēt) | makets |
 | `/portfolio_regid/` | Portfolio rediģēšana | makets |
-| `/terzetava/` | Tērzētava (klienta skats) | makets |
+| `/terzetava/` | Tērzētava (klienta skats) | darbojas |
 | `/report_submission/` | Sūdzības ziņojuma iesniegšana par lietotāju | makets |
 | `/admin_panel/` | Administratora panelis par sistēmas darbību | makets |
 

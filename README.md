@@ -50,9 +50,9 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/sakumlapa/` | Sākumlapa | makets |
 | `/meklesana/` | Fotogrāfu meklēšana un rezultāti | makets |
 | `/profils/` | Klienta profils (paša skats) | makets |
-| `/profils_fotogr/` | Fotogrāfa profils (paša skats; pagaidām pieejams tikai ar pagaidu pogu sākumlapā) | makets |
+| `/profils_fotogr/` | Fotogrāfa profils (paša skats; pagaidām pieejams tikai ar pagaidu pogu sākumlapā) | daļēji (vārds un apraksts ir reāli; bilde un portfolio – makets) |
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
-| `/profila_regid/` | Profila rediģēšana (`regid` = rediģēt) | makets |
+| `/profila_regid/` | Profila apraksta rediģēšana (`regid` = rediģēt); profila attēls vēl netiek saglabāts | darbojas |
 | `/portfolio_regid/` | Portfolio rediģēšana | makets |
 | `/terzetava/` | Tērzētava: sarunu saraksts un jaunas sarunas sākšana (klientam un fotogrāfam) | darbojas |
 | `/terzetava/<id>/` | Konkrēta saruna | darbojas |
@@ -61,9 +61,11 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/report_submission/` | Sūdzības ziņojuma iesniegšana par lietotāju | makets |
 | `/admin_panel/` | Administratora panelis par sistēmas darbību | makets |
 
-Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. Statuss „darbojas" nozīmē, ka lapa strādā ar reāliem datiem. Statuss tiks mainīts, kad lapa sāks strādāt ar reāliem datiem.
+Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. Statuss „darbojas" nozīmē, ka lapa strādā ar reāliem datiem. Statuss „daļēji" nozīmē, ka daļa lapas satura ir reāla, bet daļa vēl ir makets. Statuss tiks mainīts, kad lapa sāks strādāt ar reāliem datiem.
 
 Visas lapas, izņemot `/`, `/registracija/` un `/registracija/nosutita/`, pieprasa pieteikšanos. Izņēmums ir makets `/admin_panel/`: tam pieteikšanās pagaidām nav jāpieprasa.
+
+Fotogrāfa profila lapas (`/profils_fotogr/`, `/profila_regid/`) ir pieejamas tikai fotogrāfiem; klienti saņem kļūdu 404.
 
 Tērzētavā sarunu var sākt tikai klients ar fotogrāfu. Administratoru konti tajā nepiedalās.
 

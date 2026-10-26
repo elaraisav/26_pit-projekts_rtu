@@ -12,6 +12,7 @@ Biežākās kļūdas uzstādīšanas un palaišanas laikā. Uzstādīšanas soļ
 | `running scripts is disabled on this system` (PowerShell) | VS Code mēģina aktivizēt `.venv` ar `Activate.ps1` | Var ignorēt – `uv run` aktivizācija nav vajadzīga. Lai paziņojums pazustu: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | `python` atver Microsoft Store (Windows) | Palaists sistēmas `python`, nevis projekta | Izmanto `uv run python` |
 | `InconsistentMigrationHistory: Migration admin.0001_initial is applied before its dependency testsite.0001_initial on database 'default'.` | `db.sqlite3` izveidota pirms projekts pārgāja uz savu lietotāja modeli | Izdzēs `db.sqlite3` un izpildi `migrate` vēlreiz (skat. [„Ja jau ir vecā `db.sqlite3`"](setup.md#ja-jau-ir-vecā-dbsqlite3)) |
+| `OperationalError: no such table: testsite_photographer` (fotogrāfa profila lapās) | Pēc `git pull` nav izpildīta jaunā migrācija | Izpildi `uv run python manage.py migrate` un pārstartē serveri |
 | `Error: That port is already in use.` | Serveris jau darbojas citā terminālī | Aizver to vai palaid citā portā: `runserver 8001` |
 
 Ja problēma nav sarakstā, dodiet ziņu komandai – pievienosim risinājumu šeit.

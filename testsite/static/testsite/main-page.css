@@ -1073,20 +1073,6 @@ a {
     font-size: 13px;
     font-weight: normal;
 }
-/*
-.chat-contacts .chat-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 46px;
-    padding: 7px 4px;
-    border: 1px solid var(--navy);
-    border-radius: 9px;
-    background: var(--green);
-    color: var(--navy);
-    font-size: 13px;
-}*/
 
 .chat-contacts .chat-btn:hover,
 .chat-contacts .chat-btn[aria-current="page"] {

@@ -16,6 +16,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-sizing: border-box;
+}
+/* The * rule above would also show the head element (the page title) */
+head{
+    display: none;
+}
+/* Lapas pamata dizians, īpašības */
+body{
     font-family: 'Helvetica', sans-serif;
     background: #043B62;
     margin: 0;
@@ -27,7 +35,7 @@ body {
     margin: 50px auto;
     margin-top: 150px;
     margin-bottom: 50px;
-    height: 350px;
+    min-height: 350px;
     width: 450px;
     padding: 20px;
     border-radius: 5px;
@@ -95,7 +103,7 @@ h1 {
     margin: 50px auto;
     margin-top: 100px;
     margin-bottom: 50px;
-    height: 500px;
+    min-height: 500px;
     width: 450px;
     padding: 20px;
     border-radius: 5px;
@@ -120,7 +128,24 @@ h1 {
     color: #031D44;
     background-color: #FDF9ED;
 }
-
+/* Role select (client / photographer) */
+.role-label{
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #FDF9ED;
+}
+.reg-form select{
+    display: block;
+    align-self: center;
+    width: 300px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 3px;
+    font-size: 18px;
+    text-align: center;
+    color: #031D44;
+    background-color: #FDF9ED;
+}
 /* Reģistrācjas pogu formatējums */
 .reg button {
     width: auto;
@@ -143,3 +168,21 @@ h1 {
     /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
     flex-wrap: wrap;
 }
+
+/* Error messages in the login and registration forms */
+.form-errors,
+.field-error{
+    align-self: center;
+    width: 300px;
+    margin: 0 0 10px 0;
+    padding: 5px;
+    list-style: none;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #FDF9ED;
+    background-color: #D68A71;
+}
+
+/* Aizmirsu paroli lapas formatējums */
+/* :P */
+

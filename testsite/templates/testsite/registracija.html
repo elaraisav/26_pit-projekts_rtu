@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="reg">
+<<<<<<< HEAD
         <h1>Reģistrācija</h1>
         <form class="reg-form"> <!-- Jāpieliek funkcionalitāte !!!-->
             <input type="text" id="lietotajvards-input" placeholder="Lietotājvārds" required>
@@ -17,11 +18,37 @@
             <input type="text" id="uzvards-input" placeholder="Uzvārds" required>
             <input type="text" id="epasts-input" placeholder="E-Pasts" required>
             <button type="submit" id="registreties-btn">Reģistrēties</button> <!-- izpilda registracijas funkciju -->
+=======
+        <h1>Registracija</h1>
+        <form class="reg-form" action="{% url 'testsite:registracija' %}" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <ul class="form-errors">
+                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+            {{ form.username }}
+            {% for error in form.username.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.first_name }}
+            {% for error in form.first_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.last_name }}
+            {% for error in form.last_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.email }}
+            {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.password1 }}
+            {% for error in form.password1.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            {{ form.password2 }}
+            {% for error in form.password2.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            <label class="role-label" for="{{ form.role.id_for_label }}">Es esmu:</label>
+            {{ form.role }}
+            <button type="submit" id="registreties-btn">Reģistrēties</button>
+>>>>>>> 24e1a0e2541c9ddeafdfa58b400b8a2ca188b03c
         </form>
         <div class="reg-button">
             <form action="{% url 'testsite:autorizacija' %}" method="get">
-                <button id="atgriesties-btn">Atgriesties</button> <!-- ved atpakal uz autorizacija.html-->
+                <button id="atgriesties-btn">Atgriesties</button>
             </form>  
         </div>
     </div>
 </body>
+</html>

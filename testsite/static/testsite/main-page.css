@@ -1627,3 +1627,41 @@ a {
     border-top: 0;
     text-align: center;
 }
+
+/* Paziņojumi: peld lapas augšā un neietekmē izkārtojumu */
+.toast-area {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(420px, calc(100% - 32px));
+}
+
+.toast {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: var(--terracotta);
+    color: var(--cream);
+    box-shadow: 0 4px 14px rgba(3, 29, 68, 0.3);
+}
+
+.toast-error {
+    background: var(--navy);
+}
+
+.toast-close {
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}

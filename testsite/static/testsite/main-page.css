@@ -1073,7 +1073,7 @@ a {
     font-size: 13px;
     font-weight: normal;
 }
-
+/*
 .chat-contacts .chat-btn {
     display: flex;
     align-items: center;
@@ -1086,7 +1086,7 @@ a {
     background: var(--green);
     color: var(--navy);
     font-size: 13px;
-}
+}*/
 
 .chat-contacts .chat-btn:hover,
 .chat-contacts .chat-btn[aria-current="page"] {
@@ -1148,8 +1148,8 @@ a {
     padding: 8px 12px;
     border: 1px solid var(--navy);
     border-radius: 12px;
-    background: var(--green);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--cream);
     font: inherit;
     font-size: 13px;
     text-align: center;

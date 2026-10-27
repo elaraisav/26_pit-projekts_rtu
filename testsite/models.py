@@ -20,3 +20,14 @@ class User(AbstractUser):
     @property
     def is_photographer(self):
         return self.role == self.PHOTOGRAPHER
+
+
+# Photographer details, one row per photographer account (design 2.2, table
+# "Fotogrāfi"). Reached from the user as user.profile. For now only the
+# description (max 250 characters, F-LIM-1); more fields come with search.
+class Photographer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    description = models.TextField('Apraksts', max_length=250, blank=True)
+
+    def __str__(self):
+        return self.user.get_username()

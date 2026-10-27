@@ -71,10 +71,8 @@
                     Apraksts
                 </label>
 
-                <textarea id="profileDescription"
-                          name="description"
-                          class="edit-description-input"
-                          placeholder="Ievadiet savu aprakstu...">{{ user.profile.description|default_if_none:"" }}</textarea>
+                {{ form.description }}
+                {{ form.description.errors }}
 
                 <div class="edit-actions">
                     <button type="submit"

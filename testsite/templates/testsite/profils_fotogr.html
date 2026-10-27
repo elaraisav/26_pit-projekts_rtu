@@ -52,7 +52,7 @@
                     class="profile-avatar">
 
                 <div class="profile-details">
-                    <h1>Vārds Uzvārds</h1>
+                    <h1>{{ user.get_full_name }}</h1>
                     <a href="{% url 'testsite:profila_regid' %}"
                         type="button"
                         class="edit-profile-btn">
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="profile-description">
-                    <p>Apraksts</p>
+                    <p>{{ profile.description|default:"Apraksts vēl nav pievienots." }}</p>
                 </div>
 
             </section>
@@ -155,5 +155,24 @@
     </div>
         </main>
     </div>
+
+    <!-- Paziņojumi (Django messages): peld augšā, neaizņem vietu lapā un pazūd paši -->
+    {% if messages %}
+        <div class="toast-area" role="status">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.level_tag }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="toast-close" aria-label="Aizvērt">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            document.querySelectorAll(".toast").forEach(function (toast) {
+                const hide = function () { toast.remove(); };
+                toast.querySelector(".toast-close").addEventListener("click", hide);
+                setTimeout(hide, 4000);
+            });
+        </script>
+    {% endif %}
 </body>
 </html>

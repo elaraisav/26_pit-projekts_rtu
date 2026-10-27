@@ -43,19 +43,19 @@ Pēc uzstādīšanas lokāli parādīsies arī (repozitorijā tie netiek iekļau
 
 ## `testsite/` – lietotne
 
-Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu, izņemot autorizāciju, reģistrāciju un tērzētavu (sk. [README](../README.md#lapas)). Tērzētavas skati atrodas šeit (`views.py`), bet tās dati un WebSocket loģika – lietotnē `chat`.
+Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu, izņemot autorizāciju, reģistrāciju, tērzētavu un fotogrāfa profila aprakstu (sk. [README](../README.md#lapas)). Tērzētavas skati atrodas šeit (`views.py`), bet tās dati un WebSocket loģika – lietotnē `chat`.
 
 | Ceļš | Uzdevums |
 |---|---|
 | `urls.py` | Lietotnes maršruti: kura adrese atver kuru lapu. |
 | `views.py` | Funkcijas, kas pieņem pieprasījumu un atgriež lapu. |
-| `models.py` | Datubāzes tabulu apraksts. Pagaidām tikai lietotājs `User` (lietotājvārds, unikāls e-pasts, loma: klients vai fotogrāfs). Tērzētavas tabulas ir `chat/models.py`. |
-| `forms.py` | Autorizācijas un reģistrācijas formas. |
-| `admin.py` | Reģistrē `User` Django administrācijas panelī (`/admin/`). |
+| `models.py` | Datubāzes tabulu apraksts. Lietotājs `User` (lietotājvārds, unikāls e-pasts, loma: klients vai fotogrāfs) un `Photographer` (fotogrāfa profils, pieejams kā `user.profile`; pagaidām tikai apraksts līdz 250 rakstzīmēm). Tērzētavas tabulas ir `chat/models.py`. |
+| `forms.py` | Autorizācijas, reģistrācijas un fotogrāfa profila (`PhotographerForm`) formas. |
+| `admin.py` | Reģistrē `User` un `Photographer` Django administrācijas panelī (`/admin/`). |
 | `templates/testsite/` | HTML veidnes (lapas). |
 | `static/testsite/` | CSS, JavaScript un attēli, ko lapas ielādē. |
-| `migrations/` | Datubāzes izmaiņu vēsture (pagaidām `0001_initial`). Kopīgs kods, sk. [līdzdalība](contributing.md#atkarības-un-migrācijas). |
-| `tests.py`, `apps.py` | Testi (pagaidām reģistrācijas) un Django standarta konfigurācija. |
+| `migrations/` | Datubāzes izmaiņu vēsture (`0001_initial`, `0002_photographer`). Kopīgs kods, sk. [līdzdalība](contributing.md#atkarības-un-migrācijas). |
+| `tests.py`, `apps.py` | Testi (reģistrācijas un fotogrāfa profila) un Django standarta konfigurācija. |
 
 ## `chat/` – tērzētava
 

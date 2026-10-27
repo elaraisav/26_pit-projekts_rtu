@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 
 from chat.models import Conversation, can_chat, chat_partners_for, chat_users
 
-from .forms import LoginForm, RegistrationForm
-from .models import User
+from .forms import LoginForm, PhotographerForm, RegistrationForm
+from .models import Photographer, User
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -69,15 +69,29 @@ def profils(request):
 
 @login_required
 def profils_fotogr(request):
-    return render(request, 'testsite/profils_fotogr.html')
+    if not request.user.is_photographer:
+        raise Http404
+    # The profile row is created on the first edit, so it may not exist yet.
+    profile = Photographer.objects.filter(user=request.user).first()
+    return render(request, 'testsite/profils_fotogr.html', {'profile': profile})
 
 @login_required
 def profils_fotogr_klienta(request):
     return render(request, 'testsite/profils_fotogr_klienta.html')
 
+# Edit the logged-in photographer's own profile (design 5.1.6). There is no id in the
+# URL, so nobody can edit someone else's profile; clients have no profile page.
 @login_required
 def profila_regid(request):
-    return render(request, 'testsite/profila_regid.html')
+    if not request.user.is_photographer:
+        raise Http404
+    profile, _ = Photographer.objects.get_or_create(user=request.user)
+    form = PhotographerForm(request.POST or None, instance=profile)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Profila izmaiņas saglabātas.')
+        return redirect('testsite:profils_fotogr')
+    return render(request, 'testsite/profila_regid.html', {'form': form})
 
 @login_required
 def portfolio_regid(request):

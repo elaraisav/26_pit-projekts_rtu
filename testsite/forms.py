@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-from .models import User
+from .models import Photographer, User
 
 
 # Login form: Django checks the username and password itself.
@@ -52,3 +52,28 @@ class RegistrationForm(UserCreationForm):
     # shows the same page either way, so the form never reveals which accounts exist.
     def validate_unique(self):
         pass
+
+
+# Photographer profile form (design 5.1.6): the length rule is Django's own
+# max_length check, only the message text comes from the design. No HTML
+# maxlength on the textarea, otherwise the browser would stop typing and this
+# message would never show.
+class PhotographerForm(forms.ModelForm):
+    class Meta:
+        model = Photographer
+        fields = ('description',)
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'id': 'profileDescription',
+                'class': 'edit-description-input',
+                'placeholder': 'Ievadiet savu aprakstu...',
+            }),
+        }
+        error_messages = {
+            'description': {'max_length': 'Apraksts nedrīkst pārsniegt 250 rakstzīmes!'},
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Django adds maxlength from the model field by itself; remove it.
+        self.fields['description'].widget.attrs.pop('maxlength', None)

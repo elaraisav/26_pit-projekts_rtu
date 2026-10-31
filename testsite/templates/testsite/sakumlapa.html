@@ -20,11 +20,9 @@
             <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
         </form>
         <div class="topbar-actions">
-            <form action="{% url 'testsite:profils' %}" method="get">
-                <button class="profile-btn">Mans Profils</button>
-            </form>
-            <form action="{% url 'testsite:profils_fotogr' %}" method="get">
-                    <button class="profile-btn">test-uz fotografa profilu</button>
+            <!-- Pārbauda kāda ir lietotāja loma, aizved uz pareizo lapu -->
+            <form action="{% if user.is_photographer %}{% url 'testsite:profils_fotogr' %}{% else %}{% url 'testsite:profils' %}{% endif %}" method="get">
+                <button class="profile-btn" type="submit">Mans Profils</button>
             </form>
             <form action="{% url 'testsite:logout' %}" method="post">
                 {% csrf_token %}
@@ -35,6 +33,7 @@
     <div class="mainpage">
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
             <h3>Aktīvās sarakstes</h3>
+
             <div class="profili">
                 <article class="profils"> <!-- ChatCPT ieteikums -->
                     <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
@@ -105,3 +104,4 @@
         </main>
     </div>
 </body>
+</html>

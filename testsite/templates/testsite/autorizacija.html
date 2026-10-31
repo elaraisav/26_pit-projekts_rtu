@@ -30,7 +30,8 @@
             <button id="aizmirsu-paroli-btn" disabled>Aizmirsu paroli</button> <!-- Jāaizved uz lapu aizmirsu-paroli.html-->
         </div>
     </div>
-    <!-- var mēģināt atkomentēt -->
-    <a href="{% url 'testsite:admin_panel' %}" style="color: deeppink;">Tests - Uz administratora paneli</a>
+    <div class="admin-panel">
+        <a class="admin-btn" href="{% url 'testsite:admin_panel' %}">Administratora panelis (Funkcionalitātes atrādei)</a>
+    </div>
 </body>
 </html>

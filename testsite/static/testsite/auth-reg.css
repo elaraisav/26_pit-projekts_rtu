@@ -11,20 +11,19 @@
     box-sizing: border-box;
 }
 
+/* The * rule above would also show the head element (the page title) */
+head{
+    display: none;
+}
+
 /* Lapas pamata dizains, īpašības */
 body {
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
-}
-/* The * rule above would also show the head element (the page title) */
-head{
-    display: none;
-}
-/* Lapas pamata dizians, īpašības */
-body{
-    font-family: 'Helvetica', sans-serif;
+
+    font-family: Helvetica, Arial, sans-serif;
     background: #043B62;
     margin: 0;
     padding: 0;
@@ -41,6 +40,18 @@ body{
     border-radius: 5px;
     background: #70A288; 
     text-align: center;
+}
+
+/* Visu pogu, kas ir konteinerī auth, formatējums */
+.auth button {
+    width: 200px;
+    height: auto;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #FDF9ED;
+    background-color: #031D44;
+    cursor: pointer;
 }
 
 /* Virsraksts */
@@ -78,18 +89,7 @@ h1 {
 
 .auth-form button {
     align-self: center;
-}
-
-/* Visu pogu, kas ir konteinerī auth, formatējums */
-.auth button {
-    width: 200px;
-    height: auto;
-    padding: 5px;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #FDF9ED;
-    background-color: #031D44;
-    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */
@@ -106,6 +106,35 @@ h1 {
     margin-top: 10px;
     /* Ja ekrāns ir ļoti šaurs, pogas drīkst pāriet nākamajā rindā */
     flex-wrap: wrap;
+}
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Lai tiktu iekļauts prototipā - piekļuve administratora panelim */
+.admin-btn {
+    display: block;
+    align-self: center;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+
+    width: 300px;
+    height: auto;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #031D44;
+    color: #FDF9ED;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.admin-btn:hover {
+    background: #D68A71;
 }
 
 /* Registracijas lapas formatējums */
@@ -147,6 +176,7 @@ h1 {
 
 .reg-form button {
     align-self: center;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Role select (client / photographer) */
@@ -179,6 +209,7 @@ h1 {
     color: #FDF9ED;
     background-color: #031D44;
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */

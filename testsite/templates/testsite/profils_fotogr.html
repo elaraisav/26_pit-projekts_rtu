@@ -7,152 +7,140 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
 </head>
- <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
-        <!-- ChatGPT ieteikums -->
-        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
-            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
-            <!-- Vai kāds atceras kas vietnei bija izdomātais nosaukums?-->
-        </a>
-        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
-            <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
-            <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
-        </form>
-        <form><button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button></form>
-    </header>
+<header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+    <!-- ChatGPT ieteikums -->
+    <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+        <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+    </a>
+    <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+        <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
+        <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
+    </form>
+    <form><button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button></form>
+</header>
 <body>
-      <div class="mainpage">
+    <div class="mainpage">
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
             <h3>Aktīvās sarakstes</h3>
             <div class="profili">
-                <article class="profils"> <!-- ChatCPT ieteikums -->
-                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
-                    <div class="profile-info">
-                        <p>Anna Bērziņa</p>
-                        <a href="{% url 'testsite:terzetava' %}" class="chat-btn">Sarakstīties</a>
-                    </div>
-                </article>
+                {% for contact in chat_users %}
                 <article class="profils">
-                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
                     <div class="profile-info">
-                        <p>Jānis Ozols</p>
-                        <a href="{% url 'testsite:terzetava' %}" class="chat-btn">Sarakstīties</a>
+                        <p>{{ contact.get_full_name|default:contact.username }}</p>
+                        <a href="{% url 'testsite:chat_conversation' conversation_id=0 %}" class="chat-btn">Sarakstīties</a>
                     </div>
                 </article>
+                {% empty %}
+                    <p>Jums pašlaik nav aktīvu sarakstu.</p>
+                {% endfor %}
             </div>
         </aside>
         <main class="profile">
-  <!--iespējams fotogrāfa skats. neesmu pārbaudījusi -M-->
-        <div class="container">
-            <!-- Profila augšējā sadaļa -->
-            <section class="profile-header">
+            <div class="container">
+                <!-- Profila augšējā sadaļa -->
+                <section class="profile-header">
+                    <img
+                        src="{% static 'testsite/images/profilepic1.jpg' %}"
+                        alt="Profila attēls"
+                        class="profile-avatar">
 
-                <img
-                    src="{% static 'testsite/images/profilepic1.jpg' %}"
-                    alt="Profila attēls"
-                    class="profile-avatar">
-
-                <div class="profile-details">
-                    <h1>{{ user.get_full_name }}</h1>
-                    <a href="{% url 'testsite:profila_regid' %}"
-                        type="button"
-                        class="edit-profile-btn">
-                        Rediģēt profilu
-                    </a>
-                </div>
-
-                <div class="profile-description">
-                    <p>{{ profile.description|default:"Apraksts vēl nav pievienots." }}</p>
-                </div>
-
-            </section>
-
-            <!-- Portfolio virsraksts -->
-            <section class="portfolio">
-
-                <div class="portfolio-header">
-                    <h2>Portfolio:</h2>
-                    <a href="{% url 'testsite:portfolio_regid' %}"
-                        type="button"
-                        class="edit-portfolio-btn">
-                        Rediģēt portfolio
-                    </a>
-                    </button>
-                </div>
-
-                <!-- Portfolio fotogrāfijas -->
-                <div class="portfolio-grid">
-
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/nature-01.jpg' %}"
-                            alt="Portfolio attēls 1">
+                    <div class="profile-details">
+                        <h1>{{ user.get_full_name }}</h1>
+                        <a href="{% url 'testsite:profila_regid' %}"
+                            type="button"
+                            class="edit-profile-btn">
+                            Rediģēt profilu
+                        </a>
                     </div>
-                    <h3>Nosaukums 1</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 1</p>
-                    </div>
-                </article>
 
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/portrait-01.jpg' %}"
-                            alt="Portfolio attēls 2">
+                    <div class="profile-description">
+                        <p>{{ profile.description|default:"Apraksts vēl nav pievienots." }}</p>
                     </div>
-                    <h3>Nosaukums 2</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 2</p>
-                    </div>
-                </article>
 
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/portrait-02.jpg' %}"
-                            alt="Portfolio attēls 3">
-                    </div>
-                    <h3>Nosaukums 3</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 3</p>
-                    </div>
-                </article>
+                </section>
 
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/nature-05.jpg' %}"
-                            alt="Portfolio attēls 4">
-                    </div>
-                    <h3>Nosaukums 4</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 4</p>
-                    </div>
-                </article>
+                <!-- Portfolio virsraksts -->
+                <section class="portfolio">
 
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/nature-02.jpg' %}"
-                            alt="Portfolio attēls 5">
+                    <div class="portfolio-header">
+                        <h2>Portfolio:</h2>
+                        <a href="{% url 'testsite:portfolio_regid' %}"
+                            type="button"
+                            class="edit-portfolio-btn">
+                            Rediģēt portfolio
+                        </a>
                     </div>
-                    <h3>Nosaukums 5</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 5</p>
-                    </div>
-                </article>
 
-                <article class="portfolio-card">
-                    <div class="portfolio-image">
-                        <img src="{% static 'testsite/images/photos/nature-06.jpg' %}"
-                            alt="Portfolio attēls 6">
-                    </div>
-                    <h3>Nosaukums 6</h3>
-                    <div class="portfolio-description">
-                        <p>Apraksts 6</p>
-                    </div>
-                </article>
+                    <!-- Portfolio fotogrāfijas -->
+                    <div class="portfolio-grid">
 
-                </div>
-            </section>
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/nature-01.jpg' %}"
+                                alt="Portfolio attēls 1">
+                        </div>
+                        <h3>Nosaukums 1</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 1</p>
+                        </div>
+                    </article>
 
-        </main>
-    </div>
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/portrait-01.jpg' %}"
+                                alt="Portfolio attēls 2">
+                        </div>
+                        <h3>Nosaukums 2</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 2</p>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/portrait-02.jpg' %}"
+                                alt="Portfolio attēls 3">
+                        </div>
+                        <h3>Nosaukums 3</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 3</p>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/nature-05.jpg' %}"
+                                alt="Portfolio attēls 4">
+                        </div>
+                        <h3>Nosaukums 4</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 4</p>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/nature-02.jpg' %}"
+                                alt="Portfolio attēls 5">
+                        </div>
+                        <h3>Nosaukums 5</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 5</p>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="{% static 'testsite/images/photos/nature-06.jpg' %}"
+                                alt="Portfolio attēls 6">
+                        </div>
+                        <h3>Nosaukums 6</h3>
+                        <div class="portfolio-description">
+                            <p>Apraksts 6</p>
+                        </div>
+                    </article>
+                </section>
+            </div>
         </main>
     </div>
 

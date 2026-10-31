@@ -89,6 +89,7 @@ h1 {
 
 .auth-form button {
     align-self: center;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */
@@ -108,8 +109,9 @@ h1 {
 }
 
 .admin-panel {
-    display: flex; 
+    display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 /* Lai tiktu iekļauts prototipā - piekļuve administratora panelim */
@@ -127,17 +129,12 @@ h1 {
     background: #031D44;
     color: #FDF9ED;
     cursor: pointer;
+    text-decoration: none;
     transition: background-color 0.2s, color 0.2s;
 }
 
-.admin-btn:not(:disabled):hover {
+.admin-btn:hover {
     background: #D68A71;
-    color: #FDF9ED;
-}
-
-.admin-btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
 }
 
 /* Registracijas lapas formatējums */
@@ -179,6 +176,7 @@ h1 {
 
 .reg-form button {
     align-self: center;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Role select (client / photographer) */
@@ -211,6 +209,7 @@ h1 {
     color: #FDF9ED;
     background-color: #031D44;
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 /* Pogas maina krāsu, kad tām uzbrauc ar peli */

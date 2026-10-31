@@ -57,7 +57,25 @@ def logout_view(request):
 
 @login_required
 def sakumlapa(request):
-    return render(request, 'testsite/sakumlapa.html')
+    user = request.user
+    allowed = can_chat(user)
+
+    conversations = (
+        Conversation.objects
+        .for_user(user)
+        .usable()
+        .select_related('client', 'photographer')
+        if allowed else []
+    )
+
+    chat_users = [
+        conversation.other_participant(user)
+        for conversation in conversations
+    ]
+
+    return render(request, 'testsite/sakumlapa.html', {
+        'chat_users': chat_users,
+    })
 
 @login_required
 def meklesana(request):

@@ -55,26 +55,33 @@ def logout_view(request):
     logout(request)
     return redirect('testsite:autorizacija')
 
-@login_required
-def sakumlapa(request):
-    user = request.user
-    allowed = can_chat(user)
+# Palīgfunkcija, lai vienkāršotu sānjoslas funkcionalitātes koda atkārtošanos. Ekvivalents tam, ka katrai
+# lapas izsaucosai funkcijai ar sidebar ieraksta šo koda gabalu un tad return render. ChatGPT asistēts.
+def get_sidebar_conversations(user):
+    """
+    Atgriež lietotāja sarunas un katras sarunas otru dalībnieku. Kopīgs koda katrai sānjoslas instancei.
+    """
+    if not can_chat(user):
+        return []
 
     conversations = (
         Conversation.objects
         .for_user(user)
         .usable()
         .select_related('client', 'photographer')
-        if allowed else []
     )
 
-    chat_users = [
-        conversation.other_participant(user)
+    return [
+        (conversation, conversation.other_participant(user))
         for conversation in conversations
     ]
 
+@login_required
+def sakumlapa(request):
+    conversations = get_sidebar_conversations(request.user)
+
     return render(request, 'testsite/sakumlapa.html', {
-        'chat_users': chat_users,
+        'conversations': conversations,
     })
 
 @login_required
@@ -83,19 +90,36 @@ def meklesana(request):
 
 @login_required
 def profils(request):
-    return render(request, 'testsite/profils.html')
+    conversations = get_sidebar_conversations(request.user)
+
+    return render(request, 'testsite/profils.html', {
+        'conversations': conversations,
+    })
 
 @login_required
 def profils_fotogr(request):
     if not request.user.is_photographer:
         raise Http404
+    
     # The profile row is created on the first edit, so it may not exist yet.
+    # Iegūst fotogrāfa profilu
     profile = Photographer.objects.filter(user=request.user).first()
-    return render(request, 'testsite/profils_fotogr.html', {'profile': profile})
+
+    # Iegūst aktīvās sarunas sānjoslai
+    conversations = get_sidebar_conversations(request.user)
+
+    return render(request, 'testsite/profils_fotogr.html', {
+        'profile': profile,
+        'conversations': conversations,
+    })
 
 @login_required
 def profils_fotogr_klienta(request):
-    return render(request, 'testsite/profils_fotogr_klienta.html')
+    conversations = get_sidebar_conversations(request.user)
+    
+    return render(request, 'testsite/profils_fotogr_klienta.html', {
+        'conversations': conversations,
+    })
 
 # Edit the logged-in photographer's own profile (design 5.1.6). There is no id in the
 # URL, so nobody can edit someone else's profile; clients have no profile page.

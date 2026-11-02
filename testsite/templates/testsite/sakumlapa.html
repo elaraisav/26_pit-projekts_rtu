@@ -33,15 +33,14 @@
     <div class="mainpage">
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
             <h3>Aktīvās sarakstes</h3>
-
             <div class="profili">
-                {% for contact in chat_users %}
-                <article class="profils">
-                    <div class="profile-info">
-                        <p>{{ contact.get_full_name|default:contact.username }}</p>
-                        <a href="{% url 'testsite:terzetava'%}" class="chat-btn">Sarakstīties</a>
-                    </div>
-                </article>
+                {% for conversation, other in conversations %}
+                    <article class="profils">
+                        <div class="profile-info">
+                            <p>{{ other.get_full_name|default:other.username }}</p>
+                            <a href="{% url 'testsite:chat_conversation' conversation.pk %}" class="chat-btn">Sarakstīties</a>
+                        </div>
+                    </article>
                 {% empty %}
                     <p>Jums pašlaik nav aktīvu sarakstu.</p>
                 {% endfor %}

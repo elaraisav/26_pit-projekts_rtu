@@ -27,7 +27,7 @@
                 <article class="profils">
                     <div class="profile-info">
                         <p>{{ contact.get_full_name|default:contact.username }}</p>
-                        <a href="{% url 'testsite:chat_conversation' conversation_id=0 %}" class="chat-btn">Sarakstīties</a>
+                        <a href="{% url 'testsite:terzetava'%}" class="chat-btn">Sarakstīties</a>
                     </div>
                 </article>
                 {% empty %}

@@ -25,20 +25,16 @@
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
             <h3>Aktīvās sarakstes</h3>
             <div class="profili">
-                <article class="profils"> <!-- ChatCPT ieteikums -->
-                    <img src="{% static 'testsite/images/profilepic1.jpg' %}" alt="" class="avatar">
-                    <div class="profile-info">
-                        <p>Anna Bērziņa</p>
-                        <a href="{% url 'testsite:terzetava' %}" class="chat-btn">Sarakstīties</a>
-                    </div>
-                </article>
-                <article class="profils">
-                    <img src="{% static 'testsite/images/profilepic2.jpg' %}" alt="" class="avatar">
-                    <div class="profile-info">
-                        <p>Jānis Ozols</p>
-                        <a href="{% url 'testsite:terzetava' %}" class="chat-btn">Sarakstīties</a>
-                    </div>
-                </article>
+                {% for conversation, other in conversations %}
+                    <article class="profils">
+                        <div class="profile-info">
+                            <p>{{ other.get_full_name|default:other.username }}</p>
+                            <a href="{% url 'testsite:chat_conversation' conversation.pk %}" class="chat-btn">Sarakstīties</a>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p>Jums pašlaik nav aktīvu sarakstu.</p>
+                {% endfor %}
             </div>
         </aside>
         <main class="profile">

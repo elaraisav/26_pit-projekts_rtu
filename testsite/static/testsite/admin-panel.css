@@ -15,7 +15,7 @@
 
     --chart-one: var(--navy);
     --chart-two: var(--blue);
-    --chart-three: #70A288;
+    --chart-three: var(--green);
 }
 
 * {

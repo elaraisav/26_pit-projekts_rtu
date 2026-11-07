@@ -1702,14 +1702,14 @@ a {
     height: 100%;
     object-fit: cover;
 }
-
-h3 .portfolio-item-title, 
-p .portfolio-item-category {
+/*
+.portfolio-item-title h3, 
+.portfolio-item-category p {
     color: var(--navy);
     margin: 14px 10px 8px;
     font-size: 18px;
     font-weight: normal;
-}
+}*/
 
 
 /* Formu kļūdu paziņojumi */

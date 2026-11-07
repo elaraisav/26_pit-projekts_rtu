@@ -105,32 +105,106 @@ def portfolio_regid(request):
     profile, _ = Photographer.objects.get_or_create( user=request.user)
     portfolio_images = PortfolioImage.objects.filter( photographer=profile )
 
+    return render(
+        request, 'testsite/portfolio_regid.html', { 'profile': profile, 'portfolio_images': portfolio_images,}
+    )
+
+@login_required
+def portfolio_image_add(request):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile, _ = Photographer.objects.get_or_create(
+        user=request.user
+    )
+
     if request.method == 'POST':
         form = PortfolioImageForm(
-            request.POST, request.FILES)
+            request.POST,
+            request.FILES
+        )
 
         if form.is_valid():
             portfolio_image = form.save(commit=False)
-
-            # Attēls tiek piesaistīts pašreizējam fotogrāfam
             portfolio_image.photographer = profile
             portfolio_image.save()
 
-            messages.success(request,'Portfolio attēls veiksmīgi pievienots!')
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi pievienots!'
+            )
+
             return redirect('testsite:portfolio_regid')
+
         messages.error(
             request,
             'Neizdevās pievienot attēlu. Pārbaudiet ievadīto informāciju.'
         )
+
     else:
         form = PortfolioImageForm()
 
     return render(
         request,
-        'testsite/portfolio_regid.html',
+        'testsite/portfolio_image_form.html',
         {
             'form': form,
-            'portfolio_images': portfolio_images,
+            'is_edit': False,
+        }
+    )
+
+@login_required
+def portfolio_image_edit(request, image_id):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile = get_object_or_404(
+        Photographer,
+        user=request.user
+    )
+
+    portfolio_image = get_object_or_404(
+        PortfolioImage,
+        pk=image_id,
+        photographer=profile
+    )
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST,
+            request.FILES,
+            instance=portfolio_image
+        )
+
+        if form.is_valid():
+            updated_image = form.save(commit=False)
+            updated_image.photographer = profile
+            updated_image.save()
+
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi atjaunināts!'
+            )
+
+            return redirect('testsite:portfolio_regid')
+
+        messages.error(
+            request,
+            'Neizdevās saglabāt attēla izmaiņas.'
+        )
+
+    else:
+        form = PortfolioImageForm(
+            instance=portfolio_image
+        )
+
+    return render(
+        request,
+        'testsite/portfolio_image_form.html',
+        {
+            'form': form,
+            'portfolio_image': portfolio_image,
+            'is_edit': True,
         }
     )
 

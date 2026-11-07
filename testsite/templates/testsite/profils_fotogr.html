@@ -89,7 +89,8 @@
                                 <img src="{{ item.image.url }}" alt="{{ item.description|default:'Portfolio attēls' }}">
                             </div>
 
-                            <h3>Portfolio attēls</h3>
+                            <h3>{{ item.title }}</h3>
+                            <p>Kategorija: {{ item.category }}</p>
                             <div class="portfolio-description">
                                 <p>{{ item.description|default:"Apraksts nav pievienots." }}</p>
                             </div>

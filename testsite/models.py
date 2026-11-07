@@ -35,8 +35,10 @@ class Photographer(models.Model):
 class PortfolioImage(models.Model):
     photographer = models.ForeignKey(Photographer, on_delete=models.CASCADE, related_name='portfolio_images')
     image = models.ImageField( 'Portfolio attēls', upload_to='portfolio/%Y/%m/')
-    description = models.TextField( 'Attēla apraksts', blank=True, max_length=500)
+    description = models.TextField( 'Attēla apraksts', blank=True, max_length=250)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField('Attēla nosaukums', max_length=100)
+    category = models.CharField('Attēla kategorija', max_length=100)
 
     class Meta:
         ordering = ['-uploaded_at']

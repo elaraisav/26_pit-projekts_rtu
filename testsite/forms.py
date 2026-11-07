@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.db import models
 
 from .models import Photographer, User
 from .models import PortfolioImage
@@ -62,8 +63,7 @@ class PhotographerForm(forms.ModelForm):
     class Meta:
         model = Photographer
         fields = ('description',)
-        widgets = {
-            'description': forms.Textarea(attrs={
+        widgets = {'description': forms.Textarea(attrs={
                 'id': 'profileDescription',
                 'class': 'edit-description-input',
                 'placeholder': 'Ievadiet savu aprakstu...',
@@ -77,9 +77,6 @@ class PhotographerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Django adds maxlength from the model field by itself; remove it.
         self.fields['description'].widget.attrs.pop('maxlength', None)
-
-
-from .models import PortfolioImage
 
 
 class PortfolioImageForm(forms.ModelForm):

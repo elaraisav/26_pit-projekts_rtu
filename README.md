@@ -53,7 +53,8 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/profils_fotogr/` | Fotogrāfa profils (paša skats; pagaidām pieejams tikai ar pagaidu pogu sākumlapā) | daļēji (vārds un apraksts ir reāli; bilde un portfolio – makets) |
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
 | `/profila_regid/` | Profila apraksta rediģēšana (`regid` = rediģēt); profila attēls vēl netiek saglabāts | darbojas |
-| `/portfolio_regid/` | Portfolio rediģēšana - attēlu, apraksta, nosaukuma pievienošana,dzēšana, |  |
+| `/portfolio_regid/` | Portfolio rediģēšana |  |
+| `/portfolio_image_form/` | Attēla pievienošana portfolio | darbojas |
 | `/terzetava/` | Tērzētava: sarunu saraksts un jaunas sarunas sākšana (klientam un fotogrāfam) | darbojas |
 | `/terzetava/<id>/` | Konkrēta saruna | darbojas |
 | `/terzetava/<id>/messages/` | Jaunākās sarunas ziņas JSON formātā (tās pieprasa `chat.js` pēc savienojuma atjaunošanas) | darbojas |

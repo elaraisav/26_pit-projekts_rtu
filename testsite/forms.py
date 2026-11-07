@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from .models import Photographer, User
-
+from .models import PortfolioImage
 
 # Login form: Django checks the username and password itself.
 class LoginForm(AuthenticationForm):
@@ -77,3 +77,28 @@ class PhotographerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Django adds maxlength from the model field by itself; remove it.
         self.fields['description'].widget.attrs.pop('maxlength', None)
+
+
+from .models import PortfolioImage
+
+
+class PortfolioImageForm(forms.ModelForm):
+    class Meta:
+        model = PortfolioImage
+        fields = ('image', 'description')
+        widgets = { 'image': forms.ClearableFileInput(attrs={ 'accept': 'image/*', }),
+            'description': forms.Textarea(attrs={
+                'id': 'portfolioDescription',
+                'class': 'edit-description-input',
+                'placeholder': 'Ievadiet attēla aprakstu...',
+            }),
+        }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+
+        if image and image.size > 10 * 1024 * 1024:
+            raise forms.ValidationError(
+                'Attēls nedrīkst būt lielāks par 10 MB!'
+            )
+        return image

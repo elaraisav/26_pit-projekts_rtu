@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 
 from chat.models import Conversation, can_chat, chat_partners_for, chat_users
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm
-from .models import Photographer, User
+from .forms import LoginForm, PhotographerForm, RegistrationForm, PortfolioImageForm
+from .models import Photographer, User, PortfolioImage
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -73,7 +73,11 @@ def profils_fotogr(request):
         raise Http404
     # The profile row is created on the first edit, so it may not exist yet.
     profile = Photographer.objects.filter(user=request.user).first()
-    return render(request, 'testsite/profils_fotogr.html', {'profile': profile})
+    
+    portfolio_images = []
+    if profile:
+        portfolio_images = PortfolioImage.objects.filter(photographer=profile)
+    return render(request, 'testsite/profils_fotogr.html',{'profile': profile, 'portfolio_images': portfolio_images,})
 
 @login_required
 def profils_fotogr_klienta(request):
@@ -95,7 +99,56 @@ def profila_regid(request):
 
 @login_required
 def portfolio_regid(request):
-    return render(request, 'testsite/portfolio_regid.html')
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile, _ = Photographer.objects.get_or_create( user=request.user)
+    portfolio_images = PortfolioImage.objects.filter( photographer=profile )
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST, request.FILES)
+
+        if form.is_valid():
+            portfolio_image = form.save(commit=False)
+
+            # Attēls tiek piesaistīts pašreizējam fotogrāfam
+            portfolio_image.photographer = profile
+            portfolio_image.save()
+
+            messages.success(request,'Portfolio attēls veiksmīgi pievienots!')
+            return redirect('testsite:portfolio_regid')
+        messages.error(
+            request,
+            'Neizdevās pievienot attēlu. Pārbaudiet ievadīto informāciju.'
+        )
+    else:
+        form = PortfolioImageForm()
+
+    return render(
+        request,
+        'testsite/portfolio_regid.html',
+        {
+            'form': form,
+            'portfolio_images': portfolio_images,
+        }
+    )
+
+@login_required
+@require_POST
+def portfolio_delete(request, image_id):
+    if not request.user.is_photographer: raise Http404
+    profile = get_object_or_404(Photographer,user=request.user)
+
+    # Atļauts dzēst tikai sava konta attēlus
+    portfolio_image = get_object_or_404( PortfolioImage, pk=image_id, photographer=profile)
+
+    # Dzēšam arī fizisko attēla failu
+    portfolio_image.image.delete(save=False)
+    portfolio_image.delete()
+
+    messages.success(request,'Portfolio attēls veiksmīgi izdzēsts!' )
+    return redirect('testsite:portfolio_regid')
 
 # Chat page (design: terzetava.html). With no id it opens the newest conversation.
 # Who may chat is decided in chat/models.py (can_chat); admin accounts only see a note.

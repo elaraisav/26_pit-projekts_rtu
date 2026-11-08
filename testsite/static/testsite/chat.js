@@ -50,6 +50,21 @@
         log.scrollTop = log.scrollHeight;
     }
 
+    function sanitizeHttpUrl(raw) {
+        if (typeof raw !== 'string' || raw.trim() === '') {
+            return null;
+        }
+        try {
+            const parsed = new URL(raw, window.location.origin);
+            if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+                return parsed.href;
+            }
+        } catch (e) {
+            return null;
+        }
+        return null;
+    }
+
     function addMessage(message) {
         if (shownIds.has(message.id)) {
             return;
@@ -125,12 +140,21 @@
             const card = document.createElement('div');
             card.className = 'chat-image-card';
 
+            const safeImageUrl = sanitizeHttpUrl(message.image_url);
+            if (!safeImageUrl) {
+                const invalid = document.createElement('p');
+                invalid.textContent = 'Nederīga attēla saite.';
+                card.appendChild(invalid);
+                bubble.appendChild(card);
+                return;
+            }
+
             const image = document.createElement('img');
-            image.src = message.image_url;
+            image.src = safeImageUrl;
             image.alt = 'Nosūtītais attēls';
 
             const download = document.createElement('a');
-            download.href = message.image_url;
+            download.href = safeImageUrl;
             download.download = '';
             download.textContent = 'Lejupielādēt';
             download.className = 'chat-download-btn';

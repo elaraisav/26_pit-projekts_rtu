@@ -105,7 +105,7 @@ class Message(models.Model):
 
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_messages')
-    text = models.TextField(max_length=MAX_LENGTH)
+    text = models.TextField(max_length=MAX_LENGTH, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -122,4 +122,57 @@ class Message(models.Model):
             'sender_id': self.sender_id,
             'sender_name': self.sender.get_full_name() or self.sender.username,
             'created_at': self.created_at.isoformat(),
+
+            # Papildinājums maksājuma funkcionalitātei
+            'type': self.message_type,
+            'amount': str(self.payment_amount) if self.payment_amount is not None else None,
+            'currency': self.currency,
+            'payment_status': self.payment_status,
+            'image_url': self.image.url if self.image else None,
+            'payment_request_id': self.payment_request_id,
         }
+    
+    # Papildinājums - dažādu ziņojumu (Messages) veidi
+    message_type = models.CharField(
+        max_length=10,
+        choices=[
+            ('text', 'Teksts'),
+            ('payment', 'Maksājuma pieprasījums'),
+            ('image', 'Attēls'),
+        ],
+        default='text'
+    )
+
+    payment_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    currency = models.CharField(max_length=3, blank=True)
+
+    # Maksājuma status. No tā tkarīgs, vai var tālāk nosūtīt bildi augšupielādei
+    payment_status = models.CharField(
+        max_length=10,
+        choices=[
+            ('pending', 'Gaida apmaksu'),
+            ('paid', 'Apmaksāts'),
+        ],
+        default='pending',
+        blank=True
+    )
+
+    image = models.ImageField(
+        upload_to='chat_images/',
+        null=True,
+        blank=True
+    )
+
+    payment_request = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='uploaded_images'
+    )

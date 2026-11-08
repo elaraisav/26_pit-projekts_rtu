@@ -76,7 +76,6 @@
 
             <!-- Sarunas galvene -->
             <header class="chat-header">
-
                 <div class="chat-user">
                     <span class="chat-user-avatar chat-initials" aria-hidden="true">{{ active_other.get_full_name|default:active_other.username|slice:":1"|upper }}</span>
                     <div>
@@ -89,7 +88,6 @@
                 <form action="{% url 'testsite:report_submission' %}">
                     <button class="chat-report-btn" id="report-user-btn">Ziņot par<br>lietotāju</button>
                 </form>
-
             </header>
 
             <!-- Sarunas saturs: the other person's messages on the left, yours on the right -->
@@ -123,13 +121,47 @@
                     <button type="submit" class="chat-send-btn">Sūtīt</button>
                 </form>
                 <!-- Faila augšupielādes sistēma -->
-                <input type="file" id="image-input"
-                    accept="image/jpeg,image/png,image/webp"
-                    hidden>
+                <input type="file" id="image-input" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden>
                 <p class="chat-status" id="chat-status" role="status"></p>
             </footer>
-
         </main>
+
+        <!-- Maksājuma pieprasījuma logs -->
+        <dialog id="payment-dialog" class="chat-dialog">
+            <h3>Jauns maksājuma pieprasījums</h3>
+
+            <label for="payment-amount">Summa:</label>
+            <input type="number" id="payment-amount"
+                min="0.01" max="99999999.99"
+                step="0.01" required>
+
+            <label for="payment-currency">Valūta:</label>
+            <select id="payment-currency">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+            </select>
+
+            <div class="chat-dialog-actions">
+                <button type="button" id="payment-submit" class="chat-action-btn">Nosūtīt</button>
+                <button type="button" class="chat-cancel-btn" data-close-dialog>Atcelt</button>
+            </div>
+        </dialog>
+
+        <!-- Demonstrācijas maksājuma logs -->
+        <dialog id="pay-dialog" class="chat-dialog">
+            <h3>Demonstrācijas maksājums</h3>
+            <p>Šis ir tikai maksājuma makets. Reāls darījums netiks veikts.</p>
+
+            <label for="mock-payment-info">Maksājuma informācija:</label>
+            <input type="text" id="mock-payment-info" placeholder="Piemēram, DEMO-1234">
+
+            <div class="chat-dialog-actions">
+                <button type="button" id="pay-confirm" class="chat-action-btn">Apstiprināt apmaksu</button>
+                <button type="button" class="chat-cancel-btn" data-close-dialog>Atcelt</button>
+            </div>
+        </dialog>
+
         {{ history|json_script:"chat-history" }}
         {% else %}
         <main class="chat-main chat-main-empty">

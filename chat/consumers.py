@@ -27,25 +27,119 @@ class ChatConsumer(JsonWebsocketConsumer):
         if hasattr(self, 'group_name'):
             async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name)
 
+    # Papildinājums, la pieņem arī citu message lauku tipus - maksājumiem un attēliem
     def receive_json(self, content, **kwargs):
-        if not isinstance(content, dict) or not isinstance(content.get('message'), str):
-            return
-        text = content['message'].strip()[:Message.MAX_LENGTH]
-        if not text:
+        if not isinstance(content, dict):
             return
 
         # Checked again for every message: the conversation may have been deleted,
         # or one side may have become an admin, since the socket opened.
         conversation = self.get_conversation()
+
         if conversation is None:
             self.close()
             return
 
-        message = Message.objects.create(conversation=conversation, sender=self.scope['user'], text=text)
-        Conversation.objects.filter(pk=conversation.pk).update(updated_at=message.created_at)
+        user = self.scope['user']
+        action = content.get('action')
+
+        # Parasta teksta ziņa
+        if action == 'message':
+            text = content.get('message', '').strip()[:Message.MAX_LENGTH]
+
+            if not text:
+                return
+
+            message = Message.objects.create(
+                conversation=conversation,
+                sender=user,
+                text=text
+            )
+
+        # Maksājuma pieprasījums
+        elif action == 'payment':
+            if not user.is_photographer:
+                return
+
+            try:
+                from decimal import Decimal
+                amount = Decimal(str(content.get('amount', '')))
+            except (ValueError, TypeError):
+                return
+
+            currency = content.get('currency', '')
+
+            if amount <= 0 or amount > Decimal('99999999.99'):
+                return
+
+            if currency not in ['EUR', 'USD', 'GBP']:
+                return
+
+            message = Message.objects.create(
+                conversation=conversation,
+                sender=user,
+                text='Maksājuma pieprasījums',
+                message_type='payment',
+                payment_amount=amount,
+                currency=currency,
+                payment_status='pending'
+            )
+
+        # Maksājuma apstiprināšana (demonstrācija)
+        elif action == 'pay':
+            payment_id = content.get('payment_id')
+
+            if not str(payment_id).isdigit():
+                return
+
+            payment = Message.objects.filter(
+                pk=int(payment_id),
+                conversation=conversation,
+                message_type='payment',
+                sender=conversation.photographer,
+                payment_status='pending'
+            ).first()
+
+            if user.pk != conversation.client_id or payment is None:
+                return
+
+            payment.payment_status = 'paid'
+            payment.save(update_fields=['payment_status'])
+
+            Conversation.objects.filter(pk=conversation.pk).update(
+                updated_at=payment.created_at
+            )
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.group_name,
+                {
+                    'type': 'chat.payment_update',
+                    'message': payment.to_json()
+                }
+            )
+            return
+
+        else:
+            return
+
+        Conversation.objects.filter(pk=conversation.pk).update(
+            updated_at=message.created_at
+        )
 
         async_to_sync(self.channel_layer.group_send)(
-            self.group_name, {'type': 'chat.message', 'message': message.to_json()})
+            self.group_name,
+            {
+                'type': 'chat.message',
+                'message': message.to_json()
+            }
+        )
+
+    # Atjaunina maksājuma statusu
+    def chat_payment_update(self, event):
+        self.send_json({
+            'event': 'payment_update',
+            'message': event['message']
+        })
 
     # Called for every 'chat.message' event sent to the group.
     def chat_message(self, event):

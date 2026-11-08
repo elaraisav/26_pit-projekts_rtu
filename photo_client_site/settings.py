@@ -174,3 +174,9 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+# Media
+# Lai attēli būtu pieejami izstrādes režīmā
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

@@ -6,10 +6,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from chat.models import Conversation, can_chat, chat_partners_for, chat_users
+from chat.models import Conversation, Message, can_chat, chat_partners_for, chat_users
 
 from .forms import LoginForm, PhotographerForm, RegistrationForm
 from .models import Photographer, User
+
+# Importu papildinājumi attēlu augšupielādei
+from django.core.files.images import get_image_dimensions
+from django.core.files.uploadedfile import UploadedFile
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -201,6 +207,82 @@ def chat_start(request):
     except ValueError:
         return HttpResponseBadRequest("Invalid chat request.")
     return redirect('testsite:chat_conversation', conversation_id=conversation.pk)
+
+#   Attēlu augšupielāde
+@login_required
+@require_POST
+def chat_upload_image(request, conversation_id):
+    conversation = Conversation.objects.filter(
+        pk=conversation_id
+    ).usable().filter(
+        pk__in=Conversation.objects.for_user(request.user)
+    ).first()
+
+    if conversation is None or not request.user.is_photographer:
+        raise Http404
+
+    # Pārbauda, vai fotogrāfam ir apmaksāts maksājuma pieprasījums.
+    payment = Message.objects.filter(
+        conversation=conversation,
+        sender=request.user,
+        message_type='payment',
+        payment_status='paid'
+    ).order_by('-created_at').first()
+
+    if payment is None:
+        return JsonResponse({
+            'error': 'Vispirms jānosūta un jāsaņem apmaksa par maksājuma pieprasījumu!'
+        }, status=403)
+
+    uploaded_image = request.FILES.get('image')
+
+    if not uploaded_image:
+        return JsonResponse({'error': 'Nav izvēlēts attēls.'}, status=400)
+
+    if uploaded_image.size > 10 * 1024 * 1024:
+        return JsonResponse({
+            'error': 'Attēla izmērs nedrīkst pārsniegt 10 MB.'
+        }, status=400)
+
+    # Pārbauda, vai fails tiešām ir attēls.
+    try:
+        dimensions = get_image_dimensions(uploaded_image)
+        if not dimensions:
+            raise ValueError()
+        uploaded_image.seek(0)
+    except Exception:
+        return JsonResponse({
+            'error': 'Izvēlētais fails nav derīgs attēls.'
+        }, status=400)
+
+    message = Message.objects.create(
+        conversation=conversation,
+        sender=request.user,
+        text='',
+        message_type='image',
+        image=uploaded_image,
+        payment_request=payment
+    )
+
+    Conversation.objects.filter(pk=conversation.pk).update(
+        updated_at=message.created_at
+    )
+
+    # Nosūta attēla ziņojumu arī otram sarunas dalībniekam.
+    channel_layer = get_channel_layer()
+
+    async_to_sync(channel_layer.group_send)(
+        f'chat_{conversation.pk}',
+        {
+            'type': 'chat.message',
+            'message': message.to_json()
+        }
+    )
+
+    return JsonResponse({
+        'success': True,
+        'message': message.to_json()
+    })
 
 @login_required
 def report_submission(request):

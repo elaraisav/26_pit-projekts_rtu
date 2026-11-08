@@ -789,11 +789,12 @@ a {
     justify-content: center;
     width: 100%;
     min-height: 32px;
-    border: 1px solid var(--navy);
+    /*border: 1px solid var(--navy);*/
     border-radius: 6px;
-    background: var(--green);
-    color: var(--navy);
-    font-size: 13px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: bold;
     text-decoration: none;
 }
 

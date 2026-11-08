@@ -4,34 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tērzētava</title>
-
     {% load static %}
-
-    <link rel="stylesheet"
-          href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet" href="{% static 'testsite/terzetava.css' %}">
     <script src="{% static 'testsite/chat.js' %}" defer></script>
 </head>
-
-<body class="chat-page">
-
+<body>
     <!-- Augšējā josla -->
     <header class="topbar">
         <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
             <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
         </a>
     </header>
-
-    <div class="mainpage chat-layout">
-
+    <div class="mainpage">
         <!-- Kreisais sānpanelis -->
-        <aside class="sidebar chat-sidebar">
-
+        <aside class="chat-sidebar">
             <section class="chat-options">
                 <h2>Opcijas</h2>
-
-                <a class="chat-back-btn"
-                   href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ
-                </a>
+                <a class="chat-back-btn" href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ</a>
 
                 {% if not chat_allowed %}
                 <!-- Admin accounts don't take part in the chat -->
@@ -59,10 +48,9 @@
 
             <section class="chat-contacts">
                 <h2>Aktīvās sarakstes</h2>
-
                 <div class="profili">
                     {% for conversation, other in conversations %}
-                        <article class="profils chat-contact">
+                        <article class="profils">
                             <span class="avatar chat-initials" aria-hidden="true">{{ other.get_full_name|default:other.username|slice:":1"|upper }}</span>
 
                             <div class="profile-info">
@@ -91,7 +79,6 @@
 
                 <div class="chat-user">
                     <span class="chat-user-avatar chat-initials" aria-hidden="true">{{ active_other.get_full_name|default:active_other.username|slice:":1"|upper }}</span>
-
                     <div>
                         <p>{{ active_other.get_full_name|default:active_other.username }}</p>
                         <p class="chat-user-role">{{ active_other.get_role_display }}</p>
@@ -100,7 +87,7 @@
 
                 <!-- Report page from main (report_submission) -->
                 <form action="{% url 'testsite:report_submission' %}">
-                    <button class="chat-report-btn" id="report-user-btn">Ziņot par<br> lietotāju</button>
+                    <button class="chat-report-btn" id="report-user-btn">Ziņot par<br>lietotāju</button>
                 </form>
 
             </header>
@@ -112,29 +99,18 @@
                      aria-live="polite">
                 <p class="chat-empty" id="chat-empty">Vēl nav ziņu. Uzraksti pirmo!</p>
             </section>
-
-            <!-- Ziņojuma rakstīšanas josla -->
+            
+            <!-- Teksta rakstīšanas josla -->
             <footer class="chat-compose">
-
                 <form class="chat-compose-form" id="message-form">
-                    <label for="message-input"
-                           class="visually-hidden">
-                        Rakstīt ziņojumu
-                    </label>
-
-                    <input
-                        type="text"
+                    <label for="message-input" class="visually-hidden"> Rakstīt ziņojumu </label>
+                    <input 
+                        type="text" 
                         id="message-input"
                         name="message"
-                        placeholder="Rakstīšanas josla"
-                        autocomplete="off"
-                        maxlength="2000"
-                        required>
-
-                    <button type="submit"
-                            class="chat-send-btn">
-                        Sūtīt
-                    </button>
+                        placeholder="Ievadiet ziņu ..."
+                        autocomplete="off" maxlength="2000" required>
+                    <button type="submit" class="chat-send-btn">Sūtīt</button>
                 </form>
                 <p class="chat-status" id="chat-status" role="status"></p>
 

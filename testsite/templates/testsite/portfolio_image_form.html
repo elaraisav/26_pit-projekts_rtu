@@ -121,20 +121,21 @@
         if (portfolioInput) {
             portfolioInput.addEventListener("change", function () {
                 const file = this.files[0];
-
                 if (file && file.type.startsWith("image/")) {
-                    const objectUrl = window.URL.createObjectURL(file);
-
-                    portfolioPreview.setAttribute("src", objectUrl);
-                    portfolioPreview.hidden = false;
-                    uploadText.hidden = true;
+                    const objectUrl = URL.createObjectURL(file);
+                    // Izmanto tikai pārlūkprogrammas izveidotu Blob URL
+                    if (objectUrl.startsWith("blob:")) {
+                        portfolioPreview.src = objectUrl;
+                        portfolioPreview.hidden = false;
+                        uploadText.hidden = true;
+                    }
                 } else {
                     portfolioPreview.removeAttribute("src");
                     portfolioPreview.hidden = true;
                     uploadText.hidden = false;
                 }
             });
-        }
+        } 
     </script>
 
     <!-- Paziņojumi -->

@@ -102,18 +102,31 @@
             
             <!-- Teksta rakstīšanas josla -->
             <footer class="chat-compose">
-                <form class="chat-compose-form" id="message-form">
-                    <label for="message-input" class="visually-hidden"> Rakstīt ziņojumu </label>
-                    <input 
-                        type="text" 
+                <!-- Pārbauda, vai ir fotogrāfs, lai papildu pogas -->
+                <form class="chat-compose-form" id="message-form"
+                    data-photographer="{{ user.is_photographer|yesno:'true,false' }}">
+                    {% csrf_token %}
+                    {% if user.is_photographer %}
+                        <button type="button" class="chat-extra-btn" id="payment-btn">Maksājuma<br>pieprasījums</button>
+                        <button type="button" class="chat-extra-btn" id="image-btn">Attēla<br>augšupielāde</button>
+                    {% endif %}
+
+                    <label for="message-input" class="visually-hidden">Rakstīt ziņojumu</label>
+                    <input
+                        type="text"
                         id="message-input"
                         name="message"
                         placeholder="Ievadiet ziņu ..."
-                        autocomplete="off" maxlength="2000" required>
+                        autocomplete="off"
+                        maxlength="2000"
+                        required>
                     <button type="submit" class="chat-send-btn">Sūtīt</button>
                 </form>
+                <!-- Faila augšupielādes sistēma -->
+                <input type="file" id="image-input"
+                    accept="image/jpeg,image/png,image/webp"
+                    hidden>
                 <p class="chat-status" id="chat-status" role="status"></p>
-
             </footer>
 
         </main>

@@ -127,8 +127,8 @@ a {
 }
 
 /* TĒRZĒTAVAS LAPA*/
-/* Lapas kopējais izkārtojums */
 /* Galvenais režģis */
+/* The page fills the screen and only the message list scrolls */
 .mainpage {
     display: grid;
     grid-template-columns: 260px minmax(0, 1fr);
@@ -136,7 +136,8 @@ a {
     gap: 28px;
     width: 100%;
     max-width: none;
-    min-height: calc(100vh - 100px);
+    height: calc(100vh - 55px);
+    min-height: 0;
     margin: 0 auto;
     padding: 28px;
     background: var(--blue);
@@ -150,6 +151,7 @@ a {
     border-radius: 12px;
     background: var(--green);
     color: var(--navy);
+    overflow-y: auto;
 }
 
 .chat-sidebar h2 {
@@ -263,12 +265,13 @@ a {
 /* Labās puses tērzētava, galvenais tērzētavas logs */
 .chat-main {
     display: grid;
-    grid-template-rows: 110px minmax(470px, 1fr) 110px;
+    grid-template-rows: 110px minmax(0, 1fr) auto;
     min-width: 0;
-    min-height: calc(100vh - 55px);
+    height: calc(100vh - 55px);
+    min-height: 0;
     border: 5px solid var(--navy);
     border-radius: 12px;
-    background: var(--cream);
+    background: var(--green);
 }
 
 /* Sarunas galvene */
@@ -281,7 +284,7 @@ a {
     /*border: 1px solid var(--navy);*/
     /*border-top: 0;*/
     border-radius: 12px;
-    background: var(--cream);
+    background: var(--green);
 }
 
 .chat-user {
@@ -311,6 +314,12 @@ a {
     font-weight: bold;
 }
 
+.chat-user-role {
+    margin-top: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
 .chat-user-role p {
     font-size: 18px;
     font-weight: normal;
@@ -332,6 +341,7 @@ a {
     color: var(--cream);
     font: inherit;
     font-size: 14px;
+    font-weight: bold;
     text-align: center;
     cursor: pointer;
 }
@@ -341,20 +351,31 @@ a {
     color: var(--cream);
 }
 
+.chat-report-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 /* Ziņojumu zona */
+/* Message list: one column, theirs on the left, yours on the right */
 .chat-conversation {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     grid-template-columns: minmax(0, 1fr) minmax(185px, 0.8fr);
-    gap: 20px;
+    gap: 16px;
     min-width: 0;
     padding: 10px 16px;
     /*border: 1px solid var(--navy);
-    border-top: 0;
-    */
+    border-top: 0;*/
     background: var(--blue);
+    overflow-y: auto;
 }
 
-/* Sarunas dalībnoeku formatējums */ 
+.chat-conversation .chat-message-group {
+    width: min(80%, 360px);
+}
+
+/* Sarunas dalībnieku formatējums */ 
 .chat-left-content,
 .chat-right-content {
     display: flex;
@@ -377,85 +398,6 @@ a {
     padding-bottom: 70px;
 }
 
-/* Vecais statiskais saturs*/
-/*
-.chat-payment-card,
-.chat-upload-card {
-    width: min(100%, 185px);
-    padding: 13px 18px 5px;
-    border: 1px solid var(--navy);
-    border-radius: 18px;
-    background: var(--cream);
-    color: var(--navy);
-}
-
-.chat-payment-card {
-    margin-bottom: 10px;
-}
-
-.chat-payment-card p {
-    margin: 0 0 14px 5px;
-    font-size: 13px;
-    line-height: 1.35;
-}
-
-.chat-action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 31px;
-    padding: 6px 10px;
-    border: 1px solid var(--navy);
-    border-radius: 7px;
-    background: var(--green);
-    color: var(--navy);
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.chat-action-btn:hover {
-    background: var(--terracotta);
-}
-*/
-/* Attēlu pievienošanas karte */
-/*
-.chat-upload-card {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    padding: 5px 18px 7px;
-}
-
-.chat-file-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    min-height: 46px;
-    padding: 5px;
-    border: 1px solid var(--navy);
-    background: white;
-    font-size: 12px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.chat-file-label:hover {
-    background: var(--cream);
-}
-
-.chat-file-status {
-    margin: 0;
-    font-size: 11px;
-    overflow-wrap: anywhere;
-}
-
-.chat-left-time {
-    margin-top: 10px;
-}
-*/
 /* Labajā pusē sarunas ziņu formatējums */
 .chat-right-content {
     align-items: flex-end;
@@ -503,27 +445,79 @@ a {
     text-align: right;
 }
 
+.chat-message-group.is-theirs {
+    align-self: flex-start;
+}
+
+.chat-message-group.is-mine {
+    align-self: flex-end;
+}
+
+.chat-message-group.is-theirs .chat-sender,
+.chat-message-group.is-theirs .chat-time {
+    text-align: left;
+}
+
+.chat-message-group.is-mine .chat-sender,
+.chat-message-group.is-mine .chat-time {
+    text-align: right;
+}
+
+.chat-message-group.is-mine .chat-message {
+    background: var(--cream);
+    border-color: var(--navy);
+    box-shadow: inset 0 0 0 2px var(--terracotta);
+}
+
+/* Starting a new conversation */
+.chat-new-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 10px 14px;
+    font-size: 13px;
+}
+
+.chat-new-form select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid var(--navy);
+    border-radius: 6px;
+    background: white;
+    color: var(--navy);
+    font: inherit;
+}
+
+.chat-new-form .chat-empty {
+    margin: 0;
+    text-align: left;
+}
+
 /* Nespēju identificet, kas šis ir */
 .chat-second-group {
     margin-top: 30px;
 }
 
-
 /* Apakšējā rakstīšanas josla */
 .chat-compose {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    align-items: center;
+    gap: 4px;
     padding: 13px 20px;
-    border: 1px solid var(--navy);
-    border-top: 0;
-    background: var(--cream);
+    /*border: 1px solid var(--navy);
+    border-top: 0;*/
+    border-radius: 12px;
+    background: var(--green);
 }
 
 .chat-compose-form {
     display: flex;
     align-items: stretch;
-    width: min(100%, 650px);
+    width: 100%;
+    max-width: none;
     min-height: 34px;
     gap: 8px;
 }
@@ -534,10 +528,10 @@ a {
     height: 34px;
     padding: 5px 12px;
     border: 1px solid var(--navy);
-    border-radius: 5px;
+    border-radius: 6px;
     background: white;
     color: var(--navy);
-    font-size: 13px;
+    font-size: 14px;
     text-align: center;
 }
 
@@ -546,13 +540,22 @@ a {
     opacity: 1;
 }
 
+.chat-compose-form input:disabled {
+    opacity: 0.6;
+}
+
 .chat-send-btn {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid var(--navy);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /*border: 1px solid var(--navy);*/
     border-radius: 6px;
-    background: var(--green);
-    color: var(--navy);
+    padding: 6px 12px;
+    min-width: 65px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: bold;
     cursor: pointer;
 }
 
@@ -584,22 +587,6 @@ a {
 }
 
 /* Live chat: additions on top of the chat design above */
-/* The page fills the screen and only the message list scrolls */
-.chat-layout {
-    height: calc(100vh - 55px);
-    min-height: 0;
-}
-
-.chat-main {
-    height: calc(100vh - 55px);
-    min-height: 0;
-    grid-template-rows: 110px minmax(0, 1fr) auto;
-}
-
-.chat-sidebar {
-    overflow-y: auto;
-}
-
 /* Initials instead of profile photos (users have no photos yet) */
 .chat-initials {
     display: flex;
@@ -610,108 +597,12 @@ a {
     color: var(--navy);
 }
 
-.chat-user-role {
-    margin-top: 4px;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-/* Message list: one column, theirs on the left, yours on the right */
-.chat-conversation {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-}
-
-.chat-conversation .chat-message-group {
-    width: min(80%, 360px);
-}
-
-.chat-message-group.is-theirs {
-    align-self: flex-start;
-}
-
-.chat-message-group.is-mine {
-    align-self: flex-end;
-}
-
-.chat-message-group.is-theirs .chat-sender,
-.chat-message-group.is-theirs .chat-time {
-    text-align: left;
-}
-
-.chat-message-group.is-mine .chat-sender,
-.chat-message-group.is-mine .chat-time {
-    text-align: right;
-}
-
-.chat-message-group.is-mine .chat-message {
-    background: var(--cream);
-    border-color: var(--navy);
-    box-shadow: inset 0 0 0 2px var(--terracotta);
-}
-
-.chat-message {
-    justify-content: flex-start;
-    min-height: 0;
-}
-
-.chat-message p {
-    text-align: left;
-    white-space: pre-wrap;
-}
-
-.chat-empty {
-    margin: auto;
-    font-size: 13px;
-    text-align: center;
-}
-
-/* Starting a new conversation */
-.chat-new-form {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 0 10px 14px;
-    font-size: 13px;
-}
-
-.chat-new-form select {
-    width: 100%;
-    padding: 6px;
-    border: 1px solid var(--navy);
-    border-radius: 6px;
-    background: white;
-    color: var(--navy);
-    font: inherit;
-}
-
-.chat-new-form .chat-empty {
-    margin: 0;
-    text-align: left;
-}
-
-/* Compose bar */
-.chat-compose {
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.chat-compose-form input:disabled {
-    opacity: 0.6;
-}
-
 .chat-status {
     min-height: 1em;
     margin: 0;
     font-size: 12px;
-}
-
-.chat-report-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    text-align: center;
+    color: var(--navy);
 }
 
 /* No conversation open yet */
@@ -763,6 +654,111 @@ a {
     cursor: pointer;
 }
 
+/* Rakstīšanas joslas papildu pogas */
+.chat-extra-btn,
+.chat-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 5px 10px;
+    /*border: 1px solid var(--navy);*/
+    border-radius: 6px;
+    background: var(--navy);
+    color: var(--cream);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.chat-extra-btn:hover,
+.chat-cancel-btn:hover {
+    background: var(--terracotta);
+}
+
+.chat-dialog {
+    width: min(90%, 380px);
+    padding: 22px;
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    background: var(--cream);
+    color: var(--navy);
+}
+
+.chat-dialog::backdrop {
+    background: rgba(3, 29, 68, 0.65);
+}
+
+.chat-dialog h3 {
+    margin-top: 0;
+}
+
+.chat-dialog label {
+    display: block;
+    margin: 12px 0 5px;
+}
+
+.chat-dialog input,
+.chat-dialog select {
+    width: 100%;
+    min-height: 36px;
+    padding: 7px;
+    border: 1px solid var(--navy);
+    border-radius: 5px;
+}
+
+.chat-dialog-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.chat-dialog-actions button {
+    flex: 1;
+}
+
+/* Maksājumu un attēlu ziņojumi */
+.chat-payment-card,
+.chat-image-card {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--navy);
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--navy);
+}
+
+.chat-payment-card p,
+.chat-image-card p {
+    margin: 5px 0 10px;
+    font-size: 13px;
+}
+
+.chat-payment-card button,
+.chat-image-card button {
+    width: 100%;
+    min-height: 32px;
+    border: 1px solid var(--navy);
+    border-radius: 6px;
+    background: var(--green);
+    color: var(--navy);
+    cursor: pointer;
+}
+
+.chat-payment-card button:hover,
+.chat-image-card button:hover {
+    background: var(--terracotta);
+}
+
+.chat-image-card img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    object-fit: contain;
+}
 
 /* ZIŅOJUMA IESNIEGŠANAS LAPA */
 .report-page {

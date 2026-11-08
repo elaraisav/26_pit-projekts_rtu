@@ -123,9 +123,15 @@
                 const file = this.files[0];
 
                 if (file && file.type.startsWith("image/")) {
-                    portfolioPreview.src = URL.createObjectURL(file);
+                    const objectUrl = window.URL.createObjectURL(file);
+
+                    portfolioPreview.setAttribute("src", objectUrl);
                     portfolioPreview.hidden = false;
                     uploadText.hidden = true;
+                } else {
+                    portfolioPreview.removeAttribute("src");
+                    portfolioPreview.hidden = true;
+                    uploadText.hidden = false;
                 }
             });
         }

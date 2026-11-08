@@ -423,16 +423,16 @@ a {
     opacity: 1; /* Fully shown on mouse-over */
 }
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) to override default look) *
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) to override default look) */
 .slider::-webkit-slider-thumb {
-  /*  -webkit-appearance: none; /* Override default look *
+    webkit-appearance: none; /* Override default look */
     appearance: none;
-    width: 25px; /* Set a specific slider handle width *
-    height: 25px; /* Slider handle height 
-    border-radius: 50%; /* Izveido slider handle apaļo formu 
-    background: var(--terracotta); /* Slider handle background 
-    cursor: pointer; /* Cursor on hover 
-}*/
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    border-radius: 50%; /* Izveido slider handle apaļo formu */
+    background: var(--terracotta); /* Slider handle background */
+    cursor: pointer; /* Cursor on hover */
+}
 
 .slider::-moz-range-thumb {
     width: 25px; /* Set a specific slider handle width */
@@ -1702,15 +1702,6 @@ a {
     height: 100%;
     object-fit: cover;
 }
-/*
-.portfolio-item-title h3, 
-.portfolio-item-category p {
-    color: var(--navy);
-    margin: 14px 10px 8px;
-    font-size: 18px;
-    font-weight: normal;
-}*/
-
 
 /* Formu kļūdu paziņojumi */
 .form-errors,

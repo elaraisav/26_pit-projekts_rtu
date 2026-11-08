@@ -37,14 +37,16 @@
             <div class="portfolio-upload-column">
                 <label for="portfolioImage"
                        class="portfolio-upload-area">
+                    <!-- Iepriekš saglabātā attēla priekšskatījums -->
                     <img id="portfolioPreview"
-                         {% if is_edit and portfolio_image.image %}
-                             src="{{ portfolio_image.image.url }}"
-                         {% else %}
-                             src=""
-                         {% endif %}
-                         alt="Attēla priekšskatījums"
-                         {% if not is_edit %}hidden{% endif %}>
+                        {% if is_edit and portfolio_image.image %}
+                            src="{{ portfolio_image.image.url }}"
+                        {% endif %}
+                        alt="Attēla priekšskatījums"
+                        {% if not is_edit %}hidden{% endif %}>
+
+                    <!-- Jaunā attēla priekšskatījums -->
+                    <canvas id="portfolioCanvas" hidden></canvas>
 
                     <span id="uploadText"
                           {% if is_edit %}hidden{% endif %}>
@@ -114,28 +116,69 @@
 
     <!-- Attēla priekšskatījums -->
     <script>
-        const portfolioInput = document.getElementById("portfolioImage");
+        const portfolioInput = document.getElementById("id_image") || document.getElementById("portfolioImage");
         const portfolioPreview = document.getElementById("portfolioPreview");
+        const portfolioCanvas = document.getElementById("portfolioCanvas");
         const uploadText = document.getElementById("uploadText");
 
         if (portfolioInput) {
-            portfolioInput.addEventListener("change", function () {
+            let previewRequest = 0;
+            portfolioInput.addEventListener("change", async function () {
                 const file = this.files[0];
-                if (file && file.type.startsWith("image/")) {
-                    const objectUrl = URL.createObjectURL(file);
-                    // Izmanto tikai pārlūkprogrammas izveidotu Blob URL
-                    if (objectUrl.startsWith("blob:")) {
-                        portfolioPreview.src = objectUrl;
-                        portfolioPreview.hidden = false;
-                        uploadText.hidden = true;
+                if (!file) {
+                    return;
+                }
+
+                // Pārbauda, vai izvēlētais fails ir attēls
+                if (!file.type.startsWith("image/")) {
+                    portfolioCanvas.hidden = true;
+                    const hasExistingImage =
+                        portfolioPreview.getAttribute("src");
+                    portfolioPreview.hidden = !hasExistingImage;
+                    uploadText.hidden = Boolean(hasExistingImage);
+                    return;
+                }
+
+                const currentRequest = ++previewRequest;
+                try {
+                    // Nolasa attēlu bez HTML vai URL ievietošanas DOM
+                    const bitmap = await createImageBitmap(file);
+
+                    // Ignorē iepriekšējā faila rezultātu,
+                    // ja lietotājs jau izvēlējies citu attēlu
+                    if (currentRequest !== previewRequest) {
+                        bitmap.close();
+                        return;
                     }
-                } else {
-                    portfolioPreview.removeAttribute("src");
+
+                    portfolioCanvas.width = bitmap.width;
+                    portfolioCanvas.height = bitmap.height;
+
+                    const context = portfolioCanvas.getContext("2d");
+                    context.clearRect(
+                        0,
+                        0,
+                        portfolioCanvas.width,
+                        portfolioCanvas.height
+                    );
+
+                    context.drawImage(bitmap, 0, 0);
+                    bitmap.close();
+
+                    // Parāda jauno attēla priekšskatījumu
                     portfolioPreview.hidden = true;
-                    uploadText.hidden = false;
+                    portfolioCanvas.hidden = false;
+                    uploadText.hidden = true;
+
+                } catch (error) {
+                    console.error("Neizdevās parādīt attēla priekšskatījumu:", error);
+                    portfolioCanvas.hidden = true;
+                    const hasExistingImage = portfolioPreview.getAttribute("src");
+                    portfolioPreview.hidden = !hasExistingImage;
+                    uploadText.hidden = Boolean(hasExistingImage);
                 }
             });
-        } 
+        }
     </script>
 
     <!-- Paziņojumi -->

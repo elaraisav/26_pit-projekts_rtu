@@ -77,3 +77,24 @@ class PhotographerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Django adds maxlength from the model field by itself; remove it.
         self.fields['description'].widget.attrs.pop('maxlength', None)
+
+class ClientProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('description',)
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'id': 'profileDescription',
+                'class': 'edit-description-input',
+                'placeholder': 'Ievadiet savu aprakstu...',
+            }),
+        }
+        error_messages = {
+            'description': {
+                'max_length': 'Apraksts nedrīkst pārsniegt 250 rakstzīmes!'
+            },
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget.attrs.pop('maxlength', None)

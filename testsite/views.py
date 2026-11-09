@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 
 from chat.models import Conversation, can_chat, chat_partners_for, chat_users
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm
+from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm
 from .models import Photographer, User
 
 # Create your views here.
@@ -125,18 +125,29 @@ def profils_fotogr_klienta(request):
 # URL, so nobody can edit someone else's profile; clients have no profile page.
 @login_required
 def profila_regid(request):
-    if not request.user.is_photographer:
-        raise Http404
-    profile, _ = Photographer.objects.get_or_create(user=request.user)
-    form = PhotographerForm(request.POST or None, instance=profile)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, 'Profila izmaiņas saglabātas.')
-        return redirect('testsite:profils_fotogr')
-    return render(request, 'testsite/profila_regid.html', {'form': form})
+    # Nosaka lietotāja formu
+    if request.user.is_photographer:
+        profile, _ = Photographer.objects.get_or_create(user=request.user)
+        form = PhotographerForm(request.POST or None, instance=profile)
+        redirect_url = 'testsite:profils_fotogr'
+
+    else:
+        form = ClientProfileForm(request.POST or None, instance=request.user)
+        redirect_url = 'testsite:profils'
+
+    # Apstrādā formas iesniegšanu
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Profila izmaiņas veiksmīgi saglabātas!')
+            return redirect(redirect_url)
+    return render( request, 'testsite/profila_regid.html',{'form': form} )
 
 @login_required
 def portfolio_regid(request):
+    if not request.user.is_photographer:
+        raise Http404
     return render(request, 'testsite/portfolio_regid.html')
 
 # Chat page (design: terzetava.html). With no id it opens the newest conversation.

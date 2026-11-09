@@ -49,12 +49,12 @@
                     class="profile-avatar"> <!--avatar? -->
 
                 <div class="profile-details">
-                    <h1>Vārds Uzvārds</h1>
-                    <button type="button" class="edit-profile-btn">Rediģēt profilu </button>
+                    <h1>{{ user.get_full_name|default:user.username }}</h1>
+                    <a href="{% url 'testsite:profila_regid' %}" class="edit-profile-btn"> Rediģēt profilu</a>
                 </div>
 
                 <div class="profile-description">
-                    <p>Apraksts</p>
+                    <p>{{ user.description|default:"Apraksts vēl nav pievienots." }}</p>
                 </div>
             </section>
 

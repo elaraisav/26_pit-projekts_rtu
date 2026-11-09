@@ -19,10 +19,12 @@
             <input type="search-bar" id="search-bar" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu"> <!-- ChatGPT ieteikums -->
             <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
         </form>
-        <!-- Pārbauda kāda ir lietotāja loma, aizved uz pareizo lapu -->
-        <form action="{% if user.is_photographer %}{% url 'testsite:profils_fotogr' %}{% else %}{% url 'testsite:profils' %}{% endif %}" method="get">
-            <button class="profile-btn" type="submit">Mans Profils</button>
-        </form>
+        <div class="topbar-actions">
+            <!-- Pārbauda kāda ir lietotāja loma, aizved uz pareizo lapu -->
+            <form action="{% if user.is_photographer %}{% url 'testsite:profils_fotogr' %}{% else %}{% url 'testsite:profils' %}{% endif %}" method="get">
+                <button class="profile-btn" type="submit">Mans Profils</button>
+            </form>
+        </div>
     </header>
     <div class="mainpage">
         <aside class="sidebar">

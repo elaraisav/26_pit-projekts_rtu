@@ -17,11 +17,15 @@
         <button type="submit" class="search-btn">Meklēt</button> <!-- jāpārliecinās, ka var meklēt bez un ar teksta meklēšanas joslā -->
     </form>
     <!-- fotogrāfa profils, klienta skats -->
-    <!-- Pārbauda kāda ir lietotāja loma, aizved uz pareizo lapu -->
-    <form action="{% if user.is_photographer %}{% url 'testsite:profils_fotogr' %}{% else %}{% url 'testsite:profils' %}{% endif %}" method="get">
-        <button class="profile-btn" type="submit">Mans Profils</button>
-        <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
-    </form>
+        <div class="topbar-actions">
+            <!-- Pārbauda kāda ir lietotāja loma, aizved uz pareizo lapu -->
+            <form action="{% if user.is_photographer %}{% url 'testsite:profils_fotogr' %}{% else %}{% url 'testsite:profils' %}{% endif %}" method="get">
+                <button class="profile-btn" type="submit">Mans Profils</button>
+            </form>
+            <form>
+                <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+            </form>
+        </div>
 </header>
 <body>
     <div class="mainpage">

@@ -133,8 +133,9 @@ def profils_fotogr_klienta(request):
         'conversations': conversations,
     })
 
-# Edit the logged-in photographer's own profile (design 5.1.6). There is no id in the
-# URL, so nobody can edit someone else's profile; clients have no profile page.
+# Edit the logged-in user's own profile description (design 5.1.6): the photographer's
+# `Photographer.description` or the client's `User.description`. There is no id in the
+# URL, so nobody can edit someone else's profile.
 @login_required
 def profila_regid(request):
     # Nosaka lietotāja formu

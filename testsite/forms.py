@@ -97,6 +97,8 @@ class ClientProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Django adds maxlength from the model field by itself; remove it.
+        self.fields['description'].widget.attrs.pop('maxlength', None)
 
 class PortfolioImageForm(forms.ModelForm):
     class Meta:

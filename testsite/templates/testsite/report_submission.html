@@ -25,7 +25,6 @@
                    aria-label="Meklēt fotogrāfu">
             <button type="submit" class="search-btn">Meklēt</button>
         </form>
-        <form> <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button></form>
     </header>
 
     <main class="report-page">
@@ -36,7 +35,7 @@
                 {% csrf_token %}
                 <div class="report-recipient">
                     <span>Pret:</span>
-                    <p> &lt;{{ user.get_full_name|default:user.username }}&gt;</p>
+                    <p> &lt;{{ reported_user.get_full_name|default:reported_user.username }}&gt; </p>
                 </div>
 
                 <div class="report-field report-reason">
@@ -66,10 +65,10 @@
                               placeholder="Ievadi tekstu..."
                               required></textarea>
                 </div>
-
+                <!-- demonstrācijas pēc report-submit ir parasta poga nevis type="submit" -->
                 <div class="report-actions">
-                    <button type="submit" class="report-submit">Iesniegt </button>
-                    <button type="button" class="report-cancel">Atcelt</button>
+                    <button type="button" class="report-submit" onclick="history.back()">Iesniegt </button>
+                    <button type="button" class="report-cancel" onclick="history.back()">Atcelt</button>
                 </div>
             </form>
         </section>

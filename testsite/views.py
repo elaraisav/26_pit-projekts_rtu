@@ -215,6 +215,9 @@ def portfolio_image_edit(request, image_id):
         photographer=profile
     )
 
+    # Vecā attēla faila nosaukums (pirms formas apstrādes), lai varētu to izdzēst, ja tiek augšupielādēts jauns
+    old_image_name = portfolio_image.image.name
+
     if request.method == 'POST':
         form = PortfolioImageForm(
             request.POST,
@@ -226,6 +229,10 @@ def portfolio_image_edit(request, image_id):
             updated_image = form.save(commit=False)
             updated_image.photographer = profile
             updated_image.save()
+
+            # Ja augšupielādēts jauns attēls, dzēšam veco failu no diska
+            if old_image_name and updated_image.image.name != old_image_name:
+                updated_image.image.storage.delete(old_image_name)
 
             messages.success(
                 request,

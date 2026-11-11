@@ -2,7 +2,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
 from .forms import PaymentRequestForm
-from .models import Conversation, Message, can_chat, can_chat_together
+from .models import Conversation, Message, can_chat, can_chat_together, open_payment_for_upload
 
 
 class ChatConsumer(JsonWebsocketConsumer):
@@ -62,14 +62,22 @@ class ChatConsumer(JsonWebsocketConsumer):
             if not user.is_photographer:
                 return
 
+            # The latest request is paid and its images are not uploaded yet:
+            # no new request before that, or the paid one could never be used.
+            if open_payment_for_upload(conversation) is not None:
+                self.send_error('Vispirms pievieno attēlus par apmaksāto pieprasījumu.')
+                return
+
             form = PaymentRequestForm(content)
             if not form.is_valid():
                 # Tell the sender why the request was refused
-                self.send_json({
-                    'event': 'error',
-                    'error': ' '.join(e for errors in form.errors.values() for e in errors),
-                })
+                self.send_error(' '.join(e for errors in form.errors.values() for e in errors))
                 return
+
+            # A new request cancels the older ones that still wait for payment.
+            for old in Message.objects.filter(conversation=conversation, message_type='payment',
+                                              payment_status='pending'):
+                self.change_payment_status(old, 'cancelled')
 
             message = Message.objects.create(
                 conversation=conversation,
@@ -83,6 +91,9 @@ class ChatConsumer(JsonWebsocketConsumer):
 
         # Maksājuma apstiprināšana (demonstrācija)
         elif action == 'pay':
+            if user.pk != conversation.client_id:
+                return
+
             payment_id = content.get('payment_id')
 
             if not str(payment_id).isdigit():
@@ -92,27 +103,43 @@ class ChatConsumer(JsonWebsocketConsumer):
                 pk=int(payment_id),
                 conversation=conversation,
                 message_type='payment',
-                sender=conversation.photographer,
-                payment_status='pending'
+                sender=conversation.photographer
             ).first()
 
-            if user.pk != conversation.client_id or payment is None:
+            if payment is None:
                 return
 
-            payment.payment_status = 'paid'
-            payment.save(update_fields=['payment_status'])
+            if not self.change_payment_status(payment, 'paid'):
+                self.send_error('Šis pieprasījums vairs nav spēkā (tas ir atcelts vai jau apmaksāts).')
+                return
 
             Conversation.objects.filter(pk=conversation.pk).update(
                 updated_at=payment.created_at
             )
+            return
 
-            async_to_sync(self.channel_layer.group_send)(
-                self.group_name,
-                {
-                    'type': 'chat.payment_update',
-                    'message': payment.to_json()
-                }
-            )
+        # The photographer cancels a request that is not paid yet
+        elif action == 'cancel_payment':
+            if not user.is_photographer:
+                return
+
+            payment_id = content.get('payment_id')
+
+            if not str(payment_id).isdigit():
+                return
+
+            payment = Message.objects.filter(
+                pk=int(payment_id),
+                conversation=conversation,
+                message_type='payment',
+                sender=user
+            ).first()
+
+            if payment is None:
+                return
+
+            if not self.change_payment_status(payment, 'cancelled'):
+                self.send_error('Šo pieprasījumu vairs nevar atcelt (tas ir apmaksāts vai jau atcelts).')
             return
 
         else:
@@ -129,6 +156,25 @@ class ChatConsumer(JsonWebsocketConsumer):
                 'message': message.to_json()
             }
         )
+
+    def send_error(self, text):
+        """Tells only the sender why a request was refused."""
+        self.send_json({'event': 'error', 'error': text})
+
+    def change_payment_status(self, payment, new_status):
+        """Moves a payment request that is still pending to new_status ('paid' or
+        'cancelled') and tells everyone in the conversation. Only a pending request
+        changes, so a payment and a cancel arriving at once cannot both succeed;
+        returns False if the request was no longer pending."""
+        changed = Message.objects.filter(pk=payment.pk, payment_status='pending').update(payment_status=new_status)
+        if not changed:
+            return False
+        payment.payment_status = new_status
+        async_to_sync(self.channel_layer.group_send)(
+            self.group_name,
+            {'type': 'chat.payment_update', 'message': payment.to_json()}
+        )
+        return True
 
     # Atjaunina maksājuma statusu
     def chat_payment_update(self, event):

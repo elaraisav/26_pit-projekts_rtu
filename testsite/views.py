@@ -285,8 +285,10 @@ def chat_upload_image(request, conversation_id):
     })
 
 @login_required
-def report_submission(request):
-    return render(request, 'testsite/report_submission.html')
+def report_submission(request, conversation_id):
+    conversation = get_object_or_404(Conversation.objects.for_user(request.user).usable(), pk=conversation_id )
+    reported_user = conversation.other_participant(request.user)
+    return render(request, 'testsite/report_submission.html', {'reported_user': reported_user, })
 
 def admin_panel(request):
     return render(request, 'testsite/admin_panel.html')

@@ -97,7 +97,6 @@ class ClientProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['description'].widget.attrs.pop('maxlength', None)
 
 class PortfolioImageForm(forms.ModelForm):
     class Meta:

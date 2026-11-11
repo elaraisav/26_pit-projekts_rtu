@@ -6,6 +6,7 @@
     <title>Profils</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet" href="{% static 'testsite/shared.css' %}">
 </head>
 <body>
     <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
@@ -42,13 +43,6 @@
             </div>
         </aside>
         <main class="profile">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
 
         <div class="container">
       <!--  <main class="profile">  man patīk kā izstatās kad šo pieliek... pielikt pading kaut kur?-->
@@ -71,5 +65,23 @@
             </section>
     </div>
     </main>
+     <!-- Paziņojumi (Django messages): peld augšā, neaizņem vietu lapā un pazūd paši -->
+    {% if messages %}
+        <div class="toast-area" role="status">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.level_tag }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="toast-close" aria-label="Aizvērt">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            document.querySelectorAll(".toast").forEach(function (toast) {
+                const hide = function () { toast.remove(); };
+                toast.querySelector(".toast-close").addEventListener("click", hide);
+                setTimeout(hide, 4000);
+            });
+        </script>
+    {% endif %}
 </body>
 </html>

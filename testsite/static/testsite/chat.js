@@ -228,6 +228,12 @@
         socket.addEventListener('message', function (event) {
             const data = JSON.parse(event.data);
 
+            // Servera kļūda (piemēram, nederīga maksājuma summa)
+            if (data.event === 'error') {
+                status.textContent = data.error;
+                return;
+            }
+
             // Maksājuma statusa atjaunināšana
             if (data.event === 'payment_update') {
                 const payment = data.message;
@@ -307,7 +313,7 @@
             currency: currency
         }));
         paymentDialog.close();
-        status.textContent = 'Maksājuma pieprasījums nosūtīts.';
+        status.textContent = '';
     });
 
     // Atver attēla izvēli

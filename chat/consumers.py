@@ -1,6 +1,7 @@
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
+from .forms import PaymentRequestForm
 from .models import Conversation, Message, can_chat, can_chat_together
 
 
@@ -61,18 +62,13 @@ class ChatConsumer(JsonWebsocketConsumer):
             if not user.is_photographer:
                 return
 
-            try:
-                from decimal import Decimal
-                amount = Decimal(str(content.get('amount', '')))
-            except (ValueError, TypeError):
-                return
-
-            currency = content.get('currency', '')
-
-            if amount <= 0 or amount > Decimal('99999999.99'):
-                return
-
-            if currency not in ['EUR', 'USD', 'GBP']:
+            form = PaymentRequestForm(content)
+            if not form.is_valid():
+                # Tell the sender why the request was refused
+                self.send_json({
+                    'event': 'error',
+                    'error': ' '.join(e for errors in form.errors.values() for e in errors),
+                })
                 return
 
             message = Message.objects.create(
@@ -80,8 +76,8 @@ class ChatConsumer(JsonWebsocketConsumer):
                 sender=user,
                 text='Maksājuma pieprasījums',
                 message_type='payment',
-                payment_amount=amount,
-                currency=currency,
+                payment_amount=form.cleaned_data['amount'],
+                currency=form.cleaned_data['currency'],
                 payment_status='pending'
             )
 

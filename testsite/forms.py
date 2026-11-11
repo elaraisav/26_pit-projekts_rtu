@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.db import models
 
 from .models import Photographer, User
-
+from .models import PortfolioImage
 
 # Login form: Django checks the username and password itself.
 class LoginForm(AuthenticationForm):
@@ -62,8 +63,7 @@ class PhotographerForm(forms.ModelForm):
     class Meta:
         model = Photographer
         fields = ('description',)
-        widgets = {
-            'description': forms.Textarea(attrs={
+        widgets = {'description': forms.Textarea(attrs={
                 'id': 'profileDescription',
                 'class': 'edit-description-input',
                 'placeholder': 'Ievadiet savu aprakstu...',
@@ -98,3 +98,45 @@ class ClientProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['description'].widget.attrs.pop('maxlength', None)
+
+class PortfolioImageForm(forms.ModelForm):
+    class Meta:
+        model = PortfolioImage
+        fields = ('image', 'title', 'category', 'description')
+        widgets = { 'image': forms.ClearableFileInput(attrs={ 'accept': 'image/*','id': 'portfolioImage' }),
+            'title': forms.TextInput(attrs={ 'class': 'edit-description-input', 'placeholder': 'Ievadiet attēla nosaukumu...',}),
+            'category': forms.TextInput(attrs={ 'class': 'edit-description-input', 'placeholder': 'Ievadiet attēla kategoriju...', }),
+            'description': forms.Textarea(attrs={
+                'id': 'portfolioDescription',
+                'class': 'edit-description-input',
+                'placeholder': 'Ievadiet attēla aprakstu...',
+            }),
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Jauna attēla pievienošanā attēls ir obligāts.
+        # Rediģējot esošu attēlu, to var atstāt nemainītu.
+        self.fields['image'].required = self.instance.pk is None
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+
+        if image and image.size > 10 * 1024 * 1024:
+            raise forms.ValidationError(
+                'Attēls nedrīkst būt lielāks par 10 MB!'
+            )
+#
+#        if image:
+           # allowed_types = {
+           #     'image/jpeg',
+           #     'image/png',
+           #     'image/webp',
+           # }
+
+           # if image.content_type not in allowed_types:
+           #     raise forms.ValidationError(
+            #        'Atļauti tikai JPEG, PNG un WEBP attēli!'
+            #    )
+
+        return image

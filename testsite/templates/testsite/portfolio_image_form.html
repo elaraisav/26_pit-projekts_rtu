@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="lv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if is_edit %}
+            Attēla rediģēšana
+        {% else %}
+            Attēla pievienošana
+        {% endif %}
+    </title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet" href="{% static 'testsite/shared.css' %}">
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
+        </a>
+
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search" name="q" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu">
+            <button type="submit" class="search-btn"> Meklēt </button>
+        </form>
+        <a href="{% url 'testsite:portfolio_regid' %}" class="profile-btn"> &lt;&lt; Atpakaļ </a>
+    </header>
+
+    <main class="edit-page">
+        <section class="edit-panel edit-portfolio-panel">
+
+            <!-- Attēla priekšskatījums -->
+            <div class="portfolio-upload-column">
+                <label for="portfolioImage"
+                       class="portfolio-upload-area">
+                    <!-- Iepriekš saglabātā attēla priekšskatījums -->
+                    <img id="portfolioPreview"
+                        {% if is_edit and portfolio_image.image %}
+                            src="{{ portfolio_image.image.url }}"
+                        {% endif %}
+                        alt="Attēla priekšskatījums"
+                        {% if not is_edit %}hidden{% endif %}>
+
+                    <!-- Jaunā attēla priekšskatījums -->
+                    <canvas id="portfolioCanvas" hidden></canvas>
+
+                    <span id="uploadText"
+                          {% if is_edit %}hidden{% endif %}>
+                        Pievienot attēlu / Attēls
+                    </span>
+                </label>
+            </div>
+
+            <!-- Attēla forma -->
+            <form class="edit-form" method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                {{ form.image }}
+                {{ form.image.errors }}
+
+                <label for="id_title" class="edit-description-label"> Attēla nosaukums </label>
+
+                {{ form.title }}
+                {{ form.title.errors }}
+
+                <label for="id_category" class="edit-description-label"> Attēla kategorija </label>
+
+                {{ form.category }}
+                {{ form.category.errors }}
+
+                <label for="portfolioDescription" class="edit-description-label"> Apraksts </label>
+
+                {{ form.description }}
+                {{ form.description.errors }}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                <div class="edit-actions">
+                    <button type="submit"
+                            class="edit-save-button">
+                        {% if is_edit %}
+                            Saglabāt izmaiņas
+                        {% else %}
+                            Pievienot portfolio
+                        {% endif %}
+                    </button>
+                    {% if is_edit %}
+                        <button type="button" class="edit-delete-button" onclick="document.getElementById('deleteImageDialog').showModal()"> Dzēst attēlu </button>
+                    {% endif %}
+                </div>
+            </form>
+
+        </section>
+        {% if is_edit %}
+
+            <!-- Dzēšanas apstiprinājums -->
+            <dialog id="deleteImageDialog" class="confirm-dialog">
+                <h2>Dzēst attēlu?</h2>
+                <p> Vai tiešām vēlaties dzēst šo portfolio attēlu? </p>
+                <div class="dialog-actions">
+                    <button type="button" class="edit-save-button" onclick="document.getElementById('deleteImageDialog').close()"> Atcelt </button>
+                    <form method="post"action="{% url 'testsite:portfolio_delete' portfolio_image.id %}"> {% csrf_token %}
+                        <button type="submit" class="edit-delete-button"> Jā, dzēst attēlu</button>
+                    </form>
+                </div>
+            </dialog>
+        {% endif %}
+    </main>
+
+    <!-- Attēla priekšskatījums -->
+    <script>
+        const portfolioInput = document.getElementById("id_image") || document.getElementById("portfolioImage");
+        const portfolioPreview = document.getElementById("portfolioPreview");
+        const portfolioCanvas = document.getElementById("portfolioCanvas");
+        const uploadText = document.getElementById("uploadText");
+
+        if (portfolioInput) {
+            let previewRequest = 0;
+            portfolioInput.addEventListener("change", async function () {
+                const file = this.files[0];
+                if (!file) {
+                    return;
+                }
+
+                // Pārbauda, vai izvēlētais fails ir attēls
+                if (!file.type.startsWith("image/")) {
+                    portfolioCanvas.hidden = true;
+                    const hasExistingImage =
+                        portfolioPreview.getAttribute("src");
+                    portfolioPreview.hidden = !hasExistingImage;
+                    uploadText.hidden = Boolean(hasExistingImage);
+                    return;
+                }
+
+                const currentRequest = ++previewRequest;
+                try {
+                    // Nolasa attēlu bez HTML vai URL ievietošanas DOM
+                    const bitmap = await createImageBitmap(file);
+
+                    // Ignorē iepriekšējā faila rezultātu,
+                    // ja lietotājs jau izvēlējies citu attēlu
+                    if (currentRequest !== previewRequest) {
+                        bitmap.close();
+                        return;
+                    }
+
+                    portfolioCanvas.width = bitmap.width;
+                    portfolioCanvas.height = bitmap.height;
+
+                    const context = portfolioCanvas.getContext("2d");
+                    context.clearRect(
+                        0,
+                        0,
+                        portfolioCanvas.width,
+                        portfolioCanvas.height
+                    );
+
+                    context.drawImage(bitmap, 0, 0);
+                    bitmap.close();
+
+                    // Parāda jauno attēla priekšskatījumu
+                    portfolioPreview.hidden = true;
+                    portfolioCanvas.hidden = false;
+                    uploadText.hidden = true;
+
+                } catch (error) {
+                    console.error("Neizdevās parādīt attēla priekšskatījumu:", error);
+                    portfolioCanvas.hidden = true;
+                    const hasExistingImage = portfolioPreview.getAttribute("src");
+                    portfolioPreview.hidden = !hasExistingImage;
+                    uploadText.hidden = Boolean(hasExistingImage);
+                }
+            });
+        }
+    </script>
+
+    <!-- Paziņojumi -->
+    {% if messages %}
+        <div class="toast-area" role="status">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.level_tag }}">
+                    <span>{{ message }}</span>
+                    <button type="button"class="toast-close" aria-label="Aizvērt"> &times; </button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <script>
+            document.querySelectorAll(".toast").forEach(function (toast) {
+                const hide = function () {
+                    toast.remove();
+                };
+                toast.querySelector(".toast-close") .addEventListener("click", hide);
+                setTimeout(hide, 4000);
+            });
+        </script>
+    {% endif %}
+</body>
+</html>

@@ -4,34 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tērzētava</title>
-
     {% load static %}
-
-    <link rel="stylesheet"
-          href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet" href="{% static 'testsite/terzetava.css' %}">
     <script src="{% static 'testsite/chat.js' %}" defer></script>
 </head>
-
-<body class="chat-page">
-
+<body>
     <!-- Augšējā josla -->
     <header class="topbar">
         <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
             <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
         </a>
     </header>
-
-    <div class="mainpage chat-layout">
-
+    <div class="mainpage">
         <!-- Kreisais sānpanelis -->
-        <aside class="sidebar chat-sidebar">
-
+        <aside class="chat-sidebar">
             <section class="chat-options">
                 <h2>Opcijas</h2>
-
-                <a class="chat-back-btn"
-                   href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ
-                </a>
+                <a class="chat-back-btn" href="{% url 'testsite:sakumlapa' %}">&lt;&lt;Atpakaļ</a>
 
                 {% if not chat_allowed %}
                 <!-- Admin accounts don't take part in the chat -->
@@ -59,10 +48,9 @@
 
             <section class="chat-contacts">
                 <h2>Aktīvās sarakstes</h2>
-
                 <div class="profili">
                     {% for conversation, other in conversations %}
-                        <article class="profils chat-contact">
+                        <article class="profils">
                             <span class="avatar chat-initials" aria-hidden="true">{{ other.get_full_name|default:other.username|slice:":1"|upper }}</span>
 
                             <div class="profile-info">
@@ -88,10 +76,8 @@
 
             <!-- Sarunas galvene -->
             <header class="chat-header">
-
                 <div class="chat-user">
                     <span class="chat-user-avatar chat-initials" aria-hidden="true">{{ active_other.get_full_name|default:active_other.username|slice:":1"|upper }}</span>
-
                     <div>
                         <p>{{ active_other.get_full_name|default:active_other.username }}</p>
                         <p class="chat-user-role">{{ active_other.get_role_display }}</p>
@@ -99,10 +85,11 @@
                 </div>
 
                 <!-- Report page from main (report_submission) -->
-                <form action="{% url 'testsite:report_submission' %}">
-                    <button class="chat-report-btn" id="report-user-btn">Ziņot par<br> lietotāju</button>
+                <form action="{% url 'testsite:report_submission' active.pk %}" method="get">
+                    <button class="chat-report-btn" id="report-user-btn">
+                        Ziņot par<br> lietotāju
+                    </button>
                 </form>
-
             </header>
 
             <!-- Sarunas saturs: the other person's messages on the left, yours on the right -->
@@ -112,35 +99,101 @@
                      aria-live="polite">
                 <p class="chat-empty" id="chat-empty">Vēl nav ziņu. Uzraksti pirmo!</p>
             </section>
-
-            <!-- Ziņojuma rakstīšanas josla -->
+            
+            <!-- Teksta rakstīšanas josla -->
             <footer class="chat-compose">
+                <!-- Pārbauda, vai ir fotogrāfs, lai papildu pogas -->
+                <form class="chat-compose-form" id="message-form"
+                    data-photographer="{{ user.is_photographer|yesno:'true,false' }}">
+                    {% csrf_token %}
+                    {% if user.is_photographer %}
+                        <div class="chat-extra-buttons">
+                            <button type="button" class="chat-extra-btn" id="payment-btn">Maksājuma<br>pieprasījums</button>
+                            <button type="button" class="chat-extra-btn" id="image-btn" disabled>Pievienot<br>failus</button>
+                        </div>
+                    {% endif %}
 
-                <form class="chat-compose-form" id="message-form">
-                    <label for="message-input"
-                           class="visually-hidden">
-                        Rakstīt ziņojumu
-                    </label>
-
+                    <label for="message-input" class="visually-hidden">Rakstīt ziņojumu</label>
                     <input
                         type="text"
                         id="message-input"
                         name="message"
-                        placeholder="Rakstīšanas josla"
+                        placeholder="Ievadiet ziņu ..."
                         autocomplete="off"
                         maxlength="2000"
                         required>
-
-                    <button type="submit"
-                            class="chat-send-btn">
-                        Sūtīt
-                    </button>
+                    <button type="submit" class="chat-send-btn">Sūtīt</button>
                 </form>
                 <p class="chat-status" id="chat-status" role="status"></p>
-
             </footer>
-
         </main>
+
+        <!-- Maksājuma pieprasījuma logs -->
+        <dialog id="payment-dialog" class="chat-dialog">
+            <h3>Jauns maksājuma pieprasījums</h3>
+
+            <label for="payment-amount">Summa:</label>
+            <input type="number" id="payment-amount"
+                min="0.01" max="99999999.99"
+                step="0.01" required>
+
+            <label for="payment-currency">Valūta:</label>
+            <select id="payment-currency">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+            </select>
+
+            <div class="chat-dialog-actions">
+                <button type="button" id="payment-submit" class="chat-action-btn">Nosūtīt</button>
+                <button type="button" class="chat-cancel-btn" data-close-dialog>Atcelt</button>
+            </div>
+        </dialog>
+
+        {% if user.is_photographer %}
+        <!-- Attēlu komplekta augšupielādes logs: viens komplekts par vienu apmaksātu pieprasījumu -->
+        <dialog id="upload-dialog" class="chat-dialog">
+            <h3>Pievienot failus</h3>
+            <p>Līdz 10 attēliem (JPG vai PNG, līdz 10 MB katrs). Par vienu apmaksātu pieprasījumu var augšupielādēt vienu komplektu, to vēlāk nevar papildināt.</p>
+
+            <label for="upload-files">Attēli:</label>
+            <input type="file" id="upload-files" accept=".jpg,.jpeg,.png,image/jpeg,image/png" multiple>
+            <p id="upload-count">0 / 10</p>
+            <ul id="upload-list" class="chat-upload-list"></ul>
+            <p id="upload-error" class="chat-upload-error" role="alert"></p>
+
+            <div class="chat-dialog-actions">
+                <button type="button" id="upload-submit" class="chat-action-btn" disabled>Augšupielādēt</button>
+                <button type="button" class="chat-cancel-btn" data-close-dialog>Atcelt</button>
+            </div>
+        </dialog>
+        {% endif %}
+
+        <!-- Demonstrācijas maksājuma logs -->
+        <dialog id="pay-dialog" class="chat-dialog">
+            <h3>Demonstrācijas maksājums</h3>
+            <p>Šis ir tikai maksājuma makets. Reāls darījums netiks veikts.</p>
+
+            <label for="mock-payment-info">Maksājuma informācija:</label>
+            <input type="text" id="mock-payment-info" placeholder="Piemēram, DEMO-1234">
+
+            <div class="chat-dialog-actions">
+                <button type="button" id="pay-confirm" class="chat-action-btn">Apstiprināt apmaksu</button>
+                <button type="button" class="chat-cancel-btn" data-close-dialog>Atcelt</button>
+            </div>
+        </dialog>
+
+        <!-- Attēlu komplekta lielāks skats ar bultiņām -->
+        <dialog id="preview-dialog" class="chat-preview-dialog">
+            <button type="button" class="chat-preview-nav" id="preview-prev" aria-label="Iepriekšējais attēls">&lsaquo;</button>
+            <figure>
+                <img id="preview-image" alt="">
+                <figcaption id="preview-count"></figcaption>
+            </figure>
+            <button type="button" class="chat-preview-nav" id="preview-next" aria-label="Nākamais attēls">&rsaquo;</button>
+            <button type="button" class="chat-preview-close" data-close-dialog aria-label="Aizvērt">&times;</button>
+        </dialog>
+
         {{ history|json_script:"chat-history" }}
         {% else %}
         <main class="chat-main chat-main-empty">

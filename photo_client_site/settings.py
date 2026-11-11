@@ -174,3 +174,7 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Portfolio image storage
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

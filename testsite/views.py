@@ -6,10 +6,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from chat.models import Conversation, can_chat, chat_partners_for, chat_users
+from chat.models import Conversation, can_chat, chat_partners_for, chat_users, open_payment_for_upload
+from chat.uploads import NOT_OPEN, UploadError, create_batch, process_files
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm
-from .models import Photographer, User
+
+from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm, PortfolioImage
+from .models import Photographer, User, PortfolioImage
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -105,13 +110,20 @@ def profils_fotogr(request):
     # Iegūst fotogrāfa profilu
     profile = Photographer.objects.filter(user=request.user).first()
 
+    # Iegūst fotogrāfa portfolio attēlus
+    portfolio_images = []
+    if profile:
+        portfolio_images = PortfolioImage.objects.filter(photographer=profile)
+
     # Iegūst aktīvās sarunas sānjoslai
     conversations = get_sidebar_conversations(request.user)
 
     return render(request, 'testsite/profils_fotogr.html', {
         'profile': profile,
+        'portfolio_images': portfolio_images,
         'conversations': conversations,
     })
+
 
 @login_required
 def profils_fotogr_klienta(request):
@@ -148,7 +160,136 @@ def profila_regid(request):
 def portfolio_regid(request):
     if not request.user.is_photographer:
         raise Http404
-    return render(request, 'testsite/portfolio_regid.html')
+
+    profile, _ = Photographer.objects.get_or_create( user=request.user)
+    portfolio_images = PortfolioImage.objects.filter( photographer=profile )
+    conversations = get_sidebar_conversations(request.user)
+
+    return render(
+        request, 'testsite/portfolio_regid.html', { 'profile': profile, 'portfolio_images': portfolio_images, 'conversations': conversations,}
+    )
+
+@login_required
+def portfolio_image_add(request):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile, _ = Photographer.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+            portfolio_image = form.save(commit=False)
+            portfolio_image.photographer = profile
+            portfolio_image.save()
+
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi pievienots!'
+            )
+
+            return redirect('testsite:portfolio_regid')
+
+        messages.error(
+            request,
+            'Neizdevās pievienot attēlu. Pārbaudiet ievadīto informāciju.'
+        )
+
+    else:
+        form = PortfolioImageForm()
+
+    return render(
+        request,
+        'testsite/portfolio_image_form.html',
+        {
+            'form': form,
+            'is_edit': False,
+        }
+    )
+
+@login_required
+def portfolio_image_edit(request, image_id):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile = get_object_or_404(
+        Photographer,
+        user=request.user
+    )
+
+    portfolio_image = get_object_or_404(
+        PortfolioImage,
+        pk=image_id,
+        photographer=profile
+    )
+
+    # Vecā attēla faila nosaukums (pirms formas apstrādes), lai varētu to izdzēst, ja tiek augšupielādēts jauns
+    old_image_name = portfolio_image.image.name
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST,
+            request.FILES,
+            instance=portfolio_image
+        )
+
+        if form.is_valid():
+            updated_image = form.save(commit=False)
+            updated_image.photographer = profile
+            updated_image.save()
+
+            # Ja augšupielādēts jauns attēls, dzēšam veco failu no diska
+            if old_image_name and updated_image.image.name != old_image_name:
+                updated_image.image.storage.delete(old_image_name)
+
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi atjaunināts!'
+            )
+
+            return redirect('testsite:portfolio_regid')
+
+        messages.error(
+            request,
+            'Neizdevās saglabāt attēla izmaiņas.'
+        )
+
+    else:
+        form = PortfolioImageForm(
+            instance=portfolio_image
+        )
+
+    return render(
+        request,
+        'testsite/portfolio_image_form.html',
+        {
+            'form': form,
+            'portfolio_image': portfolio_image,
+            'is_edit': True,
+        }
+    )
+
+@login_required
+@require_POST
+def portfolio_delete(request, image_id):
+    if not request.user.is_photographer: raise Http404
+    profile = get_object_or_404(Photographer,user=request.user)
+
+    # Atļauts dzēst tikai sava konta attēlus
+    portfolio_image = get_object_or_404( PortfolioImage, pk=image_id, photographer=profile)
+
+    # Dzēšam arī fizisko attēla failu
+    portfolio_image.image.delete(save=False)
+    portfolio_image.delete()
+
+    messages.success(request,'Portfolio attēls veiksmīgi izdzēsts!' )
+    return redirect('testsite:portfolio_regid')
 
 # Chat page (design: terzetava.html). With no id it opens the newest conversation.
 # Who may chat is decided in chat/models.py (can_chat); admin accounts only see a note.
@@ -176,7 +317,7 @@ def terzetava(request, conversation_id=None):
 
     history = []
     if active is not None:
-        history = [message.to_json() for message in active.messages.select_related('sender')]
+        history = [message.to_json() for message in active.messages.select_related('sender').prefetch_related('images')]
 
     return render(request, 'testsite/terzetava.html', {
         'chat_allowed': allowed,
@@ -196,7 +337,7 @@ def chat_messages(request, conversation_id):
         raise Http404
     after = request.GET.get('after', '0')
     after = int(after) if after.isdigit() else 0
-    messages_after = conversation.messages.filter(pk__gt=after).select_related('sender').order_by('pk')
+    messages_after = conversation.messages.filter(pk__gt=after).select_related('sender').prefetch_related('images').order_by('pk')
     return JsonResponse({'messages': [message.to_json() for message in messages_after]})
 
 @login_required
@@ -213,9 +354,44 @@ def chat_start(request):
         return HttpResponseBadRequest("Invalid chat request.")
     return redirect('testsite:chat_conversation', conversation_id=conversation.pk)
 
+# The photographer uploads one batch of images (up to 10 files) after the latest payment
+# request was paid; each payment request pays for one batch (see chat/uploads.py).
 @login_required
-def report_submission(request):
-    return render(request, 'testsite/report_submission.html')
+@require_POST
+def chat_upload_images(request, conversation_id):
+    conversation = Conversation.objects.filter(
+        pk=conversation_id
+    ).usable().filter(
+        pk__in=Conversation.objects.for_user(request.user)
+    ).first()
+
+    if conversation is None or not request.user.is_photographer:
+        raise Http404
+
+    if open_payment_for_upload(conversation) is None:
+        return JsonResponse({'error': NOT_OPEN}, status=403)
+
+    try:
+        items = process_files(request.FILES.getlist('images'))
+        message = create_batch(conversation, request.user, items)
+    except UploadError as error:
+        return JsonResponse({'error': str(error)}, status=400)
+
+    Conversation.objects.filter(pk=conversation.pk).update(updated_at=message.created_at)
+
+    # Send the batch to the other person in the conversation too.
+    async_to_sync(get_channel_layer().group_send)(
+        conversation.group_name,
+        {'type': 'chat.message', 'message': message.to_json()},
+    )
+
+    return JsonResponse({'success': True, 'message': message.to_json()})
+
+@login_required
+def report_submission(request, conversation_id):
+    conversation = get_object_or_404(Conversation.objects.for_user(request.user).usable(), pk=conversation_id )
+    reported_user = conversation.other_participant(request.user)
+    return render(request, 'testsite/report_submission.html', {'reported_user': reported_user, })
 
 def admin_panel(request):
     return render(request, 'testsite/admin_panel.html')

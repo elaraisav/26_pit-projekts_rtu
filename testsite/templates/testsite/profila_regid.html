@@ -25,9 +25,11 @@
                    aria-label="Meklēt fotogrāfu">
             <button type="submit" class="search-btn">Meklēt</button>
         </form>
-        <form>
-            <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
-        </form>
+        <div class="topbar-actions">
+            <form>
+                <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
+            </form>
+        </div>
     </header>
 
     <main class="edit-page">
@@ -96,32 +98,9 @@
 
             <div class="dialog-actions">
                 <button class="edit-save-button" type="button"onclick="history.back()"> Atcelt</button>
-                <!--<button type="button"
-                        class="edit-save-button"
-                        onclick="document.getElementById('deleteAccountDialog').close()">
-                    Atcelt
-                </button>-->
-
-               <!-- <form method="post"
-                      action="{% url 'testsite:profils' %}"> <!-- konta_dzesana
-                    {% csrf_token %} -->
                     <button class="edit-delete-button" type="button"onclick="history.back()"> Jā, dzēst kontu</button>
-               <!-- </form> -->
             </div>
         </dialog>
     </main>
-<!--
-    <script>
-        const profileInput = document.getElementById("profileImage");
-        const profilePreview = document.getElementById("profilePreview");
-
-        profileInput.addEventListener("change", function () {
-            const file = this.files[0];
-
-            if (file && file.type.startsWith("image/")) {
-                profilePreview.src = URL.createObjectURL(file);
-            }
-        });
-    </script>-->
 </body>
 </html>

@@ -149,9 +149,10 @@ def portfolio_regid(request):
 
     profile, _ = Photographer.objects.get_or_create( user=request.user)
     portfolio_images = PortfolioImage.objects.filter( photographer=profile )
+    conversations = get_sidebar_conversations(request.user)
 
     return render(
-        request, 'testsite/portfolio_regid.html', { 'profile': profile, 'portfolio_images': portfolio_images,}
+        request, 'testsite/portfolio_regid.html', { 'profile': profile, 'portfolio_images': portfolio_images, 'conversations': conversations,}
     )
 
 @login_required

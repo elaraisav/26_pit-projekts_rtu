@@ -3,8 +3,8 @@
 Rīgas Tehniskās Universitātes (RTU) kursa projekts: tīmekļa platformas **makets**, kurā fotogrāfi var kopīgot fotogrāfijas ar saviem klientiem, bet klienti - viegli atrast sev piemērotus fotogrāfus.
 
 Platformā pašlaik ir īstenotas sekojošās funkcionalitātes:
-- Pilnīgi: autorizācija, reģistrācija, izrakstīšanās un tērzētava (sarunas starp klientu un fotogrāfu reāllaikā);
-- Daļēji: (TODO);
+- Pilnīgi: autorizācija, reģistrācija, izrakstīšanās, fotogrāfa profila apraksta rediģēšana, portfolio pārvaldība (attēlu pievienošana, rediģēšana un dzēšana) un tērzētava (sarunas starp klientu un fotogrāfu reāllaikā, maksājuma pieprasījumi un apmaksāto attēlu komplektu (līdz 10 attēliem) nosūtīšana);
+- Daļēji: fotogrāfa profils (vārds, apraksts un portfolio attēli ir reāli; profila bilde – makets), maksājumi tērzētavā (apmaksa ir tikai demonstrācija, reāls maksājums netiek veikts);
 - Statiski (fiksēts saturs): pārējās lapas (skat. tabulu zemāk).
 
 ## Ātrā palaišana
@@ -25,10 +25,21 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 `scripts/setup_env.py` izveido `.env` failu ar jaunu slepeno atslēgu; bez tā serveris nestartēsies.
 
 > [!NOTE]
-> Ja jau ir vecā `db.sqlite3` no laika pirms autorizācijas, `migrate` beigsies ar kļūdu. Izdzēs `db.sqlite3` (tajā nav noderīgu datu) un izpildi `migrate` vēlreiz – skat. [uzstādīšanas ceļvedi](docs/setup.md#ja-jau-ir-vecā-dbsqlite3). Administratora kontu izveido ar `uv run python manage.py createsuperuser`.
+> Administratora kontu izveido ar `uv run python manage.py createsuperuser`.
 
 > [!IMPORTANT]
 > Pakotnes pievieno tikai ar `uv add <pakotne>`, nekad ar `pip install` – citādi tās netiks pierakstītas `pyproject.toml` un `uv.lock`, un citiem projekts nestrādās.
+
+## Pēc atjauninājumiem
+
+Pēc katras `git pull` (arī pēc pārslēgšanās uz citu zaru) izpildi:
+
+```bash
+uv sync
+uv run python manage.py migrate
+```
+
+`uv sync` uzstāda jaunās atkarības, `migrate` pievieno jaunās datubāzes izmaiņas. Ja to neizdara, var parādīties kļūdas, piemēram, `no such table` – skat. [problēmu novēršanu](docs/troubleshooting.md). Pēc tam palaid serveri (`uv run python manage.py runserver`) vai pārstartē to, ja tas jau darbojas.
 
 ## Tehnoloģijas
 
@@ -50,7 +61,7 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/sakumlapa/` | Sākumlapa | makets |
 | `/meklesana/` | Fotogrāfu meklēšana un rezultāti | makets |
 | `/profils/` | Klienta profils (paša skats) | makets |
-| `/profils_fotogr/` | Fotogrāfa profils (paša skats; pagaidām pieejams tikai ar pagaidu pogu sākumlapā) | daļēji (vārds, apraksts un portfolio attēli ir reāli; profila bilde – makets) |
+| `/profils_fotogr/` | Fotogrāfa profils (paša skats; fotogrāfam uz to ved sākumlapas poga „Mans Profils") | daļēji (vārds, apraksts un portfolio attēli ir reāli; profila bilde – makets) |
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
 | `/profila_regid/` | Profila apraksta rediģēšana (`regid` = rediģēt); profila attēls vēl netiek saglabāts | darbojas |
 | `/portfolio_regid/` | Portfolio saraksts un pārvaldība (fotogrāfa skats) | darbojas |
@@ -58,7 +69,8 @@ Pēc tam atver <http://127.0.0.1:8000/> – redzēsi autorizācijas lapu. Pirmo 
 | `/portfolio/rediget/<id>/` | Portfolio attēla rediģēšana (var nomainīt attēlu vai atstāt esošo) | darbojas |
 | `/portfolio/dzest/<id>/` | Portfolio attēla dzēšana (tikai `POST`, poga portfolio sarakstā) | darbojas |
 | `/terzetava/` | Tērzētava: sarunu saraksts un jaunas sarunas sākšana (klientam un fotogrāfam) | darbojas |
-| `/terzetava/<id>/` | Konkrēta saruna | darbojas |
+| `/terzetava/<id>/` | Konkrēta saruna: ziņas, maksājuma pieprasījumi (apmaksa ir demonstrācija) un apmaksāto attēlu komplekti | darbojas |
+| `/terzetava/<id>/upload/` | Attēlu komplekta (līdz 10 JPG vai PNG failu) augšupielāde pēc maksājuma (tikai `POST`, tikai fotogrāfam; atbilde JSON formātā) | darbojas |
 | `/terzetava/<id>/messages/` | Jaunākās sarunas ziņas JSON formātā (tās pieprasa `chat.js` pēc savienojuma atjaunošanas) | darbojas |
 | `/terzetava/start/` | Jaunas sarunas sākšana (tikai `POST`) | darbojas |
 | `/report_submission/` | Sūdzības ziņojuma iesniegšana par lietotāju | makets |

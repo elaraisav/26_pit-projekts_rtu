@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="lv">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,112 +13,116 @@
 <body>
     <header class="topbar">
         <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
-            <img src="{% static 'testsite/images/logo.png' %}"
-                 alt="Vietnes logo">
+            <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
         </a>
 
-        <form class="topbar-form"
-              action="{% url 'testsite:meklesana' %}"
-              method="get">
-            <input type="search"
-                   name="q"
-                   placeholder="Meklējiet fotogrāfu..."
-                   aria-label="Meklēt fotogrāfu">
-            <button type="submit" class="search-btn">Meklēt</button>
+        <form class="topbar-form" action="{% url 'testsite:meklesana' %}" method="get">
+            <input type="search" id="search-bar" name="q" placeholder="Meklējiet fotogrāfu..." aria-label="Meklēt fotogrāfu">
+            <button type="submit" class="search-btn"> Meklēt </button>
         </form>
-        <div class="topbar-actions">
-            <form>
-                <button class="profile-btn" type="button" onclick="history.back()"> &lt;&lt; Atpakaļ </button>
-            </form>
-        </div>
+        <a href="{% url 'testsite:profils_fotogr' %}" class="profile-btn"> &lt;&lt; Atpakaļ </a>
     </header>
 
-    <main class="edit-page">
-        <section class="edit-panel edit-portfolio-panel">
-
-            <!-- Attēla pievienošana -->
-            <div class="portfolio-upload-column">
-                <label for="portfolioImage"
-                       class="portfolio-upload-area">
-                    <img id="portfolioPreview"
-                         src=""
-                         alt=""
-                         hidden>
-
-                    <span id="uploadText">
-                        Pievienot attēlu / Attēls
-                    </span>
-                </label>
+    <div class="mainpage">
+        <!-- Sānu panelis -->
+        <aside class="sidebar">
+            <h3>Aktīvās sarakstes</h3>
+            <div class="profili">
+                {% for conversation, other in conversations %}
+                    <article class="profils">
+                        <div class="profile-info">
+                            <p>{{ other.get_full_name|default:other.username }}</p>
+                            <a href="{% url 'testsite:chat_conversation' conversation.pk %}" class="chat-btn">Sarakstīties</a>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p>Jums pašlaik nav aktīvu sarakstu.</p>
+                {% endfor %}
             </div>
+        </aside>
 
-            <!-- Portfolio apraksts un pogas -->
-            <form class="edit-form"
-                  method="post"
-                  enctype="multipart/form-data"
-                  action="">
-                {% csrf_token %}
+        <!-- Galvenā profila zona -->
+        <main class="profile">
+            <div class="container">
+                <!-- Profila augšējā sadaļa -->
+                <section class="profile-header">
+                    <img src="{% static 'testsite/images/profilepic1.jpg' %}"
+                         alt="Profila attēls"
+                         class="profile-avatar">
 
-                <input type="file"
-                       name="portfolio_image"
-                       id="portfolioImage"
-                       accept="image/*"
-                       hidden>
+                    <div class="profile-details">
+                        <h1>{{ user.get_full_name }}</h1>
+                    </div>
+                    <div class="profile-description">
+                        <p> {{ profile.description|default:"Apraksts vēl nav pievienots." }} </p>
+                    </div>
+                </section>
 
-                <label for="portfolioDescription"
-                       class="edit-description-label">
-                    Apraksts
-                </label>
-
-                <textarea id="portfolioDescription"
-                          name="description"
-                          class="edit-description-input"
-                          placeholder="Ievadiet attēla aprakstu...">{{ portfolio_item.description|default_if_none:"" }}</textarea>
-
-                <div class="edit-actions">
-                    <button type="submit"
-                            class="edit-save-button">
-                        Saglabāt portfolio izmaiņas
-                    </button>
-
-                    <button type="button"
-                            class="edit-delete-button"
-                            onclick="document.getElementById('deleteImageDialog').showModal()">
-                        Dzēst attēlu
-                    </button>
+                <!-- Portfolio attēli -->
+                <section class="portfolio">
+                    <div class="portfolio-header">
+                        <h2>Portfolio:</h2>
+                        <a href="{% url 'testsite:portfolio_image_add' %}"
+                            type="button" class="edit-portfolio-btn"> Pievienot attēlu
+                        </a>
                 </div>
-            </form>
-        </section>
 
-        <!-- Attēla dzēšanas apstiprinājums -->
-        <dialog id="deleteImageDialog" class="confirm-dialog">
-            <h2>Dzēst attēlu?</h2>
-            <p>Vai tiešām vēlaties dzēst šo portfolio attēlu?</p>
+                    <div class="portfolio-grid">
+                        {% for item in portfolio_images %}
+                            <article class="portfolio-card">
+                                <div class="portfolio-image">
+                                    <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                                </div>
+                                <h3 class="portfolio-item-title">{{ item.title }}</h3>
+                                <p class="portfolio-item-category"> Kategorija: {{ item.category }}</p>
+                                <div class="portfolio-description">
+                                    <p> {{ item.description|default:"Apraksts nav pievienots." }} </p>
+                                </div>
 
-            <div class="dialog-actions">
-                <button type="button"
-                        class="edit-save-button"
-                        onclick="document.getElementById('deleteImageDialog').close()">
-                    Atcelt
-                </button>
-                <button class="edit-delete-button" type="submit" onclick="history.back()"> Jā, dzēst attēlu</button>
+                                <!-- Attēla pārvaldības pogas -->
+                                <div class="portfolio-card-actions">
+                                    <a href="{% url 'testsite:portfolio_image_edit' item.id %}"
+                                       class="edit-portfolio-btn"> Rediģēt attēlu
+                                    </a>
+                                    <!-- 
+                                    <form method="post"
+                                          action="{% url 'testsite:portfolio_delete' item.id %}"
+                                          onsubmit="return confirm('Vai tiešām vēlaties dzēst šo attēlu?');">
+                                        {% csrf_token %}
+                                        <button type="submit"class="edit-delete-button"> Dzēst attēlu </button>
+                                    </form>-->
+                                </div>
+                            </article>
+                        {% empty %}
+                            <p> Portfolio vēl nav pievienots neviens attēls. </p>
+                        {% endfor %}
+                    </div>
+                </section>
             </div>
-        </dialog>
-    </main>
-<!--
-    <script>
-        const portfolioInput = document.getElementById("portfolioImage");
-        const portfolioPreview = document.getElementById("portfolioPreview");
-        const uploadText = document.getElementById("uploadText");
+        </main>
+    </div>
 
-        portfolioInput.addEventListener("change", function () {
-            const file = this.files[0];
+    <!-- Paziņojumi -->
+    {% if messages %}
+        <div class="toast-area" role="status">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.level_tag }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="toast-close" aria-label="Aizvērt"> &times; </button>
+                </div>
+            {% endfor %}
+        </div>
 
-            if (file && file.type.startsWith("image/")) {
-                portfolioPreview.src = URL.createObjectURL(file);
-                portfolioPreview.hidden = false;
-                uploadText.hidden = true;
-            }
-        });
-    </script>-->
+        <script>
+            document.querySelectorAll(".toast").forEach(function (toast) {
+                const hide = function () {
+                    toast.remove();
+                };
+                toast.querySelector(".toast-close")
+                    .addEventListener("click", hide);
+                setTimeout(hide, 4000);
+            });
+        </script>
+    {% endif %}
 </body>
 </html>

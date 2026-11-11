@@ -371,7 +371,7 @@ def chat_upload_images(request, conversation_id):
 
     # Send the batch to the other person in the conversation too.
     async_to_sync(get_channel_layer().group_send)(
-        f'chat_{conversation.pk}',
+        conversation.group_name,
         {'type': 'chat.message', 'message': message.to_json()},
     )
 

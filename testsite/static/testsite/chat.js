@@ -561,6 +561,13 @@
         });
     });
 
+    // However the pay dialog closes (confirm, cancel, Esc), no request stays selected.
+    if (payDialog) {
+        payDialog.addEventListener('close', function () {
+            selectedPaymentId = null;
+        });
+    }
+
     input.disabled = true;
     connect();
 })();

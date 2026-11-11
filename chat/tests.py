@@ -201,6 +201,13 @@ class PaymentConsumerTests(TransactionTestCase):
     """The payment actions of the chat WebSocket: requesting, paying and cancelling."""
 
     def setUp(self):
+        # Uploaded files go to a fresh temporary folder for every test.
+        self.media = tempfile.TemporaryDirectory()
+        self.addCleanup(self.media.cleanup)
+        media_override = override_settings(MEDIA_ROOT=self.media.name)
+        media_override.enable()
+        self.addCleanup(media_override.disable)
+
         self.communicators = []
         self.photographer = User.objects.create_user('foto', 'foto@example.com', PASSWORD, role=User.PHOTOGRAPHER)
         self.client_user = User.objects.create_user('klients', 'klients@example.com', PASSWORD)
@@ -230,6 +237,27 @@ class PaymentConsumerTests(TransactionTestCase):
     def add_batch_for(self, payment_id):
         return Message.objects.create(conversation=self.conversation, sender=self.photographer,
                                       message_type='image', payment_request_id=payment_id)
+
+    @sync_to_async
+    def add_paid_request(self):
+        return Message.objects.create(
+            conversation=self.conversation, sender=self.photographer, text='Maksājuma pieprasījums',
+            message_type='payment', payment_amount=Decimal('10.00'), currency='EUR', payment_status='paid')
+
+    @sync_to_async
+    def upload_as_photographer(self):
+        self.client.login(username='foto', password=PASSWORD)
+        url = reverse('testsite:chat_upload_images', args=[self.conversation.pk])
+        return self.client.post(url, {'images': [image_file()]}).status_code
+
+    @closes_sockets
+    async def test_uploaded_batch_reaches_the_other_person_live(self):
+        # The upload view and the consumer must use the same group name.
+        client = await self.connect(self.client_user)
+        await self.add_paid_request()
+        self.assertEqual(await self.upload_as_photographer(), 200)
+        message = await client.receive_json_from()
+        self.assertEqual((message['type'], len(message['images'])), ('image', 1))
 
     @closes_sockets
     async def test_payment_request_starts_pending(self):

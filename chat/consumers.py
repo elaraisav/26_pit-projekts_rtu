@@ -20,7 +20,7 @@ class ChatConsumer(JsonWebsocketConsumer):
             self.close()
             return
 
-        self.group_name = f'chat_{conversation.pk}'
+        self.group_name = conversation.group_name
         async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
         self.accept()
 

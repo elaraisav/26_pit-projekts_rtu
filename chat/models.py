@@ -101,6 +101,12 @@ class Conversation(models.Model):
     def other_participant(self, user):
         return self.photographer if user.pk == self.client_id else self.client
 
+    @property
+    def group_name(self):
+        """The Channels group both people of the conversation listen to.
+        Used by the consumer and by the upload view, so the name lives only here."""
+        return f'chat_{self.pk}'
+
 
 # Random file names, so a stored file's URL can't be guessed from the original name.
 # Module-level functions, because migrations refer to them.

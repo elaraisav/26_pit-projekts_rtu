@@ -99,8 +99,10 @@
                 </div>
 
                 <!-- Report page from main (report_submission) -->
-                <form action="{% url 'testsite:report_submission' %}">
-                    <button class="chat-report-btn" id="report-user-btn">Ziņot par<br> lietotāju</button>
+                <form action="{% url 'testsite:report_submission' active.pk %}" method="get">
+                    <button class="chat-report-btn" id="report-user-btn">
+                        Ziņot par<br> lietotāju
+                    </button>
                 </form>
 
             </header>

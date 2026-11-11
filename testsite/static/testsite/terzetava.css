@@ -515,7 +515,7 @@ a {
 
 .chat-compose-form {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     width: 100%;
     max-width: none;
     min-height: 34px;
@@ -638,7 +638,34 @@ a {
     text-align: center;
 }
 
-/* Rakstīšanas joslas papildu pogas */
+/* Attēlu komplekta augšupielādes logs */
+.chat-upload-list {
+    margin: 8px 0;
+    padding-left: 20px;
+    max-height: 160px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.chat-upload-error {
+    min-height: 1.2em;
+    color: #a52a2a;
+    font-size: 14px;
+}
+
+.chat-extra-btn:disabled,
+.chat-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Rakstīšanas joslas papildu pogas: one above the other (as in the mockup), same width */
+.chat-extra-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .chat-extra-btn,
 .chat-cancel-btn {
     display: inline-flex;
@@ -719,8 +746,7 @@ a {
     font-size: 13px;
 }
 
-.chat-payment-card button,
-.chat-image-card button {
+.chat-payment-card button {
     width: 100%;
     min-height: 32px;
     border: 1px solid var(--navy);
@@ -730,18 +756,112 @@ a {
     cursor: pointer;
 }
 
-.chat-payment-card button:hover,
-.chat-image-card button:hover {
+.chat-payment-card button:hover {
     background: var(--terracotta);
 }
 
-.chat-image-card img {
+.chat-payment-card button + button {
+    margin-top: 6px;
+}
+
+.chat-payment-card.is-cancelled {
+    opacity: 0.6;
+}
+
+/* Attēlu komplekts: small square images, a click opens the larger preview */
+.chat-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.chat-thumb {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 1px solid var(--navy);
+    border-radius: 6px;
+    background: white;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.chat-thumb img {
     display: block;
     width: 100%;
-    max-height: 220px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+}
+
+.chat-thumb:hover,
+.chat-thumb:focus-visible {
+    outline: 2px solid var(--terracotta);
+}
+
+/* Lielāks skats */
+.chat-preview-dialog {
+    max-width: 96vw;
+    max-height: 96vh;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+.chat-preview-dialog[open] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-preview-dialog::backdrop {
+    background: rgba(3, 29, 68, 0.85);
+}
+
+.chat-preview-dialog figure {
+    margin: 0;
+    text-align: center;
+    color: var(--cream);
+}
+
+.chat-preview-dialog img {
+    display: block;
+    max-width: min(80vw, 1200px);
+    max-height: 80vh;
+    border-radius: 8px;
+    background: white;
+}
+
+.chat-preview-dialog figcaption {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.chat-preview-nav,
+.chat-preview-close {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.chat-preview-nav:hover,
+.chat-preview-close:hover {
+    background: var(--terracotta);
+    color: var(--cream);
+}
+
+.chat-preview-close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
 }
 
 /* Lejupielādes poga */

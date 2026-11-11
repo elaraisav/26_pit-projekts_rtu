@@ -21,10 +21,71 @@
 
     const paymentButton = document.getElementById('payment-btn');
     const imageButton = document.getElementById('image-btn');
-    const imageInput = document.getElementById('image-input');
 
     let selectedPaymentId = null;
     const paymentElements = new Map();
+    const statusLabels = {pending: 'Gaida apmaksu', paid: 'Apmaksāts', cancelled: 'Atcelts'};
+
+    // What decides whether the photographer may add a batch of images: the latest
+    // payment request must be paid and have no batch yet (the server checks it too).
+    const payments = new Map();            // payment request id -> message
+    const batchRequestIds = new Set();     // ids of the payment requests that already have a batch
+
+    // Larger preview of the pictures of one batch, with arrows to step through them.
+    const previewDialog = document.getElementById('preview-dialog');
+    const previewImage = document.getElementById('preview-image');
+    const previewCount = document.getElementById('preview-count');
+    const previewPrev = document.getElementById('preview-prev');
+    const previewNext = document.getElementById('preview-next');
+    let previewItems = [];
+    let previewIndex = 0;
+
+    function showPreview() {
+        previewImage.src = previewItems[previewIndex].preview;
+        previewImage.alt = 'Attēls ' + (previewIndex + 1) + ' no ' + previewItems.length;
+        previewCount.textContent = (previewIndex + 1) + ' / ' + previewItems.length;
+    }
+
+    function stepPreview(step) {
+        previewIndex = (previewIndex + step + previewItems.length) % previewItems.length;
+        showPreview();
+    }
+
+    function openPreview(items, index) {
+        if (!previewDialog) {
+            return;
+        }
+        previewItems = items;
+        previewIndex = index;
+        previewPrev.hidden = previewNext.hidden = items.length < 2;
+        showPreview();
+        previewDialog.showModal();
+    }
+
+    if (previewDialog) {
+        previewPrev.addEventListener('click', function () {
+            stepPreview(-1);
+        });
+        previewNext.addEventListener('click', function () {
+            stepPreview(1);
+        });
+        previewDialog.addEventListener('keydown', function (event) {
+            if (previewItems.length < 2) {
+                return;
+            }
+            if (event.key === 'ArrowLeft') {
+                stepPreview(-1);
+            } else if (event.key === 'ArrowRight') {
+                stepPreview(1);
+            }
+        });
+        // A click on the dark background closes the preview.
+        previewDialog.addEventListener('click', function (event) {
+            if (event.target === previewDialog) {
+                previewDialog.close();
+            }
+        });
+    }
 
     // Messages from the same person within 5 minutes share one group (name + time).
     const GROUP_GAP_MS = 5 * 60 * 1000;
@@ -113,10 +174,8 @@
 
             const paymentStatus = document.createElement('p');
             paymentStatus.className = 'payment-status';
-            paymentStatus.textContent =
-                message.payment_status === 'paid'
-                    ? 'Apmaksāts'
-                    : 'Gaida apmaksu';
+            paymentStatus.textContent = statusLabels[message.payment_status] || '';
+            card.classList.toggle('is-cancelled', message.payment_status === 'cancelled');
 
             card.append(heading, amount, paymentStatus);
             if (!mine && message.payment_status === 'pending') {
@@ -130,41 +189,76 @@
                 });
                 card.append(payButton);
             }
+            // The photographer can cancel a request that is not paid yet.
+            if (mine && message.payment_status === 'pending') {
+                const cancelButton = document.createElement('button');
+                cancelButton.type = 'button';
+                cancelButton.textContent = 'Atcelt';
+                cancelButton.addEventListener('click', function () {
+                    if (!socket || socket.readyState !== WebSocket.OPEN) {
+                        status.textContent = 'Nav savienojuma.';
+                        return;
+                    }
+                    socket.send(JSON.stringify({
+                        action: 'cancel_payment',
+                        payment_id: message.id
+                    }));
+                });
+                card.append(cancelButton);
+            }
             bubble.append(card);
+            payments.set(message.id, message);
             paymentElements.set(message.id, {
                 status: paymentStatus,
                 card: card
             });
         } else if (message.type === 'image') {
-        // Ja ziņas tips ir attēls
+            // Attēlu komplekts: small images (click for a larger preview) and the zip download under them.
+            batchRequestIds.add(message.payment_request_id);
+
             const card = document.createElement('div');
             card.className = 'chat-image-card';
 
-            const safeImageUrl = sanitizeHttpUrl(message.image_url);
-            if (!safeImageUrl) {
-                const invalid = document.createElement('p');
-                invalid.textContent = 'Nederīga attēla saite.';
-                card.appendChild(invalid);
-                bubble.appendChild(card);
-                return;
-            }
+            const items = message.images
+                .map(function (image) {
+                    return {thumbnail: sanitizeHttpUrl(image.thumbnail), preview: sanitizeHttpUrl(image.preview)};
+                })
+                .filter(function (item) {
+                    return item.thumbnail && item.preview;
+                });
 
-            const image = document.createElement('img');
-            image.src = safeImageUrl;
-            image.alt = 'Nosūtītais attēls';
+            const thumbs = document.createElement('div');
+            thumbs.className = 'chat-thumbs';
+            items.forEach(function (item, index) {
+                const thumb = document.createElement('button');
+                thumb.type = 'button';
+                thumb.className = 'chat-thumb';
+                thumb.setAttribute('aria-label', 'Atvērt attēlu ' + (index + 1) + ' no ' + items.length);
 
-            const download = document.createElement('a');
-            download.href = safeImageUrl;
-            download.download = '';
-            download.textContent = 'Lejupielādēt';
-            download.className = 'chat-download-btn';
+                const picture = document.createElement('img');
+                picture.src = item.thumbnail;
+                picture.alt = '';
+                picture.loading = 'lazy';
 
-            download.addEventListener('click', function () {
-                status.textContent = 'Attēla lejupielāde sākta.';
+                thumb.append(picture);
+                thumb.addEventListener('click', function () {
+                    openPreview(items, index);
+                });
+                thumbs.append(thumb);
             });
+            card.append(thumbs);
 
-            card.append(image, download);
-            bubble.appendChild(card);
+            const archiveUrl = sanitizeHttpUrl(message.archive_url);
+            if (archiveUrl) {
+                const download = document.createElement('a');
+                download.href = archiveUrl;
+                // A readable file name instead of the random one on the server.
+                download.download = 'attelu-komplekts-' + message.created_at.slice(0, 10) + '.zip';
+                download.textContent = 'Lejupielādēt';
+                download.className = 'chat-download-btn';
+                card.append(download);
+            }
+            bubble.append(card);
         } else {
         // Ja vienkārša ziņa
             const text = document.createElement('p');
@@ -177,6 +271,7 @@
         lastGroup.time = created;
         lastGroup.timeElement.dateTime = message.created_at;
         lastGroup.timeElement.textContent = formatTime(created);
+        updateUploadButton();
     }
 
     history.forEach(addMessage);
@@ -237,13 +332,18 @@
             // Maksājuma statusa atjaunināšana
             if (data.event === 'payment_update') {
                 const payment = data.message;
+                if (payments.has(payment.id)) {
+                    payments.get(payment.id).payment_status = payment.payment_status;
+                }
+                updateUploadButton();
                 const element = paymentElements.get(payment.id);
                 if (element) {
-                    element.status.textContent = 'Apmaksāts';
-                    const button = element.card.querySelector('button');
-                    if (button) {
+                    element.status.textContent = statusLabels[payment.payment_status] || '';
+                    element.card.classList.toggle('is-cancelled', payment.payment_status === 'cancelled');
+                    // Paid or cancelled: no "Maksāt" or "Atcelt" button any more.
+                    element.card.querySelectorAll('button').forEach(function (button) {
                         button.remove();
-                    }
+                    });
                 }
                 return;
             }
@@ -316,51 +416,119 @@
         status.textContent = '';
     });
 
-    // Atver attēla izvēli
-    if (imageButton) {
-        imageButton.addEventListener('click', function () {
-            imageInput.click();
+    // Upload is open when the latest payment request is paid and has no batch yet.
+    function uploadOpen() {
+        let latest = null;
+        payments.forEach(function (payment) {
+            if (!latest || payment.id > latest.id) {
+                latest = payment;
+            }
         });
+        return latest !== null && latest.payment_status === 'paid' && !batchRequestIds.has(latest.id);
     }
 
-    // Attēla augšupielāde
-    imageInput.addEventListener('change', function () {
-        const file = imageInput.files[0];
-        if (!file) {
+    function updateUploadButton() {
+        if (!imageButton) {
             return;
         }
-        const formData = new FormData();
-        formData.append('image', file);
-        const csrfToken = form.querySelector(
-            '[name=csrfmiddlewaretoken]'
-        ).value;
+        const open = uploadOpen();
+        imageButton.disabled = !open;
+        imageButton.title = open
+            ? ''
+            : 'Failus var pievienot, kad ir apmaksāts jaunākais maksājuma pieprasījums (viens komplekts par vienu pieprasījumu).';
+    }
+    updateUploadButton();
 
-        fetch(`/terzetava/${conversationId}/upload/`, {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin',
-            headers: {
-                'X-CSRFToken': csrfToken
-            }
-        })
-        .then(async function (response) {
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || 'Neizdevās augšupielādēt attēlu.');
-            }
-            status.textContent = 'Attēls veiksmīgi augšupielādēts.';
+    // Attēlu komplekta augšupielāde: the button opens a dialog; the whole batch is sent
+    // in one request and is accepted only if every file is valid.
+    const uploadDialog = document.getElementById('upload-dialog');
+    if (imageButton && uploadDialog) {
+        const MAX_FILES = 10;
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const filesInput = document.getElementById('upload-files');
+        const countText = document.getElementById('upload-count');
+        const fileList = document.getElementById('upload-list');
+        const errorText = document.getElementById('upload-error');
+        const submitButton = document.getElementById('upload-submit');
+        let uploading = false;
 
-            // Ja WebSocket jau piegādāja ziņu, dublikāts netiks attēlots.
-            addMessage(data.message);
-            scrollToBottom();
-        })
-        .catch(function (error) {
-            status.textContent = error.message;
-        })
-        .finally(function () {
-            imageInput.value = '';
+        // Shows the chosen files and what is wrong with them; the upload button
+        // works only for 1 to 10 valid files.
+        function checkFiles() {
+            const files = Array.from(filesInput.files);
+            let problem = '';
+            if (files.length > MAX_FILES) {
+                problem = 'Vienā komplektā var būt ne vairāk kā ' + MAX_FILES + ' attēli.';
+            }
+            fileList.replaceChildren();
+            files.forEach(function (file) {
+                const valid = /\.(jpe?g|png)$/i.test(file.name) && file.size <= MAX_FILE_SIZE;
+                if (!valid && !problem) {
+                    problem = 'Daži faili nav derīgi (jābūt JPG vai PNG, līdz 10 MB). Izvēlies failus vēlreiz.';
+                }
+                const item = document.createElement('li');
+                item.textContent = file.name + ' (' + (file.size / 1048576).toFixed(1) + ' MB)' + (valid ? '' : ' – nederīgs');
+                fileList.append(item);
+            });
+            countText.textContent = files.length + ' / ' + MAX_FILES;
+            errorText.textContent = problem;
+            submitButton.disabled = uploading || files.length === 0 || problem !== '';
+        }
+
+        imageButton.addEventListener('click', function () {
+            if (imageButton.disabled) {
+                return;
+            }
+            filesInput.value = '';
+            checkFiles();
+            uploadDialog.showModal();
         });
-    });
+
+        filesInput.addEventListener('change', checkFiles);
+
+        submitButton.addEventListener('click', async function () {
+            const files = Array.from(filesInput.files);
+            if (uploading || files.length === 0) {
+                return;
+            }
+            const formData = new FormData();
+            files.forEach(function (file) {
+                formData.append('images', file);
+            });
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            uploading = true;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Augšupielādē…';
+            errorText.textContent = '';
+            try {
+                const response = await fetch(`/terzetava/${conversationId}/upload/`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',
+                    headers: {'X-CSRFToken': csrfToken}
+                });
+                const data = await response.json().catch(function () {
+                    return {};
+                });
+                if (!response.ok) {
+                    errorText.textContent = data.error || 'Neizdevās augšupielādēt attēlus.';
+                    return;
+                }
+                uploadDialog.close();
+                status.textContent = 'Attēli augšupielādēti.';
+                // The WebSocket may deliver the message first; a duplicate is not shown twice.
+                addMessage(data.message);
+                scrollToBottom();
+            } catch (error) {
+                errorText.textContent = 'Neizdevās augšupielādēt attēlus. Pārbaudi savienojumu.';
+            } finally {
+                uploading = false;
+                submitButton.textContent = 'Augšupielādēt';
+                checkFiles();
+            }
+        });
+    }
 
     // Demonstrācijas apmaksa
     document.getElementById('pay-confirm').addEventListener('click', function () {

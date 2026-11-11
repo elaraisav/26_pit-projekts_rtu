@@ -19,16 +19,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-# Lai attēli būtu pieejami izstrādes režīmā
-from django.conf import settings
-from django.conf.urls.static import static
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', include('testsite.urls')), # This tells Django to send requests for your website's main URLs to gallery/urls.py
 ]
 
+# Attēlu pieejamība lokālajā izstrādes vidē
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -100,16 +102,57 @@ class Conversation(models.Model):
         return self.photographer if user.pk == self.client_id else self.client
 
 
+# Random file names, so a stored file's URL can't be guessed from the original name.
+# Module-level functions, because migrations refer to them.
+def archive_path(instance, filename):
+    return f'chat_archives/{uuid.uuid4().hex}.zip'
+
+
+def thumbnail_path(instance, filename):
+    return f'chat_thumbs/{uuid.uuid4().hex}.jpg'
+
+
+def preview_path(instance, filename):
+    return f'chat_previews/{uuid.uuid4().hex}.jpg'
+
+
 class Message(models.Model):
     MAX_LENGTH = 2000
+    TYPE_CHOICES = [
+        ('text', 'Teksts'),
+        ('payment', 'Maksājuma pieprasījums'),
+        ('image', 'Attēlu komplekts'),
+    ]
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Gaida apmaksu'),
+        ('paid', 'Apmaksāts'),
+        ('cancelled', 'Atcelts'),
+    ]
 
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_messages')
     text = models.TextField(max_length=MAX_LENGTH, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    message_type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='text')
+
+    # Payment requests
+    payment_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(max_length=3, blank=True)
+    # Only payment requests use the status; it decides whether a batch of images may be uploaded.
+    payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, blank=True)
+
+    # Image batches: one zip with the original files, and the paid request it belongs to.
+    archive = models.FileField(upload_to=archive_path, blank=True)
+    payment_request = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
+                                        related_name='batches')
 
     class Meta:
         ordering = ['created_at']
+        constraints = [
+            # A payment request pays for one batch only.
+            models.UniqueConstraint(fields=['payment_request'], condition=Q(message_type='image'),
+                                    name='one_batch_per_payment_request'),
+        ]
 
     def __str__(self):
         return f'{self.sender}: {self.text[:40]}'
@@ -123,56 +166,37 @@ class Message(models.Model):
             'sender_name': self.sender.get_full_name() or self.sender.username,
             'created_at': self.created_at.isoformat(),
 
-            # Papildinājums maksājuma funkcionalitātei
+            # Payment requests and image batches
             'type': self.message_type,
             'amount': str(self.payment_amount) if self.payment_amount is not None else None,
             'currency': self.currency,
             'payment_status': self.payment_status,
-            'image_url': self.image.url if self.image else None,
             'payment_request_id': self.payment_request_id,
+            'archive_url': self.archive.url if self.archive else None,
+            'images': [
+                {'thumbnail': image.thumbnail.url, 'preview': image.preview.url}
+                for image in self.images.all()
+            ] if self.message_type == 'image' else [],
         }
-    
-    # Papildinājums - dažādu ziņojumu (Messages) veidi
-    message_type = models.CharField(
-        max_length=10,
-        choices=[
-            ('text', 'Teksts'),
-            ('payment', 'Maksājuma pieprasījums'),
-            ('image', 'Attēls'),
-        ],
-        default='text'
-    )
 
-    payment_amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
 
-    currency = models.CharField(max_length=3, blank=True)
+class MessageImage(models.Model):
+    """One picture of an image batch: a small thumbnail for the chat and a larger preview.
+    The originals are only in the batch's zip (Message.archive)."""
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='images')
+    thumbnail = models.ImageField(upload_to=thumbnail_path)
+    preview = models.ImageField(upload_to=preview_path)
+    position = models.PositiveSmallIntegerField(default=0)
 
-    # Maksājuma status. No tā tkarīgs, vai var tālāk nosūtīt bildi augšupielādei
-    payment_status = models.CharField(
-        max_length=10,
-        choices=[
-            ('pending', 'Gaida apmaksu'),
-            ('paid', 'Apmaksāts'),
-        ],
-        default='pending',
-        blank=True
-    )
+    class Meta:
+        ordering = ['position']
 
-    image = models.ImageField(
-        upload_to='chat_images/',
-        null=True,
-        blank=True
-    )
 
-    payment_request = models.ForeignKey(
-        'self',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='uploaded_images'
-    )
+def open_payment_for_upload(conversation):
+    """The photographer's latest payment request in the conversation, if it is paid
+    and has no image batch yet; otherwise None (no upload allowed)."""
+    last = (conversation.messages.filter(message_type='payment', sender_id=conversation.photographer_id)
+            .order_by('-created_at', '-pk').first())
+    if last is not None and last.payment_status == 'paid' and not last.batches.exists():
+        return last
+    return None

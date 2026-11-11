@@ -16,7 +16,7 @@ class User(AbstractUser):
 
     email = models.EmailField('E-pasts', unique=True)
     role = models.CharField('Loma', max_length=20, choices=ROLE_CHOICES, default=CLIENT)
-
+    description = models.TextField('Apraksts',max_length=250,blank=True)
     @property
     def is_photographer(self):
         return self.role == self.PHOTOGRAPHER

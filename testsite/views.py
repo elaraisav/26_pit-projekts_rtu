@@ -9,7 +9,8 @@ from django.views.decorators.http import require_POST
 from chat.models import Conversation, can_chat, chat_partners_for, chat_users, open_payment_for_upload
 from chat.uploads import NOT_OPEN, UploadError, create_batch, process_files
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm, PortfolioImageForm
+
+from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm, PortfolioImage, PortfolioImageForm
 from .models import Photographer, User, PortfolioImage
 
 from channels.layers import get_channel_layer
@@ -132,19 +133,29 @@ def profils_fotogr_klienta(request):
         'conversations': conversations,
     })
 
-# Edit the logged-in photographer's own profile (design 5.1.6). There is no id in the
-# URL, so nobody can edit someone else's profile; clients have no profile page.
+# Edit the logged-in user's own profile description (design 5.1.6): the photographer's
+# `Photographer.description` or the client's `User.description`. There is no id in the
+# URL, so nobody can edit someone else's profile.
 @login_required
 def profila_regid(request):
-    if not request.user.is_photographer:
-        raise Http404
-    profile, _ = Photographer.objects.get_or_create(user=request.user)
-    form = PhotographerForm(request.POST or None, instance=profile)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, 'Profila izmaiņas saglabātas.')
-        return redirect('testsite:profils_fotogr')
-    return render(request, 'testsite/profila_regid.html', {'form': form})
+    # Nosaka lietotāja formu
+    if request.user.is_photographer:
+        profile, _ = Photographer.objects.get_or_create(user=request.user)
+        form = PhotographerForm(request.POST or None, instance=profile)
+        redirect_url = 'testsite:profils_fotogr'
+
+    else:
+        form = ClientProfileForm(request.POST or None, instance=request.user)
+        redirect_url = 'testsite:profils'
+
+    # Apstrādā formas iesniegšanu
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Profila izmaiņas veiksmīgi saglabātas!')
+            return redirect(redirect_url)
+    return render( request, 'testsite/profila_regid.html',{'form': form} )
 
 @login_required
 def portfolio_regid(request):

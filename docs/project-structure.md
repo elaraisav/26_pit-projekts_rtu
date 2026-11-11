@@ -44,19 +44,19 @@ Pēc uzstādīšanas lokāli parādīsies arī (repozitorijā tie netiek iekļau
 
 ## `testsite/` – lietotne
 
-Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu, izņemot autorizāciju, reģistrāciju, tērzētavu, fotogrāfa profila aprakstu un portfolio (sk. [README](../README.md#lapas)). Tērzētavas skati atrodas šeit (`views.py`), bet tās dati un WebSocket loģika – lietotnē `chat`.
+Šeit atrodas projekta lapas. Pagaidām tās ir maketi ar fiksētu saturu, izņemot autorizāciju, reģistrāciju, tērzētavu, profila aprakstu (klientam un fotogrāfam) un portfolio (sk. [README](../README.md#lapas)). Tērzētavas skati atrodas šeit (`views.py`), bet tās dati un WebSocket loģika – lietotnē `chat`.
 
 | Ceļš | Uzdevums |
 |---|---|
 | `urls.py` | Lietotnes maršruti: kura adrese atver kuru lapu. |
 | `views.py` | Funkcijas, kas pieņem pieprasījumu un atgriež lapu. Šeit ir arī portfolio pārvaldība (pievienošana, rediģēšana, dzēšana) un tērzētavas skati (sarunas, jaunas sarunas sākšana, ziņu atjaunošana, attēlu augšupielāde). |
-| `models.py` | Datubāzes tabulu apraksts. Lietotājs `User` (lietotājvārds, unikāls e-pasts, loma: klients vai fotogrāfs), `Photographer` (fotogrāfa profils, pieejams kā `user.profile`; apraksts līdz 250 rakstzīmēm) un `PortfolioImage` (fotogrāfa portfolio attēls: fails, nosaukums, kategorija un apraksts; pieejams kā `profile.portfolio_images`). Tērzētavas tabulas ir `chat/models.py`. |
-| `forms.py` | Autorizācijas, reģistrācijas, fotogrāfa profila (`PhotographerForm`) un portfolio attēla (`PortfolioImageForm`; attēls līdz 10 MB) formas. |
+| `models.py` | Datubāzes tabulu apraksts. Lietotājs `User` (lietotājvārds, unikāls e-pasts, loma: klients vai fotogrāfs, apraksts līdz 250 rakstzīmēm), `Photographer` (fotogrāfa profils, pieejams kā `user.profile`; apraksts līdz 250 rakstzīmēm) un `PortfolioImage` (fotogrāfa portfolio attēls: fails, nosaukums, kategorija un apraksts; pieejams kā `profile.portfolio_images`). Tērzētavas tabulas ir `chat/models.py`. |
+| `forms.py` | Autorizācijas, reģistrācijas, fotogrāfa profila (`PhotographerForm`), klienta profila (`ClientProfileForm`) un portfolio attēla (`PortfolioImageForm`; attēls līdz 10 MB) formas. |
 | `admin.py` | Reģistrē `User` un `Photographer` Django administrācijas panelī (`/admin/`). |
 | `templates/testsite/` | HTML veidnes (lapas). |
 | `static/testsite/` | CSS, JavaScript un attēli, ko lapas ielādē. |
-| `migrations/` | Datubāzes izmaiņu vēsture (`0001_initial` līdz `0004`; tostarp portfolio attēli). Kopīgs kods, sk. [līdzdalība](contributing.md#atkarības-un-migrācijas). |
-| `tests.py`, `apps.py` | Testi (reģistrācijas un fotogrāfa profila) un Django standarta konfigurācija. |
+| `migrations/` | Datubāzes izmaiņu vēsture (`0001_initial` līdz `0005`; tostarp portfolio attēli un lietotāja apraksts). Kopīgs kods, sk. [līdzdalība](contributing.md#atkarības-un-migrācijas). |
+| `tests.py`, `apps.py` | Testi (reģistrācijas, fotogrāfa un klienta profila) un Django standarta konfigurācija. |
 
 ## `chat/` – tērzētava
 

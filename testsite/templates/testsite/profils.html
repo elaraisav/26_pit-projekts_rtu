@@ -6,8 +6,10 @@
     <title>Profils</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'testsite/main-page.css' %}">
+    <link rel="stylesheet" href="{% static 'testsite/shared.css' %}">
 </head>
- <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
+<body>
+    <header class="topbar">  <!-- Logo + Meklēšanas josla + Profila poga -->
         <!-- ChatGPT ieteikums -->
         <a class="logo-link" href="{% url 'testsite:sakumlapa' %}">
             <img src="{% static 'testsite/images/logo.png' %}" alt="Vietnes logo">
@@ -24,7 +26,6 @@
             </form>
         </div>
     </header>
-<body>
       <div class="mainpage">
         <aside class="sidebar"> <!-- <aside> sadaļa - ChatCPT ieteikums, iedodot struktūras aptuveno maķetu -->
             <h3>Aktīvās sarakstes</h3>
@@ -42,6 +43,7 @@
             </div>
         </aside>
         <main class="profile">
+
         <div class="container">
       <!--  <main class="profile">  man patīk kā izstatās kad šo pieliek... pielikt pading kaut kur?-->
 
@@ -53,18 +55,34 @@
                     class="profile-avatar"> <!--avatar? -->
 
                 <div class="profile-details">
-                    <h1>Vārds Uzvārds</h1>
-                    <button type="button" class="edit-profile-btn">Rediģēt profilu </button>
+                    <h1>{{ user.get_full_name|default:user.username }}</h1>
+                    <a href="{% url 'testsite:profila_regid' %}" class="edit-profile-btn"> Rediģēt profilu</a>
                 </div>
 
                 <div class="profile-description">
-                    <p>Apraksts</p>
+                    <p>{{ user.description|default:"Apraksts vēl nav pievienots." }}</p>
                 </div>
             </section>
-
-        </main>
     </div>
-        </main>
+    </main>
     </div>
+     <!-- Paziņojumi (Django messages): peld augšā, neaizņem vietu lapā un pazūd paši -->
+    {% if messages %}
+        <div class="toast-area" role="status">
+            {% for message in messages %}
+                <div class="toast toast-{{ message.level_tag }}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="toast-close" aria-label="Aizvērt">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+        <script>
+            document.querySelectorAll(".toast").forEach(function (toast) {
+                const hide = function () { toast.remove(); };
+                toast.querySelector(".toast-close").addEventListener("click", hide);
+                setTimeout(hide, 4000);
+            });
+        </script>
+    {% endif %}
 </body>
 </html>

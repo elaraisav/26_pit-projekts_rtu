@@ -3,8 +3,8 @@
 Rīgas Tehniskās Universitātes (RTU) kursa projekts: tīmekļa platformas **makets**, kurā fotogrāfi var kopīgot fotogrāfijas ar saviem klientiem, bet klienti - viegli atrast sev piemērotus fotogrāfus.
 
 Platformā pašlaik ir īstenotas sekojošās funkcionalitātes:
-- Pilnīgi: autorizācija, reģistrācija, izrakstīšanās, fotogrāfa profila apraksta rediģēšana, portfolio pārvaldība (attēlu pievienošana, rediģēšana un dzēšana) un tērzētava (sarunas starp klientu un fotogrāfu reāllaikā, maksājuma pieprasījumi un apmaksāto attēlu komplektu (līdz 10 attēliem) nosūtīšana);
-- Daļēji: fotogrāfa profils (vārds, apraksts un portfolio attēli ir reāli; profila bilde – makets), maksājumi tērzētavā (apmaksa ir tikai demonstrācija, reāls maksājums netiek veikts);
+- Pilnīgi: autorizācija, reģistrācija, izrakstīšanās, profila apraksta rediģēšana (klientam un fotogrāfam), portfolio pārvaldība (attēlu pievienošana, rediģēšana un dzēšana) un tērzētava (sarunas starp klientu un fotogrāfu reāllaikā, maksājuma pieprasījumi un apmaksāto attēlu komplektu (līdz 10 attēliem) nosūtīšana);
+- Daļēji: klienta un fotogrāfa profils (vārds un apraksts ir reāli; fotogrāfam arī portfolio attēli; profila bilde – makets), maksājumi tērzētavā (apmaksa ir tikai demonstrācija, reāls maksājums netiek veikts);
 - Statiski (fiksēts saturs): pārējās lapas (skat. tabulu zemāk).
 
 ## Ātrā palaišana
@@ -60,10 +60,10 @@ uv run python manage.py migrate
 | `/logout/` | Izrakstīšanās (tikai `POST`, poga lapā) | darbojas |
 | `/sakumlapa/` | Sākumlapa | makets |
 | `/meklesana/` | Fotogrāfu meklēšana un rezultāti | makets |
-| `/profils/` | Klienta profils (paša skats) | makets |
+| `/profils/` | Klienta profils (paša skats) | daļēji (vārds un apraksts ir reāli; profila bilde – makets) |
 | `/profils_fotogr/` | Fotogrāfa profils (paša skats; fotogrāfam uz to ved sākumlapas poga „Mans Profils") | daļēji (vārds, apraksts un portfolio attēli ir reāli; profila bilde – makets) |
 | `/profils_fotogr_klienta/` | Fotogrāfa profils (klienta skats) | makets |
-| `/profila_regid/` | Profila apraksta rediģēšana (`regid` = rediģēt); profila attēls vēl netiek saglabāts | darbojas |
+| `/profila_regid/` | Profila apraksta rediģēšana klientam un fotogrāfam (`regid` = rediģēt); profila attēls vēl netiek saglabāts | darbojas |
 | `/portfolio_regid/` | Portfolio saraksts un pārvaldība (fotogrāfa skats) | darbojas |
 | `/portfolio/pievienot/` | Attēla pievienošana portfolio | darbojas |
 | `/portfolio/rediget/<id>/` | Portfolio attēla rediģēšana (var nomainīt attēlu vai atstāt esošo) | darbojas |
@@ -80,7 +80,7 @@ Statuss „makets" nozīmē, ka lapa rāda fiksētu saturu un nesaglabā datus. 
 
 Visas lapas, izņemot `/`, `/registracija/` un `/registracija/nosutita/`, pieprasa pieteikšanos. Izņēmums ir makets `/admin_panel/`: tam pieteikšanās pagaidām nav jāpieprasa.
 
-Fotogrāfa profila lapas (`/profils_fotogr/`, `/profila_regid/`) ir pieejamas tikai fotogrāfiem; klienti saņem kļūdu 404.
+Fotogrāfa profila lapa `/profils_fotogr/` ir pieejama tikai fotogrāfiem; klienti saņem kļūdu 404. Profila apraksta rediģēšana (`/profila_regid/`) ir pieejama gan klientiem, gan fotogrāfiem.
 
 Tērzētavā sarunu var sākt tikai klients ar fotogrāfu. Administratoru konti tajā nepiedalās.
 

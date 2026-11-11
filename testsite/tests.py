@@ -65,13 +65,6 @@ class PhotographerProfileTests(TestCase):
         self.assertIn(reverse('testsite:autorizacija'), response.url)
         self.assertEqual(Photographer.objects.count(), 0)
 
-    def test_client_has_no_profile_to_edit(self):
-        client_user = User.objects.create_user('klients', 'klients@example.com', 'Drosa-parole-731')
-        self.client.force_login(client_user)
-        self.assertEqual(self.client.get(self.url).status_code, 404)
-        self.assertEqual(self.client.post(self.url, {'description': 'x'}).status_code, 404)
-        self.assertEqual(Photographer.objects.count(), 0)
-
     def test_client_has_no_photographer_profile_page(self):
         client_user = User.objects.create_user('klients', 'klients@example.com', 'Drosa-parole-731')
         self.client.force_login(client_user)
@@ -87,3 +80,29 @@ class PhotographerProfileTests(TestCase):
         self.client.post(self.url, {'description': 'Mans apraksts'})
         self.assertEqual(Photographer.objects.get(user=other).description, 'Cita apraksts')
         self.assertEqual(Photographer.objects.get(user=self.photographer).description, 'Mans apraksts')
+
+
+class ClientProfileTests(TestCase):
+    url = reverse('testsite:profila_regid')
+
+    def setUp(self):
+        self.client_user = User.objects.create_user('klients', 'klients@example.com', 'Drosa-parole-731')
+        self.client.force_login(self.client_user)
+
+    def test_description_is_saved_and_shown_on_the_profile(self):
+        response = self.client.post(self.url, {'description': 'Meklēju kāzu fotogrāfu'}, follow=True)
+        self.assertRedirects(response, reverse('testsite:profils'))
+        self.client_user.refresh_from_db()
+        self.assertEqual(self.client_user.description, 'Meklēju kāzu fotogrāfu')
+        self.assertContains(response, 'Meklēju kāzu fotogrāfu')
+        self.assertContains(response, 'Profila izmaiņas veiksmīgi saglabātas!')
+
+    def test_description_over_250_characters_is_rejected_with_the_design_message(self):
+        response = self.client.post(self.url, {'description': 'a' * 251})
+        self.assertContains(response, 'Apraksts nedrīkst pārsniegt 250 rakstzīmes!')
+        self.client_user.refresh_from_db()
+        self.assertEqual(self.client_user.description, '')
+
+    def test_client_edit_does_not_create_a_photographer_profile(self):
+        self.client.post(self.url, {'description': 'x'})
+        self.assertEqual(Photographer.objects.count(), 0)

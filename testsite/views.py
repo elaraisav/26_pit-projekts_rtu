@@ -6,10 +6,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from chat.models import Conversation, can_chat, chat_partners_for, chat_users
+from chat.models import Conversation, can_chat, chat_partners_for, chat_users, open_payment_for_upload
+from chat.uploads import NOT_OPEN, UploadError, create_batch, process_files
 
 from .forms import LoginForm, PhotographerForm, RegistrationForm, PortfolioImageForm
 from .models import Photographer, User, PortfolioImage
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 # Every function here is responsible for 1 html page. These functions open said page.
@@ -303,7 +307,7 @@ def terzetava(request, conversation_id=None):
 
     history = []
     if active is not None:
-        history = [message.to_json() for message in active.messages.select_related('sender')]
+        history = [message.to_json() for message in active.messages.select_related('sender').prefetch_related('images')]
 
     return render(request, 'testsite/terzetava.html', {
         'chat_allowed': allowed,
@@ -323,7 +327,7 @@ def chat_messages(request, conversation_id):
         raise Http404
     after = request.GET.get('after', '0')
     after = int(after) if after.isdigit() else 0
-    messages_after = conversation.messages.filter(pk__gt=after).select_related('sender').order_by('pk')
+    messages_after = conversation.messages.filter(pk__gt=after).select_related('sender').prefetch_related('images').order_by('pk')
     return JsonResponse({'messages': [message.to_json() for message in messages_after]})
 
 @login_required
@@ -339,6 +343,39 @@ def chat_start(request):
     except ValueError:
         return HttpResponseBadRequest("Invalid chat request.")
     return redirect('testsite:chat_conversation', conversation_id=conversation.pk)
+
+# The photographer uploads one batch of images (up to 10 files) after the latest payment
+# request was paid; each payment request pays for one batch (see chat/uploads.py).
+@login_required
+@require_POST
+def chat_upload_images(request, conversation_id):
+    conversation = Conversation.objects.filter(
+        pk=conversation_id
+    ).usable().filter(
+        pk__in=Conversation.objects.for_user(request.user)
+    ).first()
+
+    if conversation is None or not request.user.is_photographer:
+        raise Http404
+
+    if open_payment_for_upload(conversation) is None:
+        return JsonResponse({'error': NOT_OPEN}, status=403)
+
+    try:
+        items = process_files(request.FILES.getlist('images'))
+        message = create_batch(conversation, request.user, items)
+    except UploadError as error:
+        return JsonResponse({'error': str(error)}, status=400)
+
+    Conversation.objects.filter(pk=conversation.pk).update(updated_at=message.created_at)
+
+    # Send the batch to the other person in the conversation too.
+    async_to_sync(get_channel_layer().group_send)(
+        conversation.group_name,
+        {'type': 'chat.message', 'message': message.to_json()},
+    )
+
+    return JsonResponse({'success': True, 'message': message.to_json()})
 
 @login_required
 def report_submission(request, conversation_id):

@@ -24,4 +24,5 @@ urlpatterns = [
     path('terzetava/<int:conversation_id>/', views.terzetava, name='chat_conversation'),
     path('terzetava/<int:conversation_id>/messages/', views.chat_messages, name='chat_messages'),
     path('terzetava/start/', views.chat_start, name='chat_start'),
+    path('terzetava/<int:conversation_id>/upload/', views.chat_upload_images, name='chat_upload_images'),
 ]

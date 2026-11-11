@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 
 from chat.models import Conversation, Message, can_chat, chat_partners_for, chat_users
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm
-from .models import Photographer, User
+from .forms import LoginForm, PhotographerForm, RegistrationForm, PortfolioImageForm
+from .models import Photographer, User, PortfolioImage
 
 # Importu papildinājumi attēlu augšupielādei
 from django.core.files.images import get_image_dimensions
@@ -111,13 +111,20 @@ def profils_fotogr(request):
     # Iegūst fotogrāfa profilu
     profile = Photographer.objects.filter(user=request.user).first()
 
+    # Iegūst fotogrāfa portfolio attēlus
+    portfolio_images = []
+    if profile:
+        portfolio_images = PortfolioImage.objects.filter(photographer=profile)
+
     # Iegūst aktīvās sarunas sānjoslai
     conversations = get_sidebar_conversations(request.user)
 
     return render(request, 'testsite/profils_fotogr.html', {
         'profile': profile,
+        'portfolio_images': portfolio_images,
         'conversations': conversations,
     })
+
 
 @login_required
 def profils_fotogr_klienta(request):
@@ -143,7 +150,138 @@ def profila_regid(request):
 
 @login_required
 def portfolio_regid(request):
-    return render(request, 'testsite/portfolio_regid.html')
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile, _ = Photographer.objects.get_or_create( user=request.user)
+    portfolio_images = PortfolioImage.objects.filter( photographer=profile )
+    conversations = get_sidebar_conversations(request.user)
+
+    return render(
+        request, 'testsite/portfolio_regid.html', { 'profile': profile, 'portfolio_images': portfolio_images, 'conversations': conversations,}
+    )
+
+@login_required
+def portfolio_image_add(request):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile, _ = Photographer.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+            portfolio_image = form.save(commit=False)
+            portfolio_image.photographer = profile
+            portfolio_image.save()
+
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi pievienots!'
+            )
+
+            return redirect('testsite:portfolio_regid')
+
+        messages.error(
+            request,
+            'Neizdevās pievienot attēlu. Pārbaudiet ievadīto informāciju.'
+        )
+
+    else:
+        form = PortfolioImageForm()
+
+    return render(
+        request,
+        'testsite/portfolio_image_form.html',
+        {
+            'form': form,
+            'is_edit': False,
+        }
+    )
+
+@login_required
+def portfolio_image_edit(request, image_id):
+    if not request.user.is_photographer:
+        raise Http404
+
+    profile = get_object_or_404(
+        Photographer,
+        user=request.user
+    )
+
+    portfolio_image = get_object_or_404(
+        PortfolioImage,
+        pk=image_id,
+        photographer=profile
+    )
+
+    # Vecā attēla faila nosaukums (pirms formas apstrādes), lai varētu to izdzēst, ja tiek augšupielādēts jauns
+    old_image_name = portfolio_image.image.name
+
+    if request.method == 'POST':
+        form = PortfolioImageForm(
+            request.POST,
+            request.FILES,
+            instance=portfolio_image
+        )
+
+        if form.is_valid():
+            updated_image = form.save(commit=False)
+            updated_image.photographer = profile
+            updated_image.save()
+
+            # Ja augšupielādēts jauns attēls, dzēšam veco failu no diska
+            if old_image_name and updated_image.image.name != old_image_name:
+                updated_image.image.storage.delete(old_image_name)
+
+            messages.success(
+                request,
+                'Portfolio attēls veiksmīgi atjaunināts!'
+            )
+
+            return redirect('testsite:portfolio_regid')
+
+        messages.error(
+            request,
+            'Neizdevās saglabāt attēla izmaiņas.'
+        )
+
+    else:
+        form = PortfolioImageForm(
+            instance=portfolio_image
+        )
+
+    return render(
+        request,
+        'testsite/portfolio_image_form.html',
+        {
+            'form': form,
+            'portfolio_image': portfolio_image,
+            'is_edit': True,
+        }
+    )
+
+@login_required
+@require_POST
+def portfolio_delete(request, image_id):
+    if not request.user.is_photographer: raise Http404
+    profile = get_object_or_404(Photographer,user=request.user)
+
+    # Atļauts dzēst tikai sava konta attēlus
+    portfolio_image = get_object_or_404( PortfolioImage, pk=image_id, photographer=profile)
+
+    # Dzēšam arī fizisko attēla failu
+    portfolio_image.image.delete(save=False)
+    portfolio_image.delete()
+
+    messages.success(request,'Portfolio attēls veiksmīgi izdzēsts!' )
+    return redirect('testsite:portfolio_regid')
 
 # Chat page (design: terzetava.html). With no id it opens the newest conversation.
 # Who may chat is decided in chat/models.py (can_chat); admin accounts only see a note.

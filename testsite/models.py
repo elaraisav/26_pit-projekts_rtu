@@ -31,3 +31,17 @@ class Photographer(models.Model):
 
     def __str__(self):
         return self.user.get_username()
+    
+class PortfolioImage(models.Model):
+    photographer = models.ForeignKey(Photographer, on_delete=models.CASCADE, related_name='portfolio_images')
+    image = models.ImageField( 'Portfolio attēls', upload_to='portfolio/%Y/%m/')
+    description = models.TextField( 'Attēla apraksts', blank=True, max_length=250)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField('Attēla nosaukums', max_length=100)
+    category = models.CharField('Attēla kategorija', max_length=100)
+
+    class Meta:
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f'{self.photographer.user.username} - {self.pk}'

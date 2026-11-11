@@ -407,7 +407,7 @@ a {
 
 /* The slider itself */
 .slider {
-    -webkit-appearance: none;
+    /*-webkit-appearance: none;*/
     width: 100%;
     height: 15px;
     border-radius: 5px;  
@@ -425,7 +425,7 @@ a {
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) to override default look) */
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+    webkit-appearance: none; /* Override default look */
     appearance: none;
     width: 25px; /* Set a specific slider handle width */
     height: 25px; /* Slider handle height */
@@ -672,7 +672,7 @@ a {
 
 .portfolio-card {
     min-width: 0;
-    color: var(--cream);
+    color: var(--navy);
 }
 
 /*Portfolio attēla vietturis */
@@ -695,7 +695,7 @@ a {
 /* Portfolio darba nosaukums */
 .portfolio-card h3 {
     margin: 14px 10px 8px;
-    color: var(--cream);
+    color: var(--navy);
     font-size: 18px;
     font-weight: normal;
     overflow-wrap: anywhere;
@@ -939,4 +939,54 @@ a {
 
 .dialog-actions form {
     display: flex;
+}
+
+/* PORTFOLIO ATTĒLU PĀRVALDĪBA */
+/* Rediģēšanas pogas pie katra attēla */
+.portfolio-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 20px;
+}
+
+.portfolio-card-actions form {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.portfolio-card-actions  {
+    min-height: 42px;
+    padding: 8px 12px;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.portfolio-card-actions .edit-save-button {
+    flex: 1 1 auto;
+}
+
+.portfolio-card-actions {
+    flex: 1 1 auto;
+}
+
+/* Attēli portfolio režģī */
+.portfolio-card .portfolio-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Formu kļūdu paziņojumi */
+.form-errors,
+.edit-form .errorlist {
+    color: #a52a2a;
+    font-size: 14px;
+}
+
+#portfolioCanvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }

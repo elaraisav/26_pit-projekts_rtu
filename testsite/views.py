@@ -10,7 +10,7 @@ from chat.models import Conversation, can_chat, chat_partners_for, chat_users, o
 from chat.uploads import NOT_OPEN, UploadError, create_batch, process_files
 
 
-from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm, PortfolioImage
+from .forms import LoginForm, PhotographerForm, RegistrationForm, ClientProfileForm, PortfolioImage, PortfolioImageForm
 from .models import Photographer, User, PortfolioImage
 
 from channels.layers import get_channel_layer
